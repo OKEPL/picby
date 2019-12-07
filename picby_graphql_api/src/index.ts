@@ -5,7 +5,6 @@ import { buildSchema } from "type-graphql";
 import { createConnection, getConnectionOptions } from "typeorm";
 import { RegisterResolver } from './modules/user/Register';
 
-
 (async () => {
   const app = express();
 
