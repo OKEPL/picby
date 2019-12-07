@@ -4,6 +4,7 @@ import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
+  
   @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
@@ -12,8 +13,6 @@ export class User extends BaseEntity {
   @Column("text", {unique: true})
   email: string;
 
-
   @Column()
   password: string;
-
 }
