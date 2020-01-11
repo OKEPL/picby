@@ -3,7 +3,7 @@ import { Arg, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 import { User } from '../../entity/User';
 import { isAuth } from '../middleware/isAuth';
 import { createAccountConfirmationUrl } from '../utils/createAccountConfirmationUrl';
-import { sendAccountConfirmationEmail } from '../utils/sendEmail';
+import { sendEmail } from '../utils/sendEmail';
 import { RegisterInput } from './register/RegisterInput';
 
 @Resolver(User)
@@ -25,7 +25,7 @@ export class RegisterResolver {
         password: hashedPassword
       }).save();
 
-      await sendAccountConfirmationEmail({
+      await sendEmail({
         email,
         url: await createAccountConfirmationUrl(user.id)
       })
