@@ -5,6 +5,7 @@ import express from "express";
 import session from "express-session";
 import { buildSchema } from "type-graphql";
 import { createConnection, getConnectionOptions } from "typeorm";
+import { ConfirmUserResolver } from "./modules/user/ConfirmUser";
 import { LoginResolver } from "./modules/user/Login";
 import { MeResolver } from "./modules/user/Me";
 import { RegisterResolver } from './modules/user/Register';
@@ -19,6 +20,7 @@ const DEFAULT_PORT = 4000;
 
 
 (async () => {
+
   const app = express();
 
   const options = await getConnectionOptions(
@@ -28,7 +30,7 @@ const DEFAULT_PORT = 4000;
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [RegisterResolver, LoginResolver, MeResolver],
+      resolvers: [RegisterResolver, LoginResolver, MeResolver, ConfirmUserResolver],
       validate: true,
 
     }),
@@ -62,7 +64,7 @@ const DEFAULT_PORT = 4000;
 
   apolloServer.applyMiddleware({ app, cors: false });
   const port = process.env.PORT || DEFAULT_PORT;
-  app.listen(port, () => {
+  app.listen(port, async () => {
     console.log(`server started at http://localhost:${port}/graphql`);
   });
 })();
