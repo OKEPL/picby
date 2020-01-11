@@ -7,7 +7,7 @@ interface SendEmailArgs {
 }
 
 // async..await is not allowed in global scope, must use a wrapper
-export async function sendAccountConfirmationEmail({email, url}: SendEmailArgs ) {
+export async function sendEmail({email, url}: SendEmailArgs ) {
   // Generate test SMTP service account from ethereal.email
   // Only needed if you don't have a real mail account for testing
   const testAccount = await nodemailer.createTestAccount();
