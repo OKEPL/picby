@@ -3,9 +3,9 @@ import connectRedis from 'connect-redis';
 import cors from 'cors';
 import express from "express";
 import session from "express-session";
-import { buildSchema } from "type-graphql";
 import { createConnection, getConnectionOptions } from "typeorm";
 import { redis } from "./redis";
+import { createSchema } from "./utils/createSchema";
 
 
 const COOKIE_MAX_AGE_LIMIT = 1000*60*60*24*7*36;
@@ -25,11 +25,7 @@ const DEFAULT_PORT = 4000;
   await createConnection({ ...options, name: "default" });
 
   const apolloServer = new ApolloServer({
-    schema: await buildSchema({
-      resolvers: [__dirname + '/modules/**/*.ts'],
-      validate: true,
-
-    }),
+    schema: await createSchema(),
     context: ({ req, res }) => ({ req, res })
   });
 
@@ -39,7 +35,7 @@ const DEFAULT_PORT = 4000;
     credentials: true,
     origin: '*'
   }))
-  
+
   app.use(
     session({
       store: new RedisStore({
