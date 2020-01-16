@@ -32,28 +32,16 @@ const registerMutation = `
 describe('Register', () => {
   it('create user', async () => {
     const user = {
-<<<<<<< HEAD
       email: internet.email(),
       password: internet.password(8)
-=======
-      email: faker.internet.email(),
-      password: faker.internet.password(8)
->>>>>>> master
     }
-   const response =  await gCall({
+    const response =  await gCall({
       source: registerMutation,
       variableValues: {
         data: user
       }
     })
 
-<<<<<<< HEAD
-=======
-    if (response.errors) {
-      console.log(response.errors[0].originalError);
-    }
-
->>>>>>> master
     expect(response).toMatchObject({
       data: {
         register: {
