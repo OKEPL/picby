@@ -1,10 +1,6 @@
 import { testConnection } from "../../../test-utils/testConnection"
 import { Connection } from "typeorm";
-<<<<<<< HEAD
 import {internet} from 'faker';
-=======
-import faker from 'faker';
->>>>>>> master
 import { gCall } from "../../../test-utils/gCall";
 import { User } from "../../../entity/User";
 import { redis } from "../../../redis";
