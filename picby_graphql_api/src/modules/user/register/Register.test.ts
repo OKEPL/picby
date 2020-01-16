@@ -1,6 +1,6 @@
 import { testConnection } from "../../../test-utils/testConnection"
 import { Connection } from "typeorm";
-import faker from 'faker';
+import { internet } from 'faker';
 import { gCall } from "../../../test-utils/gCall";
 import { User } from "../../../entity/User";
 import { redis } from "../../../redis";
@@ -32,8 +32,8 @@ const registerMutation = `
 describe('Register', () => {
   it('create user', async () => {
     const user = {
-      email: faker.internet.email(),
-      password: faker.internet.password(8)
+      email: internet.email(),
+      password: internet.password(8)
     }
    const response =  await gCall({
       source: registerMutation,
@@ -41,10 +41,6 @@ describe('Register', () => {
         data: user
       }
     })
-
-    if (response.errors) {
-      console.log(response.errors[0].originalError);
-    }
 
     expect(response).toMatchObject({
       data: {

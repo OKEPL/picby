@@ -1,6 +1,6 @@
 import { testConnection } from "../../../test-utils/testConnection"
 import { Connection } from "typeorm";
-import faker from 'faker';
+import {internet} from 'faker';
 import { gCall } from "../../../test-utils/gCall";
 import { User } from "../../../entity/User";
 import { redis } from "../../../redis";
@@ -29,33 +29,32 @@ query {
 }
 `
 
-describe('Me', () => {
-  it('get user', async () => {
+describe('Me Resolver', () => {
+  it('should retrieve current user ', async () => {
 
 
-    const user = await User.create({
-      email: faker.internet.email(),
-      password: faker.internet.password(8)
+    const {email, id} = await User.create({
+      email: internet.email(),
+      password: internet.password(8)
     }).save();
 
    const response =  await gCall({
       source: meQuery,
-      userId: user.id
+      userId: id
     })
 
 
-    console.log(response);
     expect(response).toMatchObject({
       data: {
         me: {
-          id: `${user.id}`,
-          email: user.email
+          id: `${id}`,
+          email: email
         }
       }
     })
   })
 
-  it("return null", async () => {
+  it("return null if there's no userId in context", async () => {
     const response = await gCall({
       source: meQuery
     })
