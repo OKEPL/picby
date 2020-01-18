@@ -49,7 +49,7 @@ const DEFAULT_PORT = 4000;
       cookie: {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        maxAge:  COOKIE_MAX_AGE_LIMIT//7 years
+        maxAge:  COOKIE_MAX_AGE_LIMIT
 
       }
     })
