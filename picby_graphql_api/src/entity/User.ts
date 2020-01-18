@@ -1,5 +1,6 @@
 import { Field, ID, ObjectType } from "type-graphql";
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Catalog } from "./Catalog";
 
 @ObjectType()
 @Entity()
@@ -18,4 +19,9 @@ export class User extends BaseEntity {
 
   @Column('bool', {default: false})
   isConfirmed: boolean;
+
+  @Field(() =>[Catalog])
+  @OneToMany(() => Catalog, catalog => catalog.user, {eager: true})
+  catalogs: Catalog[];
+
 }

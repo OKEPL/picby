@@ -8,7 +8,7 @@ import { redis } from "./redis";
 import { createSchema } from "./utils/createSchema";
 
 
-const COOKIE_MAX_AGE_LIMIT = 1000*60*60*24*7*36;
+const COOKIE_MAX_AGE_LIMIT = 1000*60*60*24*7*36; //7 years
 const AUTH_COOKIE_NAME = "qid";
 // TODO: we should find a way to store it secretly somewhere
 const AUTH_COOKIE_SECRET = "asdasda";
@@ -48,7 +48,7 @@ const DEFAULT_PORT = 4000;
       cookie: {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        maxAge:  COOKIE_MAX_AGE_LIMIT//7 years
+        maxAge:  COOKIE_MAX_AGE_LIMIT
 
       }
     })

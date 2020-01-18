@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcryptjs';
 import { Arg, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 import { User } from '../../entity/User';
-import { isAuth } from '../middleware/isAuth';
+import { withAuthenticatedUser } from '../middleware/withAuthenticatedUser';
 import { createAccountConfirmationUrl } from '../utils/createAccountConfirmationUrl';
 import { sendEmail } from '../utils/sendEmail';
 import { RegisterInput } from './register/RegisterInput';
@@ -9,7 +9,7 @@ import { RegisterInput } from './register/RegisterInput';
 @Resolver(User)
 export class RegisterResolver {
 
-  @UseMiddleware(isAuth)
+  @UseMiddleware(withAuthenticatedUser)
   @Query(() => String)
   hello() {
     return "hello!";

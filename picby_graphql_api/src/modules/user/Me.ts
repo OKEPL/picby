@@ -14,6 +14,6 @@ export class MeResolver {
       return undefined;
     }
 
-    return User.findOne(userId)
+    return User.findOne(userId, {relations: ["catalogs"]})
   }
 }
