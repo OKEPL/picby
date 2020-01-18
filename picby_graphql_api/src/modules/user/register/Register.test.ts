@@ -1,9 +1,9 @@
-import { testConnection } from "../../../test-utils/testConnection"
-import { Connection } from "typeorm";
 import { internet } from 'faker';
-import { gCall } from "../../../test-utils/gCall";
+import { Connection } from "typeorm";
 import { User } from "../../../entity/User";
 import { redis } from "../../../redis";
+import { gCall } from "../../../test-utils/gCall";
+import { testConnection } from "../../../test-utils/testConnection";
 
 let conn: Connection;
 beforeAll(async () => {
