@@ -4,7 +4,7 @@ import { CONFIRM_USER_PREFIX } from '../constants/redisPrefixes';
 import { ONE_DAY_EXPIRATION_TIME } from '../constants/timeDateConstants';
 
 
-export const createAccountConfirmationUrl = async (userId: number) => {
+export const createAccountConfirmationUrl = async (userId: string) => {
   const confirmationToken = v4();
   await redis.set(CONFIRM_USER_PREFIX + confirmationToken, userId, 'ex', ONE_DAY_EXPIRATION_TIME);
 
