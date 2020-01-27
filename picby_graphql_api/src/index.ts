@@ -9,7 +9,7 @@ import { redis } from "./redis";
 import { createSchema } from "./utils/createSchema";
 
 
-const COOKIE_MAX_AGE_LIMIT = 1000*60*60*24*7*36;
+const COOKIE_MAX_AGE_LIMIT = 1000*60*60*24*7*36; //7 years
 
 // TODO: we should find a way to store it secretly somewhere
 const AUTH_COOKIE_SECRET = "asdasda";
