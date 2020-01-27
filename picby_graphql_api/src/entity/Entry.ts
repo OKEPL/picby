@@ -7,7 +7,7 @@ import { Catalog } from "./Catalog";
 export class Entry extends BaseEntity {
   
   @Field(() => ID)
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn("uuid")
   id: number;
 
   @Field()

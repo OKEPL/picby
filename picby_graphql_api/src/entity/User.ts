@@ -7,8 +7,8 @@ import { Catalog } from "./Catalog";
 export class User extends BaseEntity {
   
   @Field(() => ID)
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Field()
   @Column("text", {unique: true})
