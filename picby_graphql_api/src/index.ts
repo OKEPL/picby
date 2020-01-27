@@ -4,12 +4,13 @@ import cors from 'cors';
 import express from "express";
 import session from "express-session";
 import { createConnection, getConnectionOptions } from "typeorm";
+import { AUTH_COOKIE_NAME } from "./modules/constants/cookies";
 import { redis } from "./redis";
 import { createSchema } from "./utils/createSchema";
 
 
 const COOKIE_MAX_AGE_LIMIT = 1000*60*60*24*7*36; //7 years
-const AUTH_COOKIE_NAME = "qid";
+
 // TODO: we should find a way to store it secretly somewhere
 const AUTH_COOKIE_SECRET = "asdasda";
 const DEFAULT_PORT = 4000;
