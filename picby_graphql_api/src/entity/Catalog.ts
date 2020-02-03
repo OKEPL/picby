@@ -15,7 +15,6 @@ export class Catalog extends BaseEntity {
   @Column("text", {unique: true})
   name: string;
 
-  //
   @OneToMany(() => Entry, entry => entry.catalog)
   entries: Entry[]
 
