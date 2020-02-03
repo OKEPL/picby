@@ -16,3 +16,11 @@ export class ReadCatalogsInput {
   @Field({nullable: true})
   take: number
 }
+
+
+@InputType()
+export class UpdateCatalogInput extends CreateCatalogInput {
+
+  @Field()
+  id: string
+}
