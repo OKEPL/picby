@@ -1,36 +1,38 @@
 import * as React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
-  Image,
-} from 'react-native';
+import {ScrollView, StyleSheet, Text, View, Image} from 'react-native';
 import {vw} from 'react-native-expo-viewport-units';
-import {globalStyles} from '../../common/styles/globalStyles';
 import picbyLogo from '../../common/images/picbyLogo.png';
 import FlatButton from '../../common/components/Button';
-import LinearGradient from 'react-native-linear-gradient';
 
 const Introduction12 = ({contentText, headerText}) => {
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>{headerText}</Text>
-        <Image style={styles.img} source={picbyLogo} />
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>{headerText}</Text>
+          <Image style={styles.img} source={picbyLogo} />
+        </View>
+        <View style={styles.content}>
+          <Text style={styles.contentText}>{contentText}</Text>
+        </View>
+        <View style={styles.buttonsWrapper}>
+          <View style={styles.singleButtonWrapper}>
+            <FlatButton
+              textValue={'Zarejestruj się'}
+              onPress={() => console.log('elo')}
+              colorVariantIndex={0}
+              textColor={{color: 'white'}}
+            />
+          </View>
+          <FlatButton
+            textValue={'Zaloguj się'}
+            onPress={() => console.log('elo')}
+            colorVariantIndex={0}
+            textColor={{color: 'white'}}
+          />
+        </View>
       </View>
-      <View style={styles.content}>
-        <Text style={styles.contentText}>{contentText}</Text>
-      </View>
-      <FlatButton
-        textValue={'Zarejestruj się'}
-        onPress={() => console.log('elo')}
-        buttonColor={{backgroundColor: 'blue'}}
-        textColor={{color: 'white'}}
-      />
-    </View>
+    </ScrollView>
   );
 };
 
@@ -71,6 +73,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: vw(5),
     lineHeight: vw(6.87),
+  },
+  singleButtonWrapper: {
+    marginBottom: vw(2.8),
+  },
+  buttonsWrapper: {
+    marginTop: vw(9.3),
   },
 });
 

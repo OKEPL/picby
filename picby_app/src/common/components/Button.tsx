@@ -1,40 +1,46 @@
 import React from 'react';
 import {StyleSheet, TouchableOpacity, Text, View} from 'react-native';
 import {vw} from 'react-native-expo-viewport-units';
+import LinearGradient from 'react-native-linear-gradient';
 
 export default function FlatButton({
   textValue,
   onPress,
-  buttonColor,
+  colorVariantIndex,
   textColor,
 }) {
+  const colorVariants = [
+    ['#3180AE', '#074782'],
+    ['red', 'blue'],
+  ];
   return (
     <TouchableOpacity onPress={onPress}>
-      <View style={[styles.button, buttonColor]}>
+      <LinearGradient
+        colors={colorVariants[colorVariantIndex]}
+        style={styles.linearGradient}>
         <Text style={[styles.buttonText, textColor]}>{textValue}</Text>
-      </View>
+      </LinearGradient>
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  button: {
-    borderRadius: 12,
-    paddingVertical: 14,
-    paddingHorizontal: 10,
-    backgroundColor: '#333',
-    alignSelf: 'center',
-    width: 200,
-    margin: 0,
-  },
-  red: {
-    backgroundColor: 'red',
+  linearGradient: {
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 2,
+    minWidth: vw(80),
   },
   buttonText: {
-    color: '#fff',
+    fontSize: vw(4.3),
+    lineHeight: 20,
+    letterSpacing: 0.7,
+    fontFamily: 'Gill Sans',
     textTransform: 'uppercase',
-    textAlign: 'center',
-    fontSize: 14,
     fontWeight: 'bold',
+    textAlign: 'center',
+    margin: 10,
+    color: '#ffffff',
+    backgroundColor: 'transparent',
   },
 });
