@@ -1,14 +1,17 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, Text, View} from 'react-native';
-import {vw} from 'react-native-expo-viewport-units';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  View,
+  Dimensions,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-export default function FlatButton({
-  textValue,
-  onPress,
-  colorVariantIndex,
-  textColor,
-}) {
+let {width: vw} = Dimensions.get('window');
+
+export default function FlatButton(props: any) {
+  const {textValue, onPress, colorVariantIndex, textColor} = props;
   const colorVariants = [
     ['#3180AE', '#074782'],
     ['red', 'blue'],
@@ -29,10 +32,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 8,
     borderRadius: 2,
-    minWidth: vw(80),
+    minWidth: vw * 0.8,
   },
   buttonText: {
-    fontSize: vw(4.3),
+    fontSize: vw * 0.043,
     lineHeight: 20,
     letterSpacing: 0.7,
     fontFamily: 'Gill Sans',

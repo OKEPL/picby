@@ -1,14 +1,27 @@
-import * as React from 'react';
-import {ScrollView, StyleSheet, Text, View, Image} from 'react-native';
-import {vw} from 'react-native-expo-viewport-units';
+import React from 'react';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native';
+// import {vw} from 'react-native-expo-viewport-units';
 import picbyLogo from '../../common/images/picbyLogo.png';
+import closedEye from './images/eyeClosed.png';
+import openEye from './images/eyeOpen.png';
 import FlatButton from '../../common/components/Button';
 
-const Introduction12 = ({contentText, headerText}) => {
+let {width: vw} = Dimensions.get('window');
+console.log(vw);
+const Introduction = (props: any) => {
+  const {contentText, headerText} = props;
   return (
     <ScrollView>
       <View style={styles.container}>
-        <View style={styles.header}>
+        <View>
           <Text style={styles.headerText}>{headerText}</Text>
           <Image style={styles.img} source={picbyLogo} />
         </View>
@@ -31,6 +44,17 @@ const Introduction12 = ({contentText, headerText}) => {
             textColor={{color: 'white'}}
           />
         </View>
+        <View style={styles.eyesWrapper}>
+          <TouchableOpacity>
+            <Image source={openEye} />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Image source={closedEye} />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Image source={openEye} />
+          </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );
@@ -45,24 +69,24 @@ const styles = StyleSheet.create({
     fontFamily: 'Open Sans',
     fontStyle: 'normal',
     fontWeight: 'bold',
-    fontSize: vw(5.6),
-    lineHeight: vw(7.8),
+    fontSize: (vw / 100) * 5.6,
+    lineHeight: (vw / 100) * 7.8,
     textAlign: 'center',
     color: '#074782',
-    marginBottom: vw(6.25),
-    marginTop: vw(14.6),
+    marginBottom: (vw / 100) * 6.25,
+    marginTop: (vw / 100) * 14.6,
   },
   img: {
-    minWidth: vw(65),
-    minHeight: vw(21),
-    marginBottom: vw(13),
+    minWidth: (vw / 100) * 65,
+    minHeight: (vw / 100) * 21,
+    marginBottom: (vw / 100) * 13,
   },
   text: {
-    marginTop: vw(10),
+    marginTop: (vw / 100) * 10,
   },
   content: {
-    maxWidth: vw(90),
-    minHeight: vw(33.1),
+    maxWidth: (vw / 100) * 90,
+    minHeight: (vw / 100) * 33.1,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -71,15 +95,16 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     color: 'rgba(0,0,0,0.9)',
     textAlign: 'center',
-    fontSize: vw(5),
-    lineHeight: vw(6.87),
+    fontSize: (vw / 100) * 5,
+    lineHeight: (vw / 100) * 6.87,
   },
   singleButtonWrapper: {
-    marginBottom: vw(2.8),
+    marginBottom: (vw / 100) * 2.8,
   },
   buttonsWrapper: {
-    marginTop: vw(9.3),
+    marginTop: (vw / 100) * 9.3,
   },
+  eyesWrapper: {},
 });
 
-export default Introduction12;
+export default Introduction;

@@ -7,27 +7,18 @@
  */
 
 import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import Introduction12 from './src/views/intruduction/introduction12';
+import IntroductionContextProvider from './src/views/intruduction/introductionContext';
+import IntroductionScene from './src/views/intruduction/introductionScene';
+import Introduction from './src/views/intruduction/introduction';
+import {Text, View} from 'react-native';
 const App = () => {
-  const contentText = `aplikacji budującej język ${'\n'} w umyśle dziecka,${'\n'} a także uczącącej komunikacji.`;
-  const contentText2 = `Dodawaj zdjęcia i nagrania głosowe,${'\n'} twórz opisy, przesyłaj pliki,${'\n'} komponuj albumy${'\n'} pełne wyjątkowych wspomnień!`;
-  const title = 'WITAJ W';
-  const title2 = 'POZNAJ';
   return (
-    <View>
-      <Introduction12 headerText={title} contentText={contentText} />
-    </View>
+    <IntroductionContextProvider>
+      <View>
+        <IntroductionScene />
+      </View>
+    </IntroductionContextProvider>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default App;
