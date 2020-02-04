@@ -9,13 +9,13 @@ import {
   Dimensions,
 } from 'react-native';
 // import {vw} from 'react-native-expo-viewport-units';
-import picbyLogo from '../../common/images/picbyLogo.png';
+// import picbyLogo from '../../common/images/picbyLogo.png';
+import picbyLogo from '../../common/images/PICBY.png';
 import closedEye from './images/eyeClosed.png';
 import openEye from './images/eyeOpen.png';
 import FlatButton from '../../common/components/Button';
 
 let {width: vw} = Dimensions.get('window');
-console.log(vw);
 const Introduction = (props: any) => {
   const {contentText, headerText} = props;
   return (
@@ -46,13 +46,13 @@ const Introduction = (props: any) => {
         </View>
         <View style={styles.eyesWrapper}>
           <TouchableOpacity>
-            <Image source={openEye} />
+            <Image style={styles.eyeIcon} source={openEye} />
           </TouchableOpacity>
           <TouchableOpacity>
-            <Image source={closedEye} />
+            <Image style={styles.eyeIcon} source={closedEye} />
           </TouchableOpacity>
           <TouchableOpacity>
-            <Image source={openEye} />
+            <Image style={styles.eyeIcon} source={openEye} />
           </TouchableOpacity>
         </View>
       </View>
@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
     minWidth: (vw / 100) * 65,
     minHeight: (vw / 100) * 21,
     marginBottom: (vw / 100) * 13,
+    resizeMode: 'contain',
   },
   text: {
     marginTop: (vw / 100) * 10,
@@ -104,7 +105,18 @@ const styles = StyleSheet.create({
   buttonsWrapper: {
     marginTop: (vw / 100) * 9.3,
   },
-  eyesWrapper: {},
+  eyesWrapper: {
+    marginTop: vw * 0.08,
+    minHeight: 40,
+    width: vw * 0.625,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  eyeIcon: {
+    minWidth: (vw / 100) * 9,
+    minHeight: (vw / 100) * 9,
+    resizeMode: 'contain',
+  },
 });
 
 export default Introduction;

@@ -2,7 +2,7 @@ import React from 'react';
 import {View} from 'react-native';
 import {useContext} from 'react';
 
-import Introduction from './introduction';
+import Introduction from './introductionSingleView';
 import {IntroductionContext} from './introductionContext';
 
 const IntruductionScene = (props: object) => {
@@ -12,7 +12,7 @@ const IntruductionScene = (props: object) => {
 
   return (
     <View>
-      <Introduction headerText={title} contentText={contentText} />
+      <Introduction headerText={title2} contentText={contentText2} />
     </View>
   );
 };

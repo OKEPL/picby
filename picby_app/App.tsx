@@ -9,7 +9,7 @@
 import React from 'react';
 import IntroductionContextProvider from './src/views/intruduction/introductionContext';
 import IntroductionScene from './src/views/intruduction/introductionScene';
-import Introduction from './src/views/intruduction/introduction';
+import Introduction from './src/views/intruduction/introductionSingleView';
 import {Text, View} from 'react-native';
 const App = () => {
   return (
