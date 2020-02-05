@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   },
   headerWrapper: {},
   headerText: {
-    fontFamily: 'Open Sans',
+    fontFamily: 'OpenSans-Bold',
     fontStyle: 'normal',
     fontWeight: 'bold',
     fontSize: (vw / 100) * 5.6,
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     marginTop: vw * 0.125,
   },
   contentText: {
-    fontFamily: 'Open Sans',
+    fontFamily: 'OpenSans-Regular',
     fontStyle: 'normal',
     color: 'rgba(0,0,0,0.9)',
     textAlign: 'center',

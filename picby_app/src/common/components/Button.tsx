@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     fontSize: vw * 0.043,
     lineHeight: 20,
     letterSpacing: 0.7,
-    fontFamily: 'Gill Sans',
+    fontFamily: 'OpenSans-Bold',
     textTransform: 'uppercase',
     fontWeight: 'bold',
     textAlign: 'center',

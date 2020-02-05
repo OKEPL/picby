@@ -37,6 +37,7 @@ const thirdView: React.FC = () => {
     </View>
   );
 };
+
 const TabNavigator = createBottomTabNavigator(
   {
     first: firstView,
