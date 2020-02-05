@@ -11,8 +11,7 @@ import {
 // import {vw} from 'react-native-expo-viewport-units';
 // import picbyLogo from '../../common/images/picbyLogo.png';
 import picbyLogo from '../../common/images/PICBY.png';
-import closedEye from './images/eyeClosed.png';
-import openEye from './images/eyeOpen.png';
+
 import FlatButton from '../../common/components/Button';
 
 let {width: vw} = Dimensions.get('window');
@@ -43,17 +42,6 @@ const Introduction = (props: any) => {
             colorVariantIndex={0}
             textColor={{color: 'white'}}
           />
-        </View>
-        <View style={styles.eyesWrapper}>
-          <TouchableOpacity>
-            <Image style={styles.eyeIcon} source={openEye} />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Image style={styles.eyeIcon} source={closedEye} />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Image style={styles.eyeIcon} source={openEye} />
-          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
@@ -104,18 +92,6 @@ const styles = StyleSheet.create({
   },
   buttonsWrapper: {
     marginTop: (vw / 100) * 9.3,
-  },
-  eyesWrapper: {
-    marginTop: vw * 0.08,
-    minHeight: 40,
-    width: vw * 0.625,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  eyeIcon: {
-    minWidth: (vw / 100) * 9,
-    minHeight: (vw / 100) * 9,
-    resizeMode: 'contain',
   },
 });
 
