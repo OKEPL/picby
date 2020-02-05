@@ -1,8 +1,6 @@
 import React, {useContext} from 'react';
 import {
-  ScrollView,
   StyleSheet,
-  Text,
   View,
   Image,
   TouchableOpacity,
@@ -15,7 +13,6 @@ import {IntroductionContext} from './introductionContext';
 let {width: vw} = Dimensions.get('window');
 
 const CustomBottomTab: React.FC = (props: any) => {
-  console.log(props.navigation.navigate);
   const {navigate} = props.navigation;
   const {activeScreenNumber, setActiveScreenNumber} = useContext(
     IntroductionContext,

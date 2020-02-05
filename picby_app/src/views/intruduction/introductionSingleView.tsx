@@ -5,43 +5,67 @@ import {
   Text,
   View,
   Image,
-  TouchableOpacity,
   Dimensions,
 } from 'react-native';
-// import {vw} from 'react-native-expo-viewport-units';
-// import picbyLogo from '../../common/images/picbyLogo.png';
-import picbyLogo from '../../common/images/PICBY.png';
 
+import picbyLogo from '../../common/images/PICBY.png';
+import eyePic from './images/bigEye.png';
 import FlatButton from '../../common/components/Button';
 
 let {width: vw} = Dimensions.get('window');
 const Introduction = (props: any) => {
-  const {contentText, headerText} = props;
+  const {contentText, headerText, activeScreenNumber} = props;
   return (
     <ScrollView>
       <View style={styles.container}>
-        <View>
-          <Text style={styles.headerText}>{headerText}</Text>
-          <Image style={styles.img} source={picbyLogo} />
+        <View
+          style={
+            activeScreenNumber == 3
+              ? styles.headerWrapperThirdScreen
+              : styles.headerWrapper
+          }>
+          <Text
+            style={
+              activeScreenNumber == 3
+                ? [styles.headerText, styles.headerTextThirdScreen]
+                : styles.headerText
+            }>
+            {headerText}
+          </Text>
+          <Image
+            style={
+              activeScreenNumber == 3
+                ? [styles.logo, styles.logoThirdScreen]
+                : styles.logo
+            }
+            source={picbyLogo}
+          />
         </View>
         <View style={styles.content}>
-          <Text style={styles.contentText}>{contentText}</Text>
+          {activeScreenNumber == 3 ? (
+            <View>
+              <Image style={styles.bigEye} source={eyePic} />
+            </View>
+          ) : (
+            <Text style={styles.contentText}>{contentText}</Text>
+          )}
         </View>
         <View style={styles.buttonsWrapper}>
+          <FlatButton
+            textValue={'Zarejestruj się'}
+            onPress={() => console.log('elo')}
+            colorVariantIndex={0}
+            textColor={{color: 'white'}}
+          />
+
           <View style={styles.singleButtonWrapper}>
             <FlatButton
-              textValue={'Zarejestruj się'}
+              textValue={'Zaloguj się'}
               onPress={() => console.log('elo')}
               colorVariantIndex={0}
               textColor={{color: 'white'}}
             />
           </View>
-          <FlatButton
-            textValue={'Zaloguj się'}
-            onPress={() => console.log('elo')}
-            colorVariantIndex={0}
-            textColor={{color: 'white'}}
-          />
         </View>
       </View>
     </ScrollView>
@@ -52,7 +76,14 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     textAlign: 'center',
+    marginTop: 0.134 * vw,
   },
+  headerWrapperThirdScreen: {
+    flexDirection: 'column-reverse',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerWrapper: {},
   headerText: {
     fontFamily: 'Open Sans',
     fontStyle: 'normal',
@@ -61,23 +92,27 @@ const styles = StyleSheet.create({
     lineHeight: (vw / 100) * 7.8,
     textAlign: 'center',
     color: '#074782',
-    marginBottom: (vw / 100) * 6.25,
-    marginTop: (vw / 100) * 14.6,
+    letterSpacing: 0.7,
   },
-  img: {
+  headerTextThirdScreen: {
+    marginTop: vw * 0.0262,
+  },
+  logo: {
     minWidth: (vw / 100) * 65,
     minHeight: (vw / 100) * 21,
-    marginBottom: (vw / 100) * 13,
     resizeMode: 'contain',
+    marginTop: vw * 0.0562,
   },
-  text: {
-    marginTop: (vw / 100) * 10,
+  logoThirdScreen: {
+    marginTop: 0.03 * vw,
   },
+  text: {},
   content: {
     maxWidth: (vw / 100) * 90,
     minHeight: (vw / 100) * 33.1,
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: vw * 0.125,
   },
   contentText: {
     fontFamily: 'Open Sans',
@@ -88,10 +123,15 @@ const styles = StyleSheet.create({
     lineHeight: (vw / 100) * 6.87,
   },
   singleButtonWrapper: {
-    marginBottom: (vw / 100) * 2.8,
+    marginTop: vw * 0.03,
   },
   buttonsWrapper: {
-    marginTop: (vw / 100) * 9.3,
+    marginTop: vw * 0.1,
+  },
+  bigEye: {
+    minWidth: vw * 0.5,
+    resizeMode: 'contain',
+    minHeight: vw * 0.25,
   },
 });
 

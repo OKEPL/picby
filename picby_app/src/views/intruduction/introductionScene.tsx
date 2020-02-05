@@ -24,10 +24,16 @@ const secondView: React.FC = () => {
   );
 };
 const thirdView: React.FC = () => {
-  const {contentText, title} = useContext(IntroductionContext);
+  const {contentText, title3, activeScreenNumber} = useContext(
+    IntroductionContext,
+  );
   return (
     <View>
-      <Introduction headerText={title} contentText={contentText} />
+      <Introduction
+        headerText={title3}
+        contentText={contentText}
+        activeScreenNumber={activeScreenNumber}
+      />
     </View>
   );
 };

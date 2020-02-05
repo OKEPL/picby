@@ -7,7 +7,6 @@ import {
   Dimensions,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-
 let {width: vw} = Dimensions.get('window');
 
 export default function FlatButton(props: any) {
@@ -19,6 +18,10 @@ export default function FlatButton(props: any) {
   return (
     <TouchableOpacity onPress={onPress}>
       <LinearGradient
+        useAngle={true}
+        angle={33}
+        start={{x: -0.13, y: 0}}
+        end={{x: 0.7, y: 0}}
         colors={colorVariants[colorVariantIndex]}
         style={styles.linearGradient}>
         <Text style={[styles.buttonText, textColor]}>{textValue}</Text>
@@ -33,6 +36,14 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 2,
     minWidth: vw * 0.8,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 2,
+      height: 0,
+    },
+    shadowOpacity: 0.12,
+    shadowRadius: 2,
+    elevation: 5,
   },
   buttonText: {
     fontSize: vw * 0.043,
