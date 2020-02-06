@@ -1,11 +1,11 @@
 import React from 'react';
 import IntroductionContextProvider from './src/views/intruduction/introductionContext';
-import IntroductionScene from './src/views/intruduction/introductionScene';
+import AppContainer from './src/navigation/rootNavFlow';
 
 const App = () => {
   return (
     <IntroductionContextProvider>
-      <IntroductionScene />
+      <AppContainer />
     </IntroductionContextProvider>
   );
 };

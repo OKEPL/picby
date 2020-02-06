@@ -7,12 +7,12 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
-
 import picbyLogo from '../../common/images/PICBY.png';
-import eyePic from './images/bigEye.png';
+import eyePic from '../../common/images/bigEye.png';
 import FlatButton from '../../common/components/Button';
 
-let {width: vw} = Dimensions.get('window');
+const {width: vw} = Dimensions.get('window');
+
 const Introduction = (props: any) => {
   const {contentText, headerText, activeScreenNumber} = props;
   return (
@@ -53,15 +53,22 @@ const Introduction = (props: any) => {
         <View style={styles.buttonsWrapper}>
           <FlatButton
             textValue={'Zarejestruj się'}
-            onPress={() => console.log('elo')}
+            onPress={() =>
+              props.navigation
+                .dangerouslyGetParent()
+                .navigate({routeName: 'Register'})
+            }
             colorVariantIndex={0}
             textColor={{color: 'white'}}
           />
-
           <View style={styles.singleButtonWrapper}>
             <FlatButton
               textValue={'Zaloguj się'}
-              onPress={() => console.log('elo')}
+              onPress={() =>
+                props.navigation
+                  .dangerouslyGetParent()
+                  .navigate({routeName: 'Login'})
+              }
               colorVariantIndex={0}
               textColor={{color: 'white'}}
             />
