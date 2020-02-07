@@ -26,7 +26,7 @@ const {width: vw} = Dimensions.get('window');
 
 const RegisterScreen: React.FC = (props: any) => {
   const {questionText1, actionText1} = useContext(AuthContext);
-
+  const {navigate} = props.navigation;
   const reviewSchema = yup.object({
     email: yup
       .string()
@@ -48,7 +48,7 @@ const RegisterScreen: React.FC = (props: any) => {
           <GotAccountQuestion
             questionText={questionText1}
             actionText={actionText1}
-            onPress={() => console.log('elo')}
+            onPress={() => navigate('Login')}
           />
         </View>
         <Image style={styles.logo} source={picbyLogo} />
@@ -147,7 +147,6 @@ const RegisterScreen: React.FC = (props: any) => {
                       icon={true}
                     />
                   </View>
-
                   <FlatButton
                     onPress={formikProps.handleSubmit}
                     colorVariantIndex={0}
