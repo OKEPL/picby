@@ -5,8 +5,10 @@ import {
   Text,
   View,
   Dimensions,
+  Image,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import googleIcon from '../../views/auth/icons/googleIcon.png';
 let {width: vw} = Dimensions.get('window');
 
 interface ButtonProps {
@@ -14,13 +16,20 @@ interface ButtonProps {
   colorVariantIndex: number;
   textColor: object;
   textValue: string;
+  icon?: boolean;
 }
 
 const FlatButton: React.FC<ButtonProps> = (props: any) => {
-  const {textValue, onPress, colorVariantIndex, textColor} = props;
+  const {
+    textValue,
+    onPress,
+    colorVariantIndex,
+    textColor,
+    icon = false,
+  } = props;
   const colorVariants = [
     ['#3180AE', '#074782'],
-    ['red', 'blue'],
+    ['rgba(255, 255, 255, 0.87)', 'rgba(255, 255, 255, 0.87)'],
   ];
   return (
     <TouchableOpacity onPress={onPress}>
@@ -31,6 +40,7 @@ const FlatButton: React.FC<ButtonProps> = (props: any) => {
         end={{x: 0.7, y: 0}}
         colors={colorVariants[colorVariantIndex]}
         style={styles.linearGradient}>
+        {icon ? <Image style={styles.icon} source={googleIcon} /> : null}
         <Text style={[styles.buttonText, textColor]}>{textValue}</Text>
       </LinearGradient>
     </TouchableOpacity>
@@ -39,18 +49,23 @@ const FlatButton: React.FC<ButtonProps> = (props: any) => {
 
 const styles = StyleSheet.create({
   linearGradient: {
-    paddingHorizontal: 15,
-    paddingVertical: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 14,
+
     borderRadius: 2,
+    minHeight: 0.125 * vw,
+    maxHeight: 0.125 * vw,
     minWidth: vw * 0.8,
+    maxWidth: vw * 0.8,
     shadowColor: '#000',
     shadowOffset: {
       width: 2,
-      height: 0,
+      height: 2,
     },
     shadowOpacity: 0.12,
     shadowRadius: 2,
-    elevation: 5,
   },
   buttonText: {
     fontSize: vw * 0.043,
@@ -60,9 +75,13 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     fontWeight: 'bold',
     textAlign: 'center',
-    margin: 10,
     color: '#ffffff',
     backgroundColor: 'transparent',
+  },
+  icon: {
+    width: 0.075 * vw,
+    height: 0.075 * vw,
+    marginRight: 0.0312 * vw,
   },
 });
 

@@ -12,8 +12,10 @@ import {
 import {AuthContext} from './authContext';
 import GotAccountQuestion from './components/GotAccountQuestion';
 import picbyLogo from '../../common/images/PICBY.png';
-import {TextInput} from 'react-native-gesture-handler';
 import emailLogo from './icons/envelope.png';
+import errorLogo from './icons/exclamationMark.png';
+import {TextInput} from 'react-native-gesture-handler';
+
 import keyLogo from './icons/key.png';
 import {Formik} from 'formik';
 import * as yup from 'yup';
@@ -72,11 +74,19 @@ const RegisterScreen: React.FC = (props: any) => {
                       onBlur={formikProps.handleBlur('email')}
                     />
                   </View>
-                  <Text style={styles.errorText}>
-                    {formikProps.touched.email && formikProps.errors.email
-                      ? 'Wprowadź poprawny adres e-mail.'
-                      : null}
-                  </Text>
+                  <View style={styles.errorTextWrapper}>
+                    {formikProps.touched.email && formikProps.errors.email ? (
+                      <Image
+                        style={styles.errorExlamationMark}
+                        source={errorLogo}
+                      />
+                    ) : null}
+                    <Text style={styles.errorText}>
+                      {formikProps.touched.email && formikProps.errors.email
+                        ? 'Wprowadź poprawny adres e-mail.'
+                        : null}
+                    </Text>
+                  </View>
                   <View style={styles.inputWrapper}>
                     <Image style={styles.keyLogo} source={keyLogo} />
                     <TextInput
@@ -89,11 +99,21 @@ const RegisterScreen: React.FC = (props: any) => {
                       onBlur={formikProps.handleBlur('password')}
                     />
                   </View>
-                  <Text style={styles.errorText}>
-                    {formikProps.touched.password && formikProps.errors.password
-                      ? 'Hasło jest wymagane'
-                      : null}
-                  </Text>
+                  <View style={styles.errorTextWrapper}>
+                    {formikProps.touched.password &&
+                    formikProps.errors.password ? (
+                      <Image
+                        style={styles.errorExlamationMark}
+                        source={errorLogo}
+                      />
+                    ) : null}
+                    <Text style={styles.errorText}>
+                      {formikProps.touched.password &&
+                      formikProps.errors.password
+                        ? 'Hasło jest wymagane'
+                        : null}
+                    </Text>
+                  </View>
                   <View style={styles.inputWrapper}>
                     <Image style={styles.keyLogo} source={keyLogo} />
                     <TextInput
@@ -105,10 +125,29 @@ const RegisterScreen: React.FC = (props: any) => {
                       value={formikProps.values.passwordRepeat}
                     />
                   </View>
-                  <Text style={styles.errorText}>
+                  <View style={styles.errorTextWrapper}>
                     {formikProps.touched.passwordRepeat &&
-                      formikProps.errors.passwordRepeat}
-                  </Text>
+                    formikProps.errors.passwordRepeat ? (
+                      <Image
+                        style={styles.errorExlamationMark}
+                        source={errorLogo}
+                      />
+                    ) : null}
+                    <Text style={styles.errorText}>
+                      {formikProps.touched.passwordRepeat &&
+                        formikProps.errors.passwordRepeat}
+                    </Text>
+                  </View>
+                  <View style={styles.googleButtonWrapper}>
+                    <FlatButton
+                      onPress={formikProps.handleSubmit}
+                      colorVariantIndex={1}
+                      textValue={'Zarejestruj się z google'}
+                      textColor={{color: '#3180AE'}}
+                      icon={true}
+                    />
+                  </View>
+
                   <FlatButton
                     onPress={formikProps.handleSubmit}
                     colorVariantIndex={0}
@@ -151,7 +190,6 @@ const styles = StyleSheet.create({
     color: 'rgba(7, 71, 130, 0.68)',
   },
   inputWrapper: {
-    marginBottom: vw * 0.1,
     height: 0.093 * vw,
     flexDirection: 'row',
     alignItems: 'center',
@@ -171,8 +209,28 @@ const styles = StyleSheet.create({
     width: 0.0687 * vw,
     height: 0.0375 * vw,
   },
+  errorTextWrapper: {
+    marginTop: 3,
+    flexDirection: 'row',
+    marginHorizontal: 5,
+    alignItems: 'center',
+    marginBottom: 10,
+    minHeight: 0.0625 * vw,
+    paddingHorizontal: 2,
+  },
+  errorExlamationMark: {
+    maxWidth: 0.0625 * vw,
+    maxHeight: 0.0625 * vw,
+    marginRight: 0.063 * vw,
+  },
   errorText: {
-    color: 'red',
+    color: '#CC1919',
+    letterSpacing: 0.7,
+    fontSize: 14,
+  },
+  googleButtonWrapper: {
+    marginTop: vw * 0.0625,
+    marginBottom: vw * 0.05,
   },
 });
 
