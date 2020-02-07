@@ -9,7 +9,14 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 let {width: vw} = Dimensions.get('window');
 
-export default function FlatButton(props: any) {
+interface ButtonProps {
+  onPress: () => void;
+  colorVariantIndex: number;
+  textColor: object;
+  textValue: string;
+}
+
+const FlatButton: React.FC<ButtonProps> = (props: any) => {
   const {textValue, onPress, colorVariantIndex, textColor} = props;
   const colorVariants = [
     ['#3180AE', '#074782'],
@@ -28,7 +35,7 @@ export default function FlatButton(props: any) {
       </LinearGradient>
     </TouchableOpacity>
   );
-}
+};
 
 const styles = StyleSheet.create({
   linearGradient: {
@@ -58,3 +65,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
 });
+
+export default FlatButton;
