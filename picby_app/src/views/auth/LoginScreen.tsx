@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
+
 import {AuthContext} from './authContext';
 import GotAccountQuestion from './components/GotAccountQuestion';
 import picbyLogo from '../../common/images/PICBY.png';
@@ -20,12 +21,11 @@ import keyLogo from './icons/key.png';
 import {Formik} from 'formik';
 import * as yup from 'yup';
 import FlatButton from '../../common/components/Button';
-import {NavigationActions} from 'react-navigation';
 
 const {width: vw} = Dimensions.get('window');
 
 const LoginScreen: React.FC = (props: any) => {
-  const {questionText2, actionText2} = useContext(AuthContext);
+  const {loginHeaderTextTwo, loginHeaderTextOne} = useContext(AuthContext);
   const {navigate} = props.navigation;
   const [passwordError, setPasswordError] = useState(false);
   const [serverError, setServerError] = useState(true);
@@ -61,8 +61,8 @@ const LoginScreen: React.FC = (props: any) => {
       <View style={styles.screenWrapper}>
         <View style={styles.gotAccountQuestion}>
           <GotAccountQuestion
-            questionText={questionText2}
-            actionText={actionText2}
+            questionText={loginHeaderTextTwo}
+            actionText={loginHeaderTextOne}
             onPress={() => navigate('Register')}
           />
         </View>
@@ -80,7 +80,7 @@ const LoginScreen: React.FC = (props: any) => {
                   <View style={styles.inputWrapper}>
                     <Image style={styles.emailLogo} source={emailLogo} />
                     <TextInput
-                      keyboardType={'email-address'}
+                      keyboardType="email-address"
                       style={styles.input}
                       placeholder="E-mail"
                       placeholderTextColor="rgba(7, 71, 130, 0.68)"
@@ -90,16 +90,16 @@ const LoginScreen: React.FC = (props: any) => {
                     />
                   </View>
                   <View style={styles.errorTextWrapper}>
-                    {formikProps.touched.email && formikProps.errors.email ? (
+                    {formikProps.touched.email && formikProps.errors.email && (
                       <Image
                         style={styles.errorExlamationMark}
                         source={errorLogo}
                       />
-                    ) : null}
+                    )}
                     <Text style={styles.errorText}>
-                      {formikProps.touched.email && formikProps.errors.email
-                        ? 'Wprowadź poprawny adres e-mail.'
-                        : null}
+                      {formikProps.touched.email &&
+                        formikProps.errors.email &&
+                        'Wprowadź poprawny adres e-mail.'}
                     </Text>
                   </View>
                   <View style={styles.inputWrapper}>
@@ -112,27 +112,25 @@ const LoginScreen: React.FC = (props: any) => {
                       onChangeText={formikProps.handleChange('password')}
                       value={formikProps.values.password}
                       onBlur={formikProps.handleBlur('password')}
-                      onFocus={() =>
-                        passwordError ? setPasswordError(false) : null
-                      }
+                      onFocus={() => passwordError && setPasswordError(false)}
                     />
                   </View>
                   <View style={styles.errorTextWrapper}>
-                    {passwordError ? (
+                    {passwordError && (
                       <Image
                         style={styles.errorExlamationMark}
                         source={errorLogo}
                       />
-                    ) : null}
+                    )}
                     <Text style={styles.errorText}>
-                      {passwordError ? 'Hasło jest nieprawidłowe' : null}
+                      {passwordError && 'Hasło jest nieprawidłowe'}
                     </Text>
                   </View>
                   <View style={styles.googleButtonWrapper}>
                     <FlatButton
                       onPress={formikProps.handleSubmit}
                       colorVariantIndex={1}
-                      textValue={'Zaloguj się z google'}
+                      textValue="Zaloguj się z google"
                       textColor={{color: '#3180AE'}}
                       icon={true}
                     />
@@ -140,7 +138,7 @@ const LoginScreen: React.FC = (props: any) => {
                   <FlatButton
                     onPress={formikProps.handleSubmit}
                     colorVariantIndex={0}
-                    textValue={'Zaloguj się'}
+                    textValue="Zaloguj się"
                     textColor={{color: 'white'}}
                   />
                 </View>
@@ -167,11 +165,11 @@ const styles = StyleSheet.create({
     marginTop: 0.05 * vw,
   },
   logo: {
-    minWidth: (vw / 100) * 65,
-    minHeight: (vw / 100) * 21,
+    minWidth: 0.65 * vw,
+    minHeight: 0.21 * vw,
     resizeMode: 'contain',
-    marginTop: vw * 0.2187,
-    marginBottom: vw * 0.2187,
+    marginTop: 0.2187 * vw,
+    marginBottom: 0.2187 * vw,
   },
   formWrapper: {},
   input: {

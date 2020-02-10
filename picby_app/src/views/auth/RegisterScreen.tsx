@@ -24,11 +24,17 @@ import FlatButton from '../../common/components/Button';
 const {width: vw} = Dimensions.get('window');
 
 const RegisterScreen: React.FC = (props: any) => {
-  const {questionText1, actionText1} = useContext(AuthContext);
+  const {registerHeaderTextTwo, registerHeaderTextOne} = useContext(
+    AuthContext,
+  );
   const {navigate} = props.navigation;
   const [emailAlreadyTaken, setEmailAlreadyTaken] = useState(false);
   const [serverResponseStatus, setServerResponseStatus] = useState(false);
+
   const messageEmailAlreadyTaken = 'Konto o podanym e-mail już istnieje.';
+  const messageBadEmail = 'Wprowadź poprawny adres e-mail.';
+  const messagePasswordError = 'Hasło musi zawierać min. 8 znaków';
+  const messagePasswordNotSimilar = 'Podane hasła nie są identyczne.';
 
   const reviewSchema = yup.object({
     email: yup
@@ -41,7 +47,7 @@ const RegisterScreen: React.FC = (props: any) => {
       .min(8),
     passwordRepeat: yup
       .string()
-      .oneOf([yup.ref('password'), null], 'Podane hasła nie są identyczne.'),
+      .oneOf([yup.ref('password'), null], messagePasswordNotSimilar),
   });
 
   const handleSendData = () => {
@@ -65,8 +71,8 @@ const RegisterScreen: React.FC = (props: any) => {
       <View style={styles.screenWrapper}>
         <View style={styles.gotAccountQuestion}>
           <GotAccountQuestion
-            questionText={questionText1}
-            actionText={actionText1}
+            questionText={registerHeaderTextTwo}
+            actionText={registerHeaderTextOne}
             onPress={() => navigate('Login')}
           />
         </View>
@@ -106,10 +112,10 @@ const RegisterScreen: React.FC = (props: any) => {
                       />
                     ) : null}
                     <Text style={styles.errorText}>
-                      {formikProps.touched.email && formikProps.errors.email
-                        ? 'Wprowadź poprawny adres e-mail.'
-                        : null}
-                      {emailAlreadyTaken ? messageEmailAlreadyTaken : null}
+                      {formikProps.touched.email &&
+                        formikProps.errors.email &&
+                        messageBadEmail}
+                      {emailAlreadyTaken && messageEmailAlreadyTaken}
                     </Text>
                   </View>
                   <View style={styles.inputWrapper}>
@@ -134,9 +140,8 @@ const RegisterScreen: React.FC = (props: any) => {
                     ) : null}
                     <Text style={styles.errorText}>
                       {formikProps.touched.password &&
-                      formikProps.errors.password
-                        ? 'Hasło musi zawierać min. 8 znaków'
-                        : null}
+                        formikProps.errors.password &&
+                        messagePasswordError}
                     </Text>
                   </View>
                   <View style={styles.inputWrapper}>
@@ -167,7 +172,7 @@ const RegisterScreen: React.FC = (props: any) => {
                     <FlatButton
                       onPress={formikProps.handleSubmit}
                       colorVariantIndex={1}
-                      textValue={'Zarejestruj się z google'}
+                      textValue="Zarejestruj się z google"
                       textColor={{color: '#3180AE'}}
                       icon={true}
                     />
@@ -175,7 +180,7 @@ const RegisterScreen: React.FC = (props: any) => {
                   <FlatButton
                     onPress={formikProps.handleSubmit}
                     colorVariantIndex={0}
-                    textValue={'Zarejestruj się'}
+                    textValue="Zarejestruj się"
                     textColor={{color: 'white'}}
                   />
                 </View>
@@ -197,11 +202,11 @@ const styles = StyleSheet.create({
     marginTop: 0.05 * vw,
   },
   logo: {
-    minWidth: (vw / 100) * 65,
-    minHeight: (vw / 100) * 21,
+    minWidth: 0.65 * vw,
+    minHeight: 0.21 * vw,
     resizeMode: 'contain',
-    marginTop: vw * 0.112,
-    marginBottom: vw * 0.112,
+    marginTop: 0.112 * vw,
+    marginBottom: 0.112 * vw,
   },
   formWrapper: {},
   input: {

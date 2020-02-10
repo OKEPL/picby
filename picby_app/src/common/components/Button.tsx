@@ -3,12 +3,12 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text,
-  View,
   Dimensions,
   Image,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import googleIcon from '../../views/auth/icons/googleIcon.png';
+
 let {width: vw} = Dimensions.get('window');
 
 interface ButtonProps {
@@ -19,7 +19,7 @@ interface ButtonProps {
   icon?: boolean;
 }
 
-const FlatButton: React.FC<ButtonProps> = (props: any) => {
+const FlatButton: React.FC<ButtonProps> = props => {
   const {
     textValue,
     onPress,
@@ -27,6 +27,7 @@ const FlatButton: React.FC<ButtonProps> = (props: any) => {
     textColor,
     icon = false,
   } = props;
+
   const colorVariants = [
     ['#3180AE', '#074782'],
     ['rgba(255, 255, 255, 0.87)', 'rgba(255, 255, 255, 0.87)'],
@@ -41,7 +42,7 @@ const FlatButton: React.FC<ButtonProps> = (props: any) => {
         end={{x: 0.7, y: 0}}
         colors={colorVariants[colorVariantIndex]}
         style={styles.linearGradient}>
-        {icon ? <Image style={styles.icon} source={googleIcon} /> : null}
+        {icon && <Image style={styles.icon} source={googleIcon} />}
         <Text style={[styles.buttonText, textColor]}>{textValue}</Text>
       </LinearGradient>
     </TouchableOpacity>
@@ -58,8 +59,8 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     minHeight: 0.125 * vw,
     maxHeight: 0.125 * vw,
-    minWidth: vw * 0.8,
-    maxWidth: vw * 0.8,
+    minWidth: 0.8 * vw,
+    maxWidth: 0.8 * vw,
     shadowColor: '#000',
     shadowOffset: {
       width: 2,
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
   },
   buttonText: {
-    fontSize: vw * 0.043,
+    fontSize: 0.043 * vw,
     lineHeight: 20,
     letterSpacing: 0.7,
     fontFamily: 'OpenSans-Bold',

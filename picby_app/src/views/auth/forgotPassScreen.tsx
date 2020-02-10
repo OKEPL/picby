@@ -9,6 +9,7 @@ import {
   TextInput,
   Animated,
 } from 'react-native';
+
 import eyePic from '../../common/images/bigEye.png';
 import FlatButton from '../../common/components/Button';
 import {Formik} from 'formik';
@@ -34,6 +35,8 @@ const ForgotPasswordScreen = (props: any) => {
 
   const messageBadMail = 'Wprowadź poprawny adres e-mail.';
   const messageEmailNotFound = 'Podany adres e-mail nie istnieje w bazie';
+  const popUpText = `Przypomnienie zostało wysłane.${'\n'} Sprawdź skrzynkę odbiorczą.`;
+  const contentText = `Wprowadź swój adres e-mail ${'\n'} żeby zresetować hasło.`;
 
   const handleSendEmailRequest = () => {
     let promise = new Promise((res, rej) =>
@@ -65,21 +68,17 @@ const ForgotPasswordScreen = (props: any) => {
       <View style={styles.container}>
         <Animated.View
           style={[styles.popUp, {transform: [{translateX: fadeAnim}]}]}>
-          <Text style={styles.popUpText}>
-            {`Przypomnienie zostało wysłane.${'\n'} Sprawdź skrzynkę odbiorczą.`}
-          </Text>
+          <Text style={styles.popUpText}>{popUpText}</Text>
         </Animated.View>
         <View style={styles.content}>
           <Image style={styles.bigEye} source={eyePic} />
           <Text style={styles.headerText}>ZAPOMNIAŁEŚ HASŁA?</Text>
-          <Text style={styles.contentText}>
-            {`Wprowadź swój adres e-mail ${'\n'} żeby zresetować hasło.`}
-          </Text>
+          <Text style={styles.contentText}>{contentText}</Text>
         </View>
         <View>
           <Formik
             validationSchema={reviewSchema}
-            initialValues={{email: '', password: ''}}
+            initialValues={{email: ''}}
             onSubmit={(values: any, actions: any) => {
               handleSendEmailRequest();
             }}>
@@ -89,7 +88,7 @@ const ForgotPasswordScreen = (props: any) => {
                   <View style={styles.inputWrapper}>
                     <Image style={styles.emailLogo} source={emailLogo} />
                     <TextInput
-                      keyboardType={'email-address'}
+                      keyboardType="email-address"
                       style={styles.input}
                       placeholder="E-mail"
                       placeholderTextColor="rgba(7, 71, 130, 0.68)"
@@ -110,22 +109,22 @@ const ForgotPasswordScreen = (props: any) => {
                       />
                     ) : null}
                     <Text style={styles.errorText}>
-                      {formikProps.touched.email && formikProps.errors.email
-                        ? messageBadMail
-                        : null}
-                      {emailNotFoundError ? messageEmailNotFound : null}
+                      {formikProps.touched.email &&
+                        formikProps.errors.email &&
+                        messageBadMail}
+                      {emailNotFoundError && messageEmailNotFound}
                     </Text>
                   </View>
                   <View style={styles.buttonsWrapper}>
                     <FlatButton
-                      textValue={'Wyślij'}
+                      textValue="Wyślij"
                       onPress={formikProps.handleSubmit}
                       colorVariantIndex={0}
                       textColor={{color: 'white'}}
                     />
                     <View style={styles.singleButtonWrapper}>
                       <FlatButton
-                        textValue={'Wróć'}
+                        textValue="Wróć"
                         onPress={() => navigate('Login')}
                         colorVariantIndex={2}
                         textColor={{color: '#3180AE'}}
@@ -145,7 +144,7 @@ const ForgotPasswordScreen = (props: any) => {
 const styles = StyleSheet.create({
   wrapper: {
     backgroundColor: '#FBB114',
-    minHeight: 100 * vh,
+    minHeight: vh * 1,
     position: 'relative',
     zIndex: 2,
   },
@@ -162,27 +161,27 @@ const styles = StyleSheet.create({
     fontFamily: 'OpenSans-Bold',
     fontStyle: 'normal',
     fontWeight: 'bold',
-    fontSize: (vw / 100) * 5.6,
-    lineHeight: (vw / 100) * 7.8,
+    fontSize: 0.056 * vw,
+    lineHeight: 0.078 * vw,
     textAlign: 'center',
     color: '#074782',
     letterSpacing: 0.7,
-    marginTop: vw * 0.187,
+    marginTop: 0.187 * vw,
   },
   content: {
-    maxWidth: (vw / 100) * 90,
-    minHeight: (vw / 100) * 33.1,
+    maxWidth: 0.9 * vw,
+    minHeight: 0.331 * vw,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: vw * 0.187,
+    marginTop: 0.187 * vw,
   },
   contentText: {
     fontFamily: 'OpenSans-Regular',
     fontStyle: 'normal',
     color: 'rgba(0,0,0,0.9)',
     textAlign: 'center',
-    fontSize: (vw / 100) * 5,
-    lineHeight: (vw / 100) * 6.87,
+    fontSize: 0.05 * vw,
+    lineHeight: 0.0687 * vw,
     marginTop: vw * 0.05,
   },
   singleButtonWrapper: {
@@ -205,8 +204,8 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     textAlign: 'center',
     paddingHorizontal: 5,
-    width: vw * 0.8,
-    marginTop: vw * 0.13,
+    width: 0.8 * vw,
+    marginTop: 0.13 * vw,
   },
   emailLogo: {
     width: 0.0625 * vw,

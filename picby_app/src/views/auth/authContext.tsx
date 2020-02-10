@@ -1,31 +1,31 @@
 import React, {useState} from 'react';
 
 export interface AuthProps {
-  questionText1: string;
-  questionText2: string;
-  actionText1: string;
-  actionText2: string;
+  registerHeaderTextTwo: string;
+  loginHeaderTextTwo: string;
+  registerHeaderTextOne: string;
+  loginHeaderTextOne: string;
 }
-const questionText1 = 'Masz już konto? Doskonale!';
-const questionText2 = 'Nie masz jeszcze konta?';
-const actionText1 = 'Zaloguj się';
-const actionText2 = 'Zarejestruj się';
+const registerHeaderTextTwo = 'Masz już konto? Doskonale!';
+const loginHeaderTextTwo = 'Nie masz jeszcze konta?';
+const registerHeaderTextOne = 'Zaloguj się';
+const loginHeaderTextOne = 'Zarejestruj się';
 
 export const AuthContext = React.createContext<AuthProps>({
-  questionText1,
-  questionText2,
-  actionText1,
-  actionText2,
+  registerHeaderTextTwo,
+  loginHeaderTextTwo,
+  registerHeaderTextOne,
+  loginHeaderTextOne,
 });
 
 const AuthContextProvider: React.FC = ({children}) => {
   return (
     <AuthContext.Provider
       value={{
-        questionText1,
-        questionText2,
-        actionText1,
-        actionText2,
+        registerHeaderTextTwo,
+        loginHeaderTextTwo,
+        registerHeaderTextOne,
+        loginHeaderTextOne,
       }}>
       {children}
     </AuthContext.Provider>

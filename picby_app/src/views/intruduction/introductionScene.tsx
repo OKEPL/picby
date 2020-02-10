@@ -7,31 +7,42 @@ import {IntroductionContext} from './introductionContext';
 import CustomBottomTab from './customBottomTab';
 
 const firstView: React.FC = props => {
-  const {contentText, title} = useContext(IntroductionContext);
-  return (
-    <View>
-      <Introduction {...props} headerText={title} contentText={contentText} />
-    </View>
-  );
-};
-const secondView: React.FC = props => {
-  const {contentText2, title2} = useContext(IntroductionContext);
-  return (
-    <View>
-      <Introduction {...props} headerText={title2} contentText={contentText2} />
-    </View>
-  );
-};
-const thirdView: React.FC = props => {
-  const {contentText, title3, activeScreenNumber} = useContext(
+  const {firstScreenContentText, firstScreenTitle} = useContext(
     IntroductionContext,
   );
   return (
     <View>
       <Introduction
         {...props}
-        headerText={title3}
-        contentText={contentText}
+        headerText={firstScreenTitle}
+        contentText={firstScreenContentText}
+      />
+    </View>
+  );
+};
+const secondView: React.FC = props => {
+  const {secondScreenContentText, secondScreenTitle} = useContext(
+    IntroductionContext,
+  );
+  return (
+    <View>
+      <Introduction
+        {...props}
+        headerText={secondScreenTitle}
+        contentText={secondScreenContentText}
+      />
+    </View>
+  );
+};
+const thirdView: React.FC = props => {
+  const {thirdScreenTitle, activeScreenNumber} = useContext(
+    IntroductionContext,
+  );
+  return (
+    <View>
+      <Introduction
+        {...props}
+        headerText={thirdScreenTitle}
         activeScreenNumber={activeScreenNumber}
       />
     </View>

@@ -52,7 +52,7 @@ const Introduction = (props: any) => {
         </View>
         <View style={styles.buttonsWrapper}>
           <FlatButton
-            textValue={'Zarejestruj się'}
+            textValue="Zarejestruj się"
             onPress={() =>
               props.navigation
                 .dangerouslyGetParent()
@@ -95,50 +95,50 @@ const styles = StyleSheet.create({
     fontFamily: 'OpenSans-Bold',
     fontStyle: 'normal',
     fontWeight: 'bold',
-    fontSize: (vw / 100) * 5.6,
-    lineHeight: (vw / 100) * 7.8,
+    fontSize: 0.056 * vw,
+    lineHeight: 0.078 * vw,
     textAlign: 'center',
     color: '#074782',
     letterSpacing: 0.7,
   },
   headerTextThirdScreen: {
-    marginTop: vw * 0.0262,
+    marginTop: 0.0262 * vw,
   },
   logo: {
-    minWidth: (vw / 100) * 65,
-    minHeight: (vw / 100) * 21,
+    minWidth: 0.65 * vw,
+    minHeight: 0.21 * vw,
     resizeMode: 'contain',
-    marginTop: vw * 0.0562,
+    marginTop: 0.0562 * vw,
   },
   logoThirdScreen: {
     marginTop: 0.03 * vw,
   },
   text: {},
   content: {
-    maxWidth: (vw / 100) * 90,
-    minHeight: (vw / 100) * 33.1,
+    maxWidth: 0.9 * vw,
+    minHeight: 0.331 * vw,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: vw * 0.125,
+    marginTop: 0.125 * vw,
   },
   contentText: {
     fontFamily: 'OpenSans-Regular',
     fontStyle: 'normal',
     color: 'rgba(0,0,0,0.9)',
     textAlign: 'center',
-    fontSize: (vw / 100) * 5,
-    lineHeight: (vw / 100) * 6.87,
+    fontSize: 0.05 * vw,
+    lineHeight: 0.0687 * vw,
   },
   singleButtonWrapper: {
-    marginTop: vw * 0.03,
+    marginTop: 0.03 * vw,
   },
   buttonsWrapper: {
-    marginTop: vw * 0.1,
+    marginTop: 0.1 * vw,
   },
   bigEye: {
-    minWidth: vw * 0.5,
+    minWidth: 0.5 * vw,
     resizeMode: 'contain',
-    minHeight: vw * 0.25,
+    minHeight: 0.25 * vw,
   },
 });
 
