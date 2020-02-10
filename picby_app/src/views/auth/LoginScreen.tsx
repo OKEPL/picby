@@ -20,6 +20,7 @@ import keyLogo from './icons/key.png';
 import {Formik} from 'formik';
 import * as yup from 'yup';
 import FlatButton from '../../common/components/Button';
+import {NavigationActions} from 'react-navigation';
 
 const {width: vw} = Dimensions.get('window');
 
@@ -147,9 +148,11 @@ const LoginScreen: React.FC = (props: any) => {
             }}
           </Formik>
         </View>
-        <TouchableOpacity>
-          <Text style={styles.forgotPassword}>Zapomniałeś hasła?</Text>
-        </TouchableOpacity>
+        <View>
+          <TouchableOpacity onPress={() => navigate('ForgotPass')}>
+            <Text style={styles.forgotPassword}>Zapomniałeś hasła?</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </TouchableWithoutFeedback>
   );

@@ -30,6 +30,7 @@ const FlatButton: React.FC<ButtonProps> = (props: any) => {
   const colorVariants = [
     ['#3180AE', '#074782'],
     ['rgba(255, 255, 255, 0.87)', 'rgba(255, 255, 255, 0.87)'],
+    ['#FBB114', '#FBB114'],
   ];
   return (
     <TouchableOpacity onPress={onPress}>

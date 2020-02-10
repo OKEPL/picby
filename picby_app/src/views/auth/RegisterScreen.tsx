@@ -19,7 +19,6 @@ import {TextInput} from 'react-native-gesture-handler';
 import keyLogo from './icons/key.png';
 import {Formik} from 'formik';
 import * as yup from 'yup';
-import uuid from 'uuid';
 import FlatButton from '../../common/components/Button';
 
 const {width: vw} = Dimensions.get('window');
