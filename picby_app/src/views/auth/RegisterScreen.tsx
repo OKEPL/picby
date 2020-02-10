@@ -26,16 +26,36 @@ const {width: vw} = Dimensions.get('window');
 const RegisterScreen: React.FC = (props: any) => {
   const {questionText1, actionText1} = useContext(AuthContext);
   const {navigate} = props.navigation;
+  const [emailAlreadyTaken, setEmailAlreadyTaken] = useState(false);
+  const [serverResponseStatus, setServerResponseStatus] = useState(false);
+  const messageEmailAlreadyTaken = 'Konto o podanym e-mail już istnieje.';
+
   const reviewSchema = yup.object({
     email: yup
       .string()
       .required()
       .email(),
-    password: yup.string().required(),
+    password: yup
+      .string()
+      .required()
+      .min(8),
     passwordRepeat: yup
       .string()
       .oneOf([yup.ref('password'), null], 'Podane hasła nie są identyczne.'),
   });
+
+  const handleSendData = () => {
+    let promise = new Promise((res, rej) =>
+      serverResponseStatus ? res(true) : rej(true),
+    );
+    promise
+      .then(() => {
+        //dane ok// zmiana isLoggedIn -> //
+      })
+      .catch(() => {
+        setEmailAlreadyTaken(true);
+      });
+  };
 
   return (
     <TouchableWithoutFeedback
@@ -57,6 +77,7 @@ const RegisterScreen: React.FC = (props: any) => {
             initialValues={{email: '', password: '', passwordRepeat: ''}}
             onSubmit={(values, actions) => {
               console.log(values);
+              handleSendData();
             }}>
             {formikProps => {
               return (
@@ -64,17 +85,21 @@ const RegisterScreen: React.FC = (props: any) => {
                   <View style={styles.inputWrapper}>
                     <Image style={styles.emailLogo} source={emailLogo} />
                     <TextInput
-                      keyboardType={'email-address'}
+                      keyboardType="email-address"
                       style={styles.input}
                       placeholder="E-mail"
                       placeholderTextColor="rgba(7, 71, 130, 0.68)"
                       onChangeText={formikProps.handleChange('email')}
                       value={formikProps.values.email}
                       onBlur={formikProps.handleBlur('email')}
+                      onFocus={() =>
+                        emailAlreadyTaken ? setEmailAlreadyTaken(false) : null
+                      }
                     />
                   </View>
                   <View style={styles.errorTextWrapper}>
-                    {formikProps.touched.email && formikProps.errors.email ? (
+                    {(formikProps.touched.email && formikProps.errors.email) ||
+                    emailAlreadyTaken ? (
                       <Image
                         style={styles.errorExlamationMark}
                         source={errorLogo}
@@ -84,6 +109,7 @@ const RegisterScreen: React.FC = (props: any) => {
                       {formikProps.touched.email && formikProps.errors.email
                         ? 'Wprowadź poprawny adres e-mail.'
                         : null}
+                      {emailAlreadyTaken ? messageEmailAlreadyTaken : null}
                     </Text>
                   </View>
                   <View style={styles.inputWrapper}>
@@ -109,7 +135,7 @@ const RegisterScreen: React.FC = (props: any) => {
                     <Text style={styles.errorText}>
                       {formikProps.touched.password &&
                       formikProps.errors.password
-                        ? 'Hasło jest wymagane'
+                        ? 'Hasło musi zawierać min. 8 znaków'
                         : null}
                     </Text>
                   </View>
