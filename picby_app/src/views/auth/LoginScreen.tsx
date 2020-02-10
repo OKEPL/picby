@@ -14,12 +14,11 @@ import GotAccountQuestion from './components/GotAccountQuestion';
 import picbyLogo from '../../common/images/PICBY.png';
 import emailLogo from './icons/envelope.png';
 import errorLogo from './icons/exclamationMark.png';
-import {TextInput} from 'react-native-gesture-handler';
+import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
 
 import keyLogo from './icons/key.png';
 import {Formik} from 'formik';
 import * as yup from 'yup';
-import uuid from 'uuid';
 import FlatButton from '../../common/components/Button';
 
 const {width: vw} = Dimensions.get('window');
@@ -28,6 +27,7 @@ const LoginScreen: React.FC = (props: any) => {
   const {questionText2, actionText2} = useContext(AuthContext);
   const {navigate} = props.navigation;
   const [passwordError, setpasswordError] = useState(false);
+  const [serverError, setServerError] = useState(true);
 
   const reviewSchema = yup.object({
     email: yup
@@ -38,15 +38,18 @@ const LoginScreen: React.FC = (props: any) => {
   });
 
   const handleThrowPasswordError = () => {
-    return new Promise((resolve, reject) => {
-      //await for server response and set passwordError to true
+    let promise = new Promise((resolve, reject) => {
+      //await for server response then set passwordError to true
       setTimeout(() => {
-        if (!passwordError) {
+        if (serverError) {
           return resolve(true);
         }
         reject(true);
       }, 1000);
     });
+    return promise
+      .then(() => setpasswordError(true))
+      .catch(() => console.log('Logowanie pomyslne'));
   };
 
   return (
@@ -68,9 +71,7 @@ const LoginScreen: React.FC = (props: any) => {
             validationSchema={reviewSchema}
             initialValues={{email: '', password: ''}}
             onSubmit={(values: any, actions: any) => {
-              handleThrowPasswordError()
-                .then(() => setpasswordError(true))
-                .catch(() => console.log('Logowanie pomyslne'));
+              handleThrowPasswordError();
             }}>
             {formikProps => {
               return (
@@ -127,7 +128,7 @@ const LoginScreen: React.FC = (props: any) => {
                     <FlatButton
                       onPress={formikProps.handleSubmit}
                       colorVariantIndex={1}
-                      textValue={'Zarejestruj się z google'}
+                      textValue={'Zaloguj się z google'}
                       textColor={{color: '#3180AE'}}
                       icon={true}
                     />
@@ -135,7 +136,7 @@ const LoginScreen: React.FC = (props: any) => {
                   <FlatButton
                     onPress={formikProps.handleSubmit}
                     colorVariantIndex={0}
-                    textValue={'Zarejestruj się'}
+                    textValue={'Zaloguj się'}
                     textColor={{color: 'white'}}
                   />
                 </View>
@@ -143,6 +144,9 @@ const LoginScreen: React.FC = (props: any) => {
             }}
           </Formik>
         </View>
+        <TouchableOpacity>
+          <Text style={styles.forgotPassword}>Zapomniałeś hasła?</Text>
+        </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -160,8 +164,8 @@ const styles = StyleSheet.create({
     minWidth: (vw / 100) * 65,
     minHeight: (vw / 100) * 21,
     resizeMode: 'contain',
-    marginTop: vw * 0.112,
-    marginBottom: vw * 0.112,
+    marginTop: vw * 0.2187,
+    marginBottom: vw * 0.2187,
   },
   formWrapper: {},
   input: {
@@ -215,6 +219,11 @@ const styles = StyleSheet.create({
   googleButtonWrapper: {
     marginTop: vw * 0.0625,
     marginBottom: vw * 0.05,
+  },
+  forgotPassword: {
+    textDecorationLine: 'underline',
+    color: '#000',
+    marginTop: 0.04 * vw,
   },
 });
 
