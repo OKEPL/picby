@@ -26,7 +26,7 @@ const {width: vw} = Dimensions.get('window');
 const LoginScreen: React.FC = (props: any) => {
   const {questionText2, actionText2} = useContext(AuthContext);
   const {navigate} = props.navigation;
-  const [passwordError, setpasswordError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
   const [serverError, setServerError] = useState(true);
 
   const reviewSchema = yup.object({
@@ -48,7 +48,7 @@ const LoginScreen: React.FC = (props: any) => {
       }, 1000);
     });
     return promise
-      .then(() => setpasswordError(true))
+      .then(() => setPasswordError(true))
       .catch(() => console.log('Logowanie pomyslne'));
   };
 
@@ -111,6 +111,9 @@ const LoginScreen: React.FC = (props: any) => {
                       onChangeText={formikProps.handleChange('password')}
                       value={formikProps.values.password}
                       onBlur={formikProps.handleBlur('password')}
+                      onFocus={() =>
+                        passwordError ? setPasswordError(false) : null
+                      }
                     />
                   </View>
                   <View style={styles.errorTextWrapper}>
