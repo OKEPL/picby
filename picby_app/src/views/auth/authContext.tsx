@@ -26,9 +26,9 @@ const AuthContextProvider: React.FC = ({children}) => {
   const [
     registerServerResponseStatus,
     setRegisterServerResponseStatus,
-  ] = useState(false);
+  ] = useState(true);
   const [loginServerResponseStatus, setLoginServerResponseStatus] = useState(
-    false,
+    true,
   );
 
   const queryRegisterUser = () => {};

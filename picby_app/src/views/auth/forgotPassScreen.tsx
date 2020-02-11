@@ -18,8 +18,9 @@ import emailLogo from './icons/envelope.png';
 import errorLogo from './icons/exclamationMark.png';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {globalStyles} from '../../common/styles/globalStyles';
-import {useHandlePopupAnimation} from './useHandlePopupAnimation';
+import {useHandlePopupAnimation} from './hooks/useHandlePopupAnimation';
 import PopUp from '../auth/components/Popup';
+import {useSubmit} from './hooks/useSubmit';
 
 const {width: vw, height: vh} = Dimensions.get('window');
 
@@ -43,9 +44,11 @@ const ForgotPasswordScreen = (props: any) => {
 
   const handleSendEmailRequest = () => {
     let promise = new Promise((res, rej) =>
-      serverResponseStatus ? res(true) : rej(true),
+      setTimeout(() => {
+        serverResponseStatus ? res(true) : rej(true);
+      }, 3000),
     );
-    promise
+    return promise
       .then(() => {
         handlePopUpAnimation();
       })
@@ -53,7 +56,9 @@ const ForgotPasswordScreen = (props: any) => {
         setEmailNotFoundError(true);
       });
   };
-
+  const {handleSubmit, loading, serverError} = useSubmit(
+    handleSendEmailRequest,
+  );
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -72,7 +77,7 @@ const ForgotPasswordScreen = (props: any) => {
             validationSchema={reviewSchema}
             initialValues={{email: ''}}
             onSubmit={(values: any, actions: any) => {
-              handleSendEmailRequest();
+              handleSubmit();
             }}>
             {formikProps => {
               return (
@@ -113,6 +118,7 @@ const ForgotPasswordScreen = (props: any) => {
                       onPress={formikProps.handleSubmit}
                       colorVariantIndex={0}
                       textColor={{color: 'white'}}
+                      disabled={loading}
                     />
                     <View style={styles.singleButtonWrapper}>
                       <FlatButton
@@ -120,6 +126,7 @@ const ForgotPasswordScreen = (props: any) => {
                         onPress={() => navigate('Login')}
                         colorVariantIndex={2}
                         textColor={{color: '#3180AE'}}
+                        disabled={loading}
                       />
                     </View>
                   </View>

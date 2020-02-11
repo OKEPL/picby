@@ -8,7 +8,6 @@ import {
   Image,
   TouchableWithoutFeedback,
   Keyboard,
-  Animated,
 } from 'react-native';
 import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
 import {Formik} from 'formik';
@@ -22,7 +21,9 @@ import picbyLogo from '../../common/images/PICBY.png';
 import emailLogo from './icons/envelope.png';
 import keyLogo from './icons/key.png';
 import errorLogo from './icons/exclamationMark.png';
-import {useHandlePopupAnimation} from './useHandlePopupAnimation';
+import {useHandlePopupAnimation} from './hooks/useHandlePopupAnimation';
+import {useSubmit} from './hooks/useSubmit';
+
 import PopUp from '../auth/components/Popup';
 
 const {width: vw} = Dimensions.get('window');
@@ -51,11 +52,11 @@ const LoginScreen: React.FC = (props: any) => {
     password: yup.string().required(),
   });
 
-  const handleThrowPasswordError = () => {
+  const handleSendData = () => {
     let promise = new Promise((resolve, reject) => {
       setTimeout(
         () => (loginServerResponseStatus ? resolve(true) : reject(true)),
-        1000,
+        3000,
       );
     });
 
@@ -66,6 +67,8 @@ const LoginScreen: React.FC = (props: any) => {
       })
       .catch(() => setPasswordError(true));
   };
+  const {handleSubmit, loading, serverError} = useSubmit(handleSendData);
+
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -86,7 +89,7 @@ const LoginScreen: React.FC = (props: any) => {
             validationSchema={reviewSchema}
             initialValues={{email: '', password: ''}}
             onSubmit={(values: any, actions: any) => {
-              handleThrowPasswordError();
+              handleSubmit();
             }}>
             {formikProps => {
               return (
@@ -147,6 +150,7 @@ const LoginScreen: React.FC = (props: any) => {
                       textValue="Zaloguj się z google"
                       textColor={{color: '#3180AE'}}
                       icon={true}
+                      disabled={loading}
                     />
                   </View>
                   <FlatButton
@@ -154,6 +158,7 @@ const LoginScreen: React.FC = (props: any) => {
                     colorVariantIndex={0}
                     textValue="Zaloguj się"
                     textColor={{color: 'white'}}
+                    disabled={loading}
                   />
                 </View>
               );

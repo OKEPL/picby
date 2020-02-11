@@ -21,8 +21,9 @@ import emailLogo from './icons/envelope.png';
 import errorLogo from './icons/exclamationMark.png';
 import keyLogo from './icons/key.png';
 import FlatButton from '../../common/components/Button';
-import {useHandlePopupAnimation} from './useHandlePopupAnimation';
+import {useHandlePopupAnimation} from './hooks/useHandlePopupAnimation';
 import PopUp from '../auth/components/Popup';
+import {useSubmit} from './hooks/useSubmit';
 
 const {width: vw} = Dimensions.get('window');
 
@@ -58,9 +59,12 @@ const RegisterScreen: React.FC = (props: any) => {
 
   const handleSendData = () => {
     let promise = new Promise((res, rej) =>
-      registerServerResponseStatus ? res(true) : rej(true),
+      setTimeout(
+        () => (registerServerResponseStatus ? res(true) : rej(true)),
+        3000,
+      ),
     );
-    promise
+    return promise
       .then(() => {
         //dane ok// wyślij email potwierdzajacy -> //
         setMessagePopUpText(messageRegisterSuccess);
@@ -72,6 +76,7 @@ const RegisterScreen: React.FC = (props: any) => {
         setEmailAlreadyTakenError(true);
       });
   };
+  const {handleSubmit, loading, serverError} = useSubmit(handleSendData);
 
   return (
     <TouchableWithoutFeedback
@@ -93,8 +98,7 @@ const RegisterScreen: React.FC = (props: any) => {
             validationSchema={reviewSchema}
             initialValues={{email: '', password: '', passwordRepeat: ''}}
             onSubmit={(values, actions) => {
-              console.log(values);
-              handleSendData();
+              handleSubmit();
             }}>
             {formikProps => {
               return (
@@ -186,6 +190,7 @@ const RegisterScreen: React.FC = (props: any) => {
                       textValue="Zarejestruj się z google"
                       textColor={{color: '#3180AE'}}
                       icon={true}
+                      disabled={loading}
                     />
                   </View>
                   <FlatButton
@@ -193,6 +198,7 @@ const RegisterScreen: React.FC = (props: any) => {
                     colorVariantIndex={0}
                     textValue="Zarejestruj się"
                     textColor={{color: 'white'}}
+                    disabled={loading}
                   />
                 </View>
               );

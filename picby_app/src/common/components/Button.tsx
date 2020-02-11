@@ -17,6 +17,7 @@ interface ButtonProps {
   textColor: object;
   textValue: string;
   icon?: boolean;
+  disabled: any;
 }
 
 const FlatButton: React.FC<ButtonProps> = props => {
@@ -26,6 +27,7 @@ const FlatButton: React.FC<ButtonProps> = props => {
     colorVariantIndex,
     textColor,
     icon = false,
+    disabled,
   } = props;
 
   const colorVariants = [
@@ -34,14 +36,18 @@ const FlatButton: React.FC<ButtonProps> = props => {
     ['#FBB114', '#FBB114'],
   ];
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} disabled={disabled}>
       <LinearGradient
         useAngle={true}
         angle={33}
         start={{x: -0.13, y: 0}}
         end={{x: 0.7, y: 0}}
         colors={colorVariants[colorVariantIndex]}
-        style={styles.linearGradient}>
+        style={
+          disabled
+            ? [styles.linearGradient, {opacity: 0.5}]
+            : [styles.linearGradient]
+        }>
         {icon && <Image style={styles.icon} source={googleIcon} />}
         <Text style={[styles.buttonText, textColor]}>{textValue}</Text>
       </LinearGradient>
@@ -51,11 +57,11 @@ const FlatButton: React.FC<ButtonProps> = props => {
 
 const styles = StyleSheet.create({
   linearGradient: {
+    opacity: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 14,
-
     borderRadius: 2,
     minHeight: 0.125 * vw,
     maxHeight: 0.125 * vw,
