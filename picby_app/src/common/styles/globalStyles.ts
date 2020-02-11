@@ -1,6 +1,6 @@
 import {StyleSheet, Dimensions} from 'react-native';
 
-const {width: vw, height: vh} = Dimensions.get('window');
+const {width: vw} = Dimensions.get('window');
 
 export const globalStyles = StyleSheet.create({
   container: {
@@ -8,27 +8,6 @@ export const globalStyles = StyleSheet.create({
   },
   screenWrapper: {
     alignItems: 'center',
-  },
-  popUp: {
-    backgroundColor: '#074782',
-    color: 'white',
-    width: 0.95 * vw,
-    paddingHorizontal: 0.0312 * vw,
-    paddingVertical: 0.02 * vw,
-    position: 'absolute',
-    top: 0.84 * vh,
-    borderRadius: 2,
-    textAlign: 'center',
-    alignItems: 'center',
-    zIndex: 2,
-  },
-  popUpHidden: {
-    display: 'none',
-  },
-  popUpText: {
-    color: 'white',
-    fontSize: 18,
-    letterSpacing: 0.5,
   },
   errorTextWrapper: {
     marginTop: 3,

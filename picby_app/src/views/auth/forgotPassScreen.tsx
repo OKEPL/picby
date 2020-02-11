@@ -18,6 +18,8 @@ import emailLogo from './icons/envelope.png';
 import errorLogo from './icons/exclamationMark.png';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {globalStyles} from '../../common/styles/globalStyles';
+import {useHandlePopupAnimation} from './useHandlePopupAnimation';
+import PopUp from '../auth/components/Popup';
 
 const {width: vw, height: vh} = Dimensions.get('window');
 
@@ -30,7 +32,7 @@ const reviewSchema = yup.object({
 
 const ForgotPasswordScreen = (props: any) => {
   const {navigate} = props.navigation;
-  const [fadeAnim] = useState(new Animated.Value(-1 * vw));
+  const {handlePopUpAnimation, fadeAnim} = useHandlePopupAnimation();
   const [emailNotFoundError, setEmailNotFoundError] = useState(false);
   const [serverResponseStatus, setServerResponseStatus] = useState(true);
 
@@ -45,19 +47,11 @@ const ForgotPasswordScreen = (props: any) => {
     );
     promise
       .then(() => {
-        setTimeout(() => handlePopUpAnimation(0), 300);
-        setTimeout(() => handlePopUpAnimation(-1), 4000);
+        handlePopUpAnimation();
       })
       .catch(() => {
         setEmailNotFoundError(true);
       });
-  };
-
-  const handlePopUpAnimation = (value: number = 0) => {
-    Animated.timing(fadeAnim, {
-      toValue: value * vw,
-      duration: 300,
-    }).start();
   };
 
   return (
@@ -67,10 +61,7 @@ const ForgotPasswordScreen = (props: any) => {
       }}
       style={styles.wrapper}>
       <View style={styles.container}>
-        <Animated.View
-          style={[globalStyles.popUp, {transform: [{translateX: fadeAnim}]}]}>
-          <Text style={globalStyles.popUpText}>{popUpText}</Text>
-        </Animated.View>
+        <PopUp popUpText={popUpText} fadeAnim={fadeAnim} />
         <View style={styles.content}>
           <Image style={styles.bigEye} source={eyePic} />
           <Text style={styles.headerText}>ZAPOMNIAŁEŚ HASŁA?</Text>

@@ -22,15 +22,26 @@ import picbyLogo from '../../common/images/PICBY.png';
 import emailLogo from './icons/envelope.png';
 import keyLogo from './icons/key.png';
 import errorLogo from './icons/exclamationMark.png';
+import {useHandlePopupAnimation} from './useHandlePopupAnimation';
+import PopUp from '../auth/components/Popup';
 
 const {width: vw} = Dimensions.get('window');
 
 const LoginScreen: React.FC = (props: any) => {
-  const {loginHeaderTextTwo, loginHeaderTextOne} = useContext(AuthContext);
+  const {
+    loginHeaderTextTwo,
+    loginHeaderTextOne,
+    loginServerResponseStatus,
+  } = useContext(AuthContext);
   const {navigate} = props.navigation;
   const [passwordError, setPasswordError] = useState(false);
-  const [serverError, setServerError] = useState(true);
-  const [fadeAnim] = useState(new Animated.Value(-1 * vw));
+  const {handlePopUpAnimation, fadeAnim} = useHandlePopupAnimation();
+
+  const messageEmailConfirmation = `E-mail został potwierdzony,${'\n'}możesz się zalogować.`;
+  const messageLoginSuccess = `Logowanie pomyślne,${'\n'} nastąpi przekierowanie`;
+  const messageBadPassword = 'Hasło jest nieprawidłowe';
+  const messageBadEmail = 'Wprowadź poprawny adres e-mail.';
+  const [messagePopUpText, setMessagePopUpText] = useState('');
 
   const reviewSchema = yup.object({
     email: yup
@@ -42,23 +53,18 @@ const LoginScreen: React.FC = (props: any) => {
 
   const handleThrowPasswordError = () => {
     let promise = new Promise((resolve, reject) => {
-      //await for server response then set passwordError to true
-      setTimeout(() => {
-        if (serverError) {
-          return resolve(true);
-        }
-        reject(true);
-      }, 1000);
+      setTimeout(
+        () => (loginServerResponseStatus ? resolve(true) : reject(true)),
+        1000,
+      );
     });
+
     return promise
-      .then(() => setPasswordError(true))
-      .catch(() => console.log('Logowanie pomyslne'));
-  };
-  const handlePopUpAnimation = (value: number = 0) => {
-    Animated.timing(fadeAnim, {
-      toValue: value * vw,
-      duration: 300,
-    }).start();
+      .then(() => {
+        setMessagePopUpText(messageLoginSuccess);
+        handlePopUpAnimation();
+      })
+      .catch(() => setPasswordError(true));
   };
   return (
     <TouchableWithoutFeedback
@@ -66,6 +72,7 @@ const LoginScreen: React.FC = (props: any) => {
         Keyboard.dismiss();
       }}>
       <View style={globalStyles.screenWrapper}>
+        <PopUp popUpText={messagePopUpText} fadeAnim={fadeAnim} />
         <View style={styles.gotAccountQuestion}>
           <GotAccountQuestion
             questionText={loginHeaderTextTwo}
@@ -106,7 +113,7 @@ const LoginScreen: React.FC = (props: any) => {
                     <Text style={globalStyles.errorText}>
                       {formikProps.touched.email &&
                         formikProps.errors.email &&
-                        'Wprowadź poprawny adres e-mail.'}
+                        messageBadEmail}
                     </Text>
                   </View>
                   <View style={styles.inputWrapper}>
@@ -130,7 +137,7 @@ const LoginScreen: React.FC = (props: any) => {
                       />
                     )}
                     <Text style={globalStyles.errorText}>
-                      {passwordError && 'Hasło jest nieprawidłowe'}
+                      {passwordError && messageBadPassword}
                     </Text>
                   </View>
                   <View style={styles.googleButtonWrapper}>

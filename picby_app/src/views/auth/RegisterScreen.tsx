@@ -21,6 +21,8 @@ import emailLogo from './icons/envelope.png';
 import errorLogo from './icons/exclamationMark.png';
 import keyLogo from './icons/key.png';
 import FlatButton from '../../common/components/Button';
+import {useHandlePopupAnimation} from './useHandlePopupAnimation';
+import PopUp from '../auth/components/Popup';
 
 const {width: vw} = Dimensions.get('window');
 
@@ -32,11 +34,13 @@ const RegisterScreen: React.FC = (props: any) => {
   } = useContext(AuthContext);
   const {navigate} = props.navigation;
   const [emailAlreadyTaken, setEmailAlreadyTakenError] = useState(false);
-
+  const {handlePopUpAnimation, fadeAnim} = useHandlePopupAnimation();
+  const [messagePopUpText, setMessagePopUpText] = useState('');
   const messageEmailAlreadyTaken = 'Konto o podanym e-mail już istnieje.';
   const messageBadEmail = 'Wprowadź poprawny adres e-mail.';
   const messagePasswordError = 'Hasło musi zawierać min. 8 znaków';
   const messagePasswordNotSimilar = 'Podane hasła nie są identyczne.';
+  const messageRegisterSuccess = `Zarejestrowano pomyślnie,${'\n'}sprawdź skrzynkę pocztową.`;
 
   const reviewSchema = yup.object({
     email: yup
@@ -58,9 +62,13 @@ const RegisterScreen: React.FC = (props: any) => {
     );
     promise
       .then(() => {
-        //dane ok// zmiana isLoggedIn -> //
+        //dane ok// wyślij email potwierdzajacy -> //
+        setMessagePopUpText(messageRegisterSuccess);
+        handlePopUpAnimation();
       })
       .catch(() => {
+        setMessagePopUpText(messageEmailAlreadyTaken);
+        handlePopUpAnimation();
         setEmailAlreadyTakenError(true);
       });
   };
@@ -71,6 +79,7 @@ const RegisterScreen: React.FC = (props: any) => {
         Keyboard.dismiss();
       }}>
       <View style={styles.screenWrapper}>
+        <PopUp fadeAnim={fadeAnim} popUpText={messagePopUpText} />
         <View style={styles.gotAccountQuestion}>
           <GotAccountQuestion
             questionText={registerHeaderTextTwo}
