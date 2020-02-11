@@ -9,27 +9,29 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
+import {Formik} from 'formik';
+import * as yup from 'yup';
+import {TextInput} from 'react-native-gesture-handler';
+
+import {globalStyles} from '../../common/styles/globalStyles';
 import {AuthContext} from './authContext';
 import GotAccountQuestion from './components/GotAccountQuestion';
 import picbyLogo from '../../common/images/PICBY.png';
 import emailLogo from './icons/envelope.png';
 import errorLogo from './icons/exclamationMark.png';
-import {TextInput} from 'react-native-gesture-handler';
-
 import keyLogo from './icons/key.png';
-import {Formik} from 'formik';
-import * as yup from 'yup';
 import FlatButton from '../../common/components/Button';
 
 const {width: vw} = Dimensions.get('window');
 
 const RegisterScreen: React.FC = (props: any) => {
-  const {registerHeaderTextTwo, registerHeaderTextOne} = useContext(
-    AuthContext,
-  );
+  const {
+    registerHeaderTextTwo,
+    registerHeaderTextOne,
+    registerServerResponseStatus,
+  } = useContext(AuthContext);
   const {navigate} = props.navigation;
-  const [emailAlreadyTaken, setEmailAlreadyTaken] = useState(false);
-  const [serverResponseStatus, setServerResponseStatus] = useState(false);
+  const [emailAlreadyTaken, setEmailAlreadyTakenError] = useState(false);
 
   const messageEmailAlreadyTaken = 'Konto o podanym e-mail już istnieje.';
   const messageBadEmail = 'Wprowadź poprawny adres e-mail.';
@@ -52,14 +54,14 @@ const RegisterScreen: React.FC = (props: any) => {
 
   const handleSendData = () => {
     let promise = new Promise((res, rej) =>
-      serverResponseStatus ? res(true) : rej(true),
+      registerServerResponseStatus ? res(true) : rej(true),
     );
     promise
       .then(() => {
         //dane ok// zmiana isLoggedIn -> //
       })
       .catch(() => {
-        setEmailAlreadyTaken(true);
+        setEmailAlreadyTakenError(true);
       });
   };
 
@@ -77,7 +79,7 @@ const RegisterScreen: React.FC = (props: any) => {
           />
         </View>
         <Image style={styles.logo} source={picbyLogo} />
-        <View style={styles.formWrapper}>
+        <View>
           <Formik
             validationSchema={reviewSchema}
             initialValues={{email: '', password: '', passwordRepeat: ''}}
@@ -89,29 +91,29 @@ const RegisterScreen: React.FC = (props: any) => {
               return (
                 <View>
                   <View style={styles.inputWrapper}>
-                    <Image style={styles.emailLogo} source={emailLogo} />
+                    <Image style={globalStyles.emailLogo} source={emailLogo} />
                     <TextInput
                       keyboardType="email-address"
-                      style={styles.input}
+                      style={globalStyles.input}
                       placeholder="E-mail"
                       placeholderTextColor="rgba(7, 71, 130, 0.68)"
                       onChangeText={formikProps.handleChange('email')}
                       value={formikProps.values.email}
                       onBlur={formikProps.handleBlur('email')}
                       onFocus={() =>
-                        emailAlreadyTaken ? setEmailAlreadyTaken(false) : null
+                        emailAlreadyTaken && setEmailAlreadyTakenError(false)
                       }
                     />
                   </View>
-                  <View style={styles.errorTextWrapper}>
+                  <View style={globalStyles.errorTextWrapper}>
                     {(formikProps.touched.email && formikProps.errors.email) ||
                     emailAlreadyTaken ? (
                       <Image
-                        style={styles.errorExlamationMark}
+                        style={globalStyles.errorExlamationMark}
                         source={errorLogo}
                       />
                     ) : null}
-                    <Text style={styles.errorText}>
+                    <Text style={globalStyles.errorText}>
                       {formikProps.touched.email &&
                         formikProps.errors.email &&
                         messageBadEmail}
@@ -119,10 +121,10 @@ const RegisterScreen: React.FC = (props: any) => {
                     </Text>
                   </View>
                   <View style={styles.inputWrapper}>
-                    <Image style={styles.keyLogo} source={keyLogo} />
+                    <Image style={globalStyles.keyLogo} source={keyLogo} />
                     <TextInput
                       secureTextEntry={true}
-                      style={styles.input}
+                      style={globalStyles.input}
                       placeholder="Hasło"
                       placeholderTextColor="rgba(7, 71, 130, 0.68)"
                       onChangeText={formikProps.handleChange('password')}
@@ -130,40 +132,40 @@ const RegisterScreen: React.FC = (props: any) => {
                       onBlur={formikProps.handleBlur('password')}
                     />
                   </View>
-                  <View style={styles.errorTextWrapper}>
+                  <View style={globalStyles.errorTextWrapper}>
                     {formikProps.touched.password &&
                     formikProps.errors.password ? (
                       <Image
-                        style={styles.errorExlamationMark}
+                        style={globalStyles.errorExlamationMark}
                         source={errorLogo}
                       />
                     ) : null}
-                    <Text style={styles.errorText}>
+                    <Text style={globalStyles.errorText}>
                       {formikProps.touched.password &&
                         formikProps.errors.password &&
                         messagePasswordError}
                     </Text>
                   </View>
                   <View style={styles.inputWrapper}>
-                    <Image style={styles.keyLogo} source={keyLogo} />
+                    <Image style={globalStyles.keyLogo} source={keyLogo} />
                     <TextInput
                       secureTextEntry={true}
-                      style={styles.input}
+                      style={globalStyles.input}
                       placeholder="Powtórz hasło"
                       placeholderTextColor="rgba(7, 71, 130, 0.68)"
                       onChangeText={formikProps.handleChange('passwordRepeat')}
                       value={formikProps.values.passwordRepeat}
                     />
                   </View>
-                  <View style={styles.errorTextWrapper}>
+                  <View style={globalStyles.errorTextWrapper}>
                     {formikProps.touched.passwordRepeat &&
                     formikProps.errors.passwordRepeat ? (
                       <Image
-                        style={styles.errorExlamationMark}
+                        style={globalStyles.errorExlamationMark}
                         source={errorLogo}
                       />
                     ) : null}
-                    <Text style={styles.errorText}>
+                    <Text style={globalStyles.errorText}>
                       {formikProps.touched.passwordRepeat &&
                         formikProps.errors.passwordRepeat}
                     </Text>
@@ -208,16 +210,6 @@ const styles = StyleSheet.create({
     marginTop: 0.112 * vw,
     marginBottom: 0.112 * vw,
   },
-  formWrapper: {},
-  input: {
-    paddingLeft: 0.053 * vw,
-    width: 0.72 * vw,
-    margin: 0,
-    padding: 0,
-    letterSpacing: 0.5,
-    fontSize: 16,
-    color: 'rgba(7, 71, 130, 0.68)',
-  },
   inputWrapper: {
     height: 0.093 * vw,
     flexDirection: 'row',
@@ -228,34 +220,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingHorizontal: 5,
     width: vw * 0.8,
-  },
-  emailLogo: {
-    width: 0.0625 * vw,
-    marginRight: 0.0062 * vw,
-    height: 0.05 * vw,
-  },
-  keyLogo: {
-    width: 0.0687 * vw,
-    height: 0.0375 * vw,
-  },
-  errorTextWrapper: {
-    marginTop: 3,
-    flexDirection: 'row',
-    marginHorizontal: 5,
-    alignItems: 'center',
-    marginBottom: 10,
-    minHeight: 0.0625 * vw,
-    paddingHorizontal: 2,
-  },
-  errorExlamationMark: {
-    maxWidth: 0.0625 * vw,
-    maxHeight: 0.0625 * vw,
-    marginRight: 0.063 * vw,
-  },
-  errorText: {
-    color: '#CC1919',
-    letterSpacing: 0.7,
-    fontSize: 14,
   },
   googleButtonWrapper: {
     marginTop: vw * 0.0625,

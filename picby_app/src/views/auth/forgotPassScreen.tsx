@@ -17,6 +17,7 @@ import * as yup from 'yup';
 import emailLogo from './icons/envelope.png';
 import errorLogo from './icons/exclamationMark.png';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import {globalStyles} from '../../common/styles/globalStyles';
 
 const {width: vw, height: vh} = Dimensions.get('window');
 
@@ -31,7 +32,7 @@ const ForgotPasswordScreen = (props: any) => {
   const {navigate} = props.navigation;
   const [fadeAnim] = useState(new Animated.Value(-1 * vw));
   const [emailNotFoundError, setEmailNotFoundError] = useState(false);
-  const [serverResponseStatus, setServerResponseStatus] = useState(false);
+  const [serverResponseStatus, setServerResponseStatus] = useState(true);
 
   const messageBadMail = 'Wprowadź poprawny adres e-mail.';
   const messageEmailNotFound = 'Podany adres e-mail nie istnieje w bazie';
@@ -44,15 +45,15 @@ const ForgotPasswordScreen = (props: any) => {
     );
     promise
       .then(() => {
-        setTimeout(() => handleAnimation(0), 300);
-        setTimeout(() => handleAnimation(-1), 4000);
+        setTimeout(() => handlePopUpAnimation(0), 300);
+        setTimeout(() => handlePopUpAnimation(-1), 4000);
       })
       .catch(() => {
         setEmailNotFoundError(true);
       });
   };
 
-  const handleAnimation = (value: number) => {
+  const handlePopUpAnimation = (value: number = 0) => {
     Animated.timing(fadeAnim, {
       toValue: value * vw,
       duration: 300,
@@ -67,8 +68,8 @@ const ForgotPasswordScreen = (props: any) => {
       style={styles.wrapper}>
       <View style={styles.container}>
         <Animated.View
-          style={[styles.popUp, {transform: [{translateX: fadeAnim}]}]}>
-          <Text style={styles.popUpText}>{popUpText}</Text>
+          style={[globalStyles.popUp, {transform: [{translateX: fadeAnim}]}]}>
+          <Text style={globalStyles.popUpText}>{popUpText}</Text>
         </Animated.View>
         <View style={styles.content}>
           <Image style={styles.bigEye} source={eyePic} />
@@ -86,10 +87,10 @@ const ForgotPasswordScreen = (props: any) => {
               return (
                 <View>
                   <View style={styles.inputWrapper}>
-                    <Image style={styles.emailLogo} source={emailLogo} />
+                    <Image style={globalStyles.emailLogo} source={emailLogo} />
                     <TextInput
                       keyboardType="email-address"
-                      style={styles.input}
+                      style={globalStyles.input}
                       placeholder="E-mail"
                       placeholderTextColor="rgba(7, 71, 130, 0.68)"
                       onChangeText={formikProps.handleChange('email')}
@@ -100,15 +101,15 @@ const ForgotPasswordScreen = (props: any) => {
                       }
                     />
                   </View>
-                  <View style={styles.errorTextWrapper}>
+                  <View style={globalStyles.errorTextWrapper}>
                     {(formikProps.touched.email && formikProps.errors.email) ||
                     emailNotFoundError ? (
                       <Image
-                        style={styles.errorExlamationMark}
+                        style={globalStyles.errorExlamationMark}
                         source={errorLogo}
                       />
                     ) : null}
-                    <Text style={styles.errorText}>
+                    <Text style={globalStyles.errorText}>
                       {formikProps.touched.email &&
                         formikProps.errors.email &&
                         messageBadMail}
@@ -207,60 +208,6 @@ const styles = StyleSheet.create({
     width: 0.8 * vw,
     maxWidth: 0.8 * vw,
     marginTop: 0.13 * vw,
-  },
-  emailLogo: {
-    width: 0.0625 * vw,
-    marginRight: 0.0062 * vw,
-    height: 0.05 * vw,
-  },
-  input: {
-    paddingLeft: 0.053 * vw,
-    width: 0.72 * vw,
-    margin: 0,
-    padding: 0,
-    letterSpacing: 0.3,
-    fontSize: 16,
-    color: 'rgba(7, 71, 130, 0.68)',
-  },
-  errorTextWrapper: {
-    marginTop: 3,
-    flexDirection: 'row',
-    marginHorizontal: 5,
-    alignItems: 'center',
-    marginBottom: 10,
-    minHeight: 0.0625 * vw,
-    paddingHorizontal: 2,
-  },
-  errorExlamationMark: {
-    maxWidth: 0.0625 * vw,
-    maxHeight: 0.0625 * vw,
-    marginRight: 0.063 * vw,
-  },
-  errorText: {
-    color: '#CC1919',
-    letterSpacing: 0.3,
-    fontSize: 14,
-  },
-  popUp: {
-    backgroundColor: '#074782',
-    color: 'white',
-    width: 0.95 * vw,
-    paddingHorizontal: 0.0312 * vw,
-    paddingVertical: 0.02 * vw,
-    position: 'absolute',
-    top: 0.84 * vh,
-    borderRadius: 2,
-    textAlign: 'center',
-    alignItems: 'center',
-    zIndex: 2,
-  },
-  popUpHidden: {
-    display: 'none',
-  },
-  popUpText: {
-    color: 'white',
-    fontSize: 18,
-    letterSpacing: 0.5,
   },
 });
 

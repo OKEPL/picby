@@ -5,6 +5,7 @@ export interface AuthProps {
   loginHeaderTextTwo: string;
   registerHeaderTextOne: string;
   loginHeaderTextOne: string;
+  registerServerResponseStatus: boolean | null;
 }
 const registerHeaderTextTwo = 'Masz już konto? Doskonale!';
 const loginHeaderTextTwo = 'Nie masz jeszcze konta?';
@@ -16,9 +17,17 @@ export const AuthContext = React.createContext<AuthProps>({
   loginHeaderTextTwo,
   registerHeaderTextOne,
   loginHeaderTextOne,
+  registerServerResponseStatus: null,
 });
 
 const AuthContextProvider: React.FC = ({children}) => {
+  const [
+    registerServerResponseStatus,
+    setRegisterServerResponseStatus,
+  ] = useState(null);
+
+  const queryRegisterUser = () => {};
+
   return (
     <AuthContext.Provider
       value={{
@@ -26,6 +35,7 @@ const AuthContextProvider: React.FC = ({children}) => {
         loginHeaderTextTwo,
         registerHeaderTextOne,
         loginHeaderTextOne,
+        registerServerResponseStatus,
       }}>
       {children}
     </AuthContext.Provider>
