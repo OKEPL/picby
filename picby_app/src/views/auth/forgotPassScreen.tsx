@@ -205,6 +205,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     paddingHorizontal: 5,
     width: 0.8 * vw,
+    maxWidth: 0.8 * vw,
     marginTop: 0.13 * vw,
   },
   emailLogo: {
@@ -217,7 +218,7 @@ const styles = StyleSheet.create({
     width: 0.72 * vw,
     margin: 0,
     padding: 0,
-    letterSpacing: 0.5,
+    letterSpacing: 0.3,
     fontSize: 16,
     color: 'rgba(7, 71, 130, 0.68)',
   },
@@ -237,7 +238,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: '#CC1919',
-    letterSpacing: 0.7,
+    letterSpacing: 0.3,
     fontSize: 14,
   },
   popUp: {
