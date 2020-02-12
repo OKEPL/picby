@@ -54,6 +54,7 @@ const RegisterScreen: React.FC = (props: any) => {
       .min(8),
     passwordRepeat: yup
       .string()
+      .required('To pole jest wymagane')
       .oneOf([yup.ref('password'), null], messagePasswordNotSimilar),
   });
 
