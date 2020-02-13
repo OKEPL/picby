@@ -11,7 +11,7 @@ interface ButtonProps {
   textColor: object;
   textValue: string;
   icon?: boolean;
-  disabled: any;
+  disabled?: any;
 }
 
 const FlatButton: React.FC<ButtonProps> = props => {
@@ -81,8 +81,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   icon: {
-    width: 0.075 * vw,
-    height: 0.075 * vw,
+    minWidth: 0.075 * vw,
+    minHeight: 0.075 * vw,
     marginRight: 0.0312 * vw,
   },
 });

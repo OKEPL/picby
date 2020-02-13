@@ -1,13 +1,7 @@
 import React, {useContext} from 'react';
-import {
-  StyleSheet,
-  View,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-} from 'react-native';
-import closedEye from './images/eyeClosed.png';
-import openEye from './images/eyeOpen.png';
+import {StyleSheet, View, TouchableOpacity, Dimensions} from 'react-native';
+import ClosedEye from './images/eyeClosed.svg';
+import OpenEye from './images/eyeOpen.svg';
 import {IntroductionContext} from './introductionContext';
 
 let {width: vw} = Dimensions.get('window');
@@ -25,30 +19,33 @@ const CustomBottomTab: React.FC = (props: any) => {
           navigate('first');
           setActiveScreenNumber(1);
         }}>
-        <Image
-          style={styles.eyeIcon}
-          source={activeScreenNumber == 1 ? openEye : closedEye}
-        />
+        {activeScreenNumber === 1 ? (
+          <OpenEye style={styles.eyeIcon} />
+        ) : (
+          <ClosedEye style={styles.eyeIcon} />
+        )}
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
           navigate('second');
           setActiveScreenNumber(2);
         }}>
-        <Image
-          style={styles.eyeIcon}
-          source={activeScreenNumber == 2 ? openEye : closedEye}
-        />
+        {activeScreenNumber === 2 ? (
+          <OpenEye style={styles.eyeIcon} />
+        ) : (
+          <ClosedEye style={styles.eyeIcon} />
+        )}
       </TouchableOpacity>
       <TouchableOpacity
         onPress={() => {
           navigate('third');
           setActiveScreenNumber(3);
         }}>
-        <Image
-          style={styles.eyeIcon}
-          source={activeScreenNumber == 3 ? openEye : closedEye}
-        />
+        {activeScreenNumber === 3 ? (
+          <OpenEye style={styles.eyeIcon} />
+        ) : (
+          <ClosedEye style={styles.eyeIcon} />
+        )}
       </TouchableOpacity>
     </View>
   );

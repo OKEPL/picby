@@ -7,7 +7,7 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
-import picbyLogo from '../../common/images/PICBY.png';
+import PicbyLogo from '../../common/images/PICBY.svg';
 import eyePic from '../../common/images/bigEye.png';
 import FlatButton from '../../common/components/Button';
 
@@ -32,13 +32,12 @@ const Introduction = (props: any) => {
             }>
             {headerText}
           </Text>
-          <Image
+          <PicbyLogo
             style={
               activeScreenNumber == 3
                 ? [styles.logo, styles.logoThirdScreen]
                 : styles.logo
             }
-            source={picbyLogo}
           />
         </View>
         <View style={styles.content}>

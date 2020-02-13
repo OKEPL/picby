@@ -17,10 +17,10 @@ import {globalStyles} from '../../common/styles/globalStyles';
 import {AuthContext} from './authContext';
 import GotAccountQuestion from './components/GotAccountQuestion';
 import FlatButton from '../../common/components/Button';
-import picbyLogo from '../../common/images/PICBY.png';
-import emailLogo from './icons/envelope.png';
-import keyLogo from './icons/key.png';
-import errorLogo from './icons/exclamationMark.png';
+import PicbyLogo from '../../common/images/PICBY.svg';
+import EmailLogo from './icons/envelope.svg';
+import KeyLogo from './icons/key.svg';
+import ErrorLogo from './icons/exclamationMark.svg';
 import {useHandlePopupAnimation} from './hooks/useHandlePopupAnimation';
 import {useSubmit} from './hooks/useSubmit';
 
@@ -83,7 +83,7 @@ const LoginScreen: React.FC = (props: any) => {
             onPress={() => navigate('Register')}
           />
         </View>
-        <Image style={styles.logo} source={picbyLogo} />
+        <PicbyLogo style={styles.logo} />
         <View>
           <Formik
             validationSchema={reviewSchema}
@@ -95,7 +95,7 @@ const LoginScreen: React.FC = (props: any) => {
               return (
                 <View>
                   <View style={styles.inputWrapper}>
-                    <Image style={globalStyles.emailLogo} source={emailLogo} />
+                    <EmailLogo style={globalStyles.emailLogo} />
                     <TextInput
                       keyboardType="email-address"
                       style={globalStyles.input}
@@ -108,10 +108,7 @@ const LoginScreen: React.FC = (props: any) => {
                   </View>
                   <View style={globalStyles.errorTextWrapper}>
                     {formikProps.touched.email && formikProps.errors.email && (
-                      <Image
-                        style={globalStyles.errorExlamationMark}
-                        source={errorLogo}
-                      />
+                      <ErrorLogo style={globalStyles.errorExlamationMark} />
                     )}
                     <Text style={globalStyles.errorText}>
                       {formikProps.touched.email &&
@@ -120,7 +117,7 @@ const LoginScreen: React.FC = (props: any) => {
                     </Text>
                   </View>
                   <View style={styles.inputWrapper}>
-                    <Image style={globalStyles.keyLogo} source={keyLogo} />
+                    <KeyLogo style={globalStyles.keyLogo} />
                     <TextInput
                       secureTextEntry={true}
                       style={globalStyles.input}
@@ -134,10 +131,7 @@ const LoginScreen: React.FC = (props: any) => {
                   </View>
                   <View style={globalStyles.errorTextWrapper}>
                     {passwordError && (
-                      <Image
-                        style={globalStyles.errorExlamationMark}
-                        source={errorLogo}
-                      />
+                      <ErrorLogo style={globalStyles.errorExlamationMark} />
                     )}
                     <Text style={globalStyles.errorText}>
                       {passwordError && messageBadPassword}

@@ -14,8 +14,8 @@ import eyePic from '../../common/images/bigEye.png';
 import FlatButton from '../../common/components/Button';
 import {Formik} from 'formik';
 import * as yup from 'yup';
-import emailLogo from './icons/envelope.png';
-import errorLogo from './icons/exclamationMark.png';
+import EmailLogo from './icons/envelope.svg';
+import ErrorLogo from './icons/exclamationMark.svg';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {globalStyles} from '../../common/styles/globalStyles';
 import {useHandlePopupAnimation} from './hooks/useHandlePopupAnimation';
@@ -83,7 +83,7 @@ const ForgotPasswordScreen = (props: any) => {
               return (
                 <View>
                   <View style={styles.inputWrapper}>
-                    <Image style={globalStyles.emailLogo} source={emailLogo} />
+                    <EmailLogo style={globalStyles.emailLogo} />
                     <TextInput
                       keyboardType="email-address"
                       style={globalStyles.input}
@@ -100,10 +100,7 @@ const ForgotPasswordScreen = (props: any) => {
                   <View style={globalStyles.errorTextWrapper}>
                     {(formikProps.touched.email && formikProps.errors.email) ||
                     emailNotFoundError ? (
-                      <Image
-                        style={globalStyles.errorExlamationMark}
-                        source={errorLogo}
-                      />
+                      <ErrorLogo style={globalStyles.errorExlamationMark} />
                     ) : null}
                     <Text style={globalStyles.errorText}>
                       {formikProps.touched.email &&
