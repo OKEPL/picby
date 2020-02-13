@@ -5,7 +5,6 @@ import {
   Text,
   StyleSheet,
   Dimensions,
-  Image,
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
@@ -16,10 +15,10 @@ import {TextInput} from 'react-native-gesture-handler';
 import {globalStyles} from '../../common/styles/globalStyles';
 import {AuthContext} from './authContext';
 import GotAccountQuestion from './components/GotAccountQuestion';
-import picbyLogo from '../../common/images/PICBY.png';
-import emailLogo from './icons/envelope.png';
-import errorLogo from './icons/exclamationMark.png';
-import keyLogo from './icons/key.png';
+import PicbyLogo from '../../common/images/PICBY.svg';
+import EmailLogo from './icons/envelope.svg';
+import ErrorLogo from './icons/exclamationMark.svg';
+import KeyLogo from './icons/key.svg';
 import FlatButton from '../../common/components/Button';
 import {useHandlePopupAnimation} from './hooks/useHandlePopupAnimation';
 import PopUp from '../auth/components/Popup';
@@ -93,7 +92,7 @@ const RegisterScreen: React.FC = (props: any) => {
             onPress={() => navigate('Login')}
           />
         </View>
-        <Image style={styles.logo} source={picbyLogo} />
+        <PicbyLogo style={styles.logo} />
         <View>
           <Formik
             validationSchema={reviewSchema}
@@ -105,7 +104,7 @@ const RegisterScreen: React.FC = (props: any) => {
               return (
                 <View>
                   <View style={styles.inputWrapper}>
-                    <Image style={globalStyles.emailLogo} source={emailLogo} />
+                    <EmailLogo style={globalStyles.emailLogo} />
                     <TextInput
                       keyboardType="email-address"
                       style={globalStyles.input}
@@ -122,10 +121,7 @@ const RegisterScreen: React.FC = (props: any) => {
                   <View style={globalStyles.errorTextWrapper}>
                     {(formikProps.touched.email && formikProps.errors.email) ||
                     emailAlreadyTaken ? (
-                      <Image
-                        style={globalStyles.errorExlamationMark}
-                        source={errorLogo}
-                      />
+                      <ErrorLogo style={globalStyles.errorExlamationMark} />
                     ) : null}
                     <Text style={globalStyles.errorText}>
                       {formikProps.touched.email &&
@@ -135,7 +131,7 @@ const RegisterScreen: React.FC = (props: any) => {
                     </Text>
                   </View>
                   <View style={styles.inputWrapper}>
-                    <Image style={globalStyles.keyLogo} source={keyLogo} />
+                    <KeyLogo style={globalStyles.keyLogo} />
                     <TextInput
                       secureTextEntry={true}
                       style={globalStyles.input}
@@ -149,10 +145,7 @@ const RegisterScreen: React.FC = (props: any) => {
                   <View style={globalStyles.errorTextWrapper}>
                     {formikProps.touched.password &&
                     formikProps.errors.password ? (
-                      <Image
-                        style={globalStyles.errorExlamationMark}
-                        source={errorLogo}
-                      />
+                      <ErrorLogo style={globalStyles.errorExlamationMark} />
                     ) : null}
                     <Text style={globalStyles.errorText}>
                       {formikProps.touched.password &&
@@ -161,7 +154,7 @@ const RegisterScreen: React.FC = (props: any) => {
                     </Text>
                   </View>
                   <View style={styles.inputWrapper}>
-                    <Image style={globalStyles.keyLogo} source={keyLogo} />
+                    <KeyLogo style={globalStyles.keyLogo} />
                     <TextInput
                       secureTextEntry={true}
                       style={globalStyles.input}
@@ -174,10 +167,7 @@ const RegisterScreen: React.FC = (props: any) => {
                   <View style={globalStyles.errorTextWrapper}>
                     {formikProps.touched.passwordRepeat &&
                     formikProps.errors.passwordRepeat ? (
-                      <Image
-                        style={globalStyles.errorExlamationMark}
-                        source={errorLogo}
-                      />
+                      <ErrorLogo style={globalStyles.errorExlamationMark} />
                     ) : null}
                     <Text style={globalStyles.errorText}>
                       {formikProps.touched.passwordRepeat &&

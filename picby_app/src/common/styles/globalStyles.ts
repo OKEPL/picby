@@ -29,13 +29,15 @@ export const globalStyles = StyleSheet.create({
     fontSize: 14,
   },
   emailLogo: {
-    width: 0.0625 * vw,
+    minWidth: 0.0625 * vw,
     marginRight: 0.0062 * vw,
-    height: 0.05 * vw,
+    minHeight: 0.05 * vw,
+    maxHeight: 0.05 * vw,
+    maxWidth: 0.0625 * vw,
   },
   keyLogo: {
-    width: 0.0687 * vw,
-    height: 0.0375 * vw,
+    minWidth: 0.0687 * vw,
+    minHeight: 0.0375 * vw,
   },
   input: {
     paddingLeft: 0.053 * vw,

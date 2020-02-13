@@ -1,13 +1,7 @@
 import React from 'react';
-import {
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-  Dimensions,
-  Image,
-} from 'react-native';
+import {StyleSheet, TouchableOpacity, Text, Dimensions} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import googleIcon from '../../views/auth/icons/googleIcon.png';
+import GoogleIcon from '../../views/auth/icons/googleIcon.svg';
 
 let {width: vw} = Dimensions.get('window');
 
@@ -48,7 +42,7 @@ const FlatButton: React.FC<ButtonProps> = props => {
             ? [styles.linearGradient, {opacity: 0.5}]
             : [styles.linearGradient]
         }>
-        {icon && <Image style={styles.icon} source={googleIcon} />}
+        {icon && <GoogleIcon style={styles.icon} />}
         <Text style={[styles.buttonText, textColor]}>{textValue}</Text>
       </LinearGradient>
     </TouchableOpacity>
