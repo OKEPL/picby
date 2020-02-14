@@ -5,43 +5,47 @@ import {createBottomTabNavigator} from 'react-navigation-tabs';
 import Introduction from './introductionSingleView';
 import {IntroductionContext} from './introductionContext';
 import CustomBottomTab from './customBottomTab';
+import {NavigationStackProp} from 'react-navigation-stack';
+import {introductionTextContent} from '../../staticData/staticData';
 
-const firstView: React.FC = props => {
-  const {firstScreenContentText, firstScreenTitle} = useContext(
-    IntroductionContext,
-  );
+type Props = {
+  navigation: NavigationStackProp;
+  contentText?: string;
+  headerText?: string;
+};
+
+const firstView: React.FC<Props> = ({navigation}) => {
+  const {firstScreenContentText, firstScreenTitle} = introductionTextContent;
   return (
     <View>
       <Introduction
-        {...props}
+        navigation={navigation}
         headerText={firstScreenTitle}
         contentText={firstScreenContentText}
       />
     </View>
   );
 };
-const secondView: React.FC = props => {
-  const {secondScreenContentText, secondScreenTitle} = useContext(
-    IntroductionContext,
-  );
+const secondView: React.FC<Props> = ({navigation}) => {
+  const {secondScreenContentText, secondScreenTitle} = introductionTextContent;
   return (
     <View>
       <Introduction
-        {...props}
+        navigation={navigation}
         headerText={secondScreenTitle}
         contentText={secondScreenContentText}
       />
     </View>
   );
 };
-const thirdView: React.FC = props => {
-  const {thirdScreenTitle, activeScreenNumber} = useContext(
-    IntroductionContext,
-  );
+const thirdView: React.FC<Props> = ({navigation}) => {
+  const {activeScreenNumber} = useContext(IntroductionContext);
+  const {thirdScreenTitle} = introductionTextContent;
+
   return (
     <View>
       <Introduction
-        {...props}
+        navigation={navigation}
         headerText={thirdScreenTitle}
         activeScreenNumber={activeScreenNumber}
       />

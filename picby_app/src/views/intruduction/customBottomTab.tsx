@@ -3,6 +3,7 @@ import {StyleSheet, View, TouchableOpacity, Dimensions} from 'react-native';
 import ClosedEye from './images/eyeClosed.svg';
 import OpenEye from './images/eyeOpen.svg';
 import {IntroductionContext} from './introductionContext';
+import {NavigationStackProp} from 'react-navigation-stack';
 
 let {width: vw} = Dimensions.get('window');
 
@@ -10,9 +11,10 @@ interface EyeComponentProps {
   screenOrder: string;
   screenNumber: number;
 }
-
-const CustomBottomTab: React.FC = (props: any) => {
-  const {navigate} = props.navigation;
+type Props = {
+  navigation: NavigationStackProp;
+};
+const CustomBottomTab: React.FC<Props> = ({navigation: {navigate}}) => {
   const {activeScreenNumber, setActiveScreenNumber} = useContext(
     IntroductionContext,
   );

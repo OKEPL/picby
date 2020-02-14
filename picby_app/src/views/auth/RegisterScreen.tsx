@@ -28,10 +28,15 @@ import {
   inputData,
   introHeaderText,
 } from '../../staticData/staticData';
+import {NavigationStackProp} from 'react-navigation-stack';
 
 const {width: vw} = Dimensions.get('window');
 
-const RegisterScreen: React.FC = (props: any) => {
+type Props = {
+  navigation: NavigationStackProp;
+};
+
+const RegisterScreen: React.FC<Props> = ({navigation: {navigate}}) => {
   const {
     registerServerResponseStatus,
     sendRegstrationRequest,
@@ -40,10 +45,10 @@ const RegisterScreen: React.FC = (props: any) => {
     dismissKeyboard,
   } = useContext(AuthContext);
 
-  const {navigate} = props.navigation;
   const [emailAlreadyTaken, setEmailAlreadyTakenError] = useState(false);
   const {handlePopUpAnimation, fadeAnim} = useHandlePopupAnimation();
   const [messagePopUpText, setMessagePopUpText] = useState('');
+
   const {
     messageBadEmail,
     messageEmailAlreadyTaken,
@@ -52,13 +57,16 @@ const RegisterScreen: React.FC = (props: any) => {
     messagePasswordNotSimilar,
     messageFieldRequired,
   } = registerMessages;
+
   const {serverError} = serverErrors;
+
   const {
     registerText,
     registerWithGoogle,
     textColorBlue,
     textColorWhite,
   } = buttonsData;
+
   const {placeholderTextBlueColor} = inputData;
   const {registerHeaderTextTwo, registerHeaderTextOne} = introHeaderText;
 

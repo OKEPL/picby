@@ -25,6 +25,7 @@ import {
   inputData,
   buttonsData,
 } from '../../staticData/staticData';
+import {NavigationStackProp} from 'react-navigation-stack';
 
 const {width: vw, height: vh} = Dimensions.get('window');
 
@@ -35,8 +36,11 @@ const reviewSchema = yup.object({
     .email(),
 });
 
-const ForgotPasswordScreen = (props: any) => {
-  const {navigate} = props.navigation;
+type Props = {
+  navigation: NavigationStackProp;
+};
+
+const ForgotPasswordScreen: React.FC<Props> = ({navigation: {navigate}}) => {
   const {handlePopUpAnimation, fadeAnim} = useHandlePopupAnimation();
   const {dismissKeyboard} = useContext(AuthContext);
   const [emailNotFoundError, setEmailNotFoundError] = useState(false);
@@ -83,7 +87,7 @@ const ForgotPasswordScreen = (props: any) => {
           <Formik
             validationSchema={reviewSchema}
             initialValues={{email: ''}}
-            onSubmit={(values: any, actions: any) => {
+            onSubmit={(values, actions) => {
               handleSubmit();
             }}>
             {formikProps => {

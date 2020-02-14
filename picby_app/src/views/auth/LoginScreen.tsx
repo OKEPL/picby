@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Dimensions,
   TouchableWithoutFeedback,
-  Keyboard,
 } from 'react-native';
 import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
 import {Formik} from 'formik';
@@ -30,15 +29,20 @@ import {
   inputData,
   loginMessages,
 } from '../../staticData/staticData';
+import {NavigationStackProp} from 'react-navigation-stack';
 
 const {width: vw} = Dimensions.get('window');
 
-const LoginScreen: React.FC = (props: any) => {
+type Props = {
+  navigation: NavigationStackProp;
+};
+
+const LoginScreen: React.FC<Props> = ({navigation: {navigate}}) => {
   const {loginServerResponseStatus, dismissKeyboard} = useContext(AuthContext);
-  const {navigate} = props.navigation;
   const [passwordError, setPasswordError] = useState(false);
   const {handlePopUpAnimation, fadeAnim} = useHandlePopupAnimation();
   const {loginHeaderTextTwo, loginHeaderTextOne} = introHeaderText;
+
   const {
     messageBadEmail,
     messageBadPassword,
@@ -46,8 +50,10 @@ const LoginScreen: React.FC = (props: any) => {
     messageLoginSuccess,
     forgotPasswordText,
   } = loginMessages;
+
   const {placeholderTextBlueColor} = inputData;
   const [messagePopUpText, setMessagePopUpText] = useState('');
+
   const {
     loginText,
     loginWithGoogle,
@@ -96,7 +102,7 @@ const LoginScreen: React.FC = (props: any) => {
           <Formik
             validationSchema={reviewSchema}
             initialValues={{email: '', password: ''}}
-            onSubmit={(values: any, actions: any) => {
+            onSubmit={(values, actions) => {
               handleSubmit();
             }}>
             {formikProps => {

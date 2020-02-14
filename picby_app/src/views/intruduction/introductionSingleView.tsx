@@ -11,12 +11,28 @@ import PicbyLogo from '../../common/images/PICBY.svg';
 import eyePic from '../../common/images/bigEye.png';
 import FlatButton from '../../common/components/Button';
 import {buttonsData} from '../../staticData/staticData';
+import {NavigationStackProp} from 'react-navigation-stack';
 
 const {width: vw} = Dimensions.get('window');
 
-const Introduction = (props: any) => {
-  const {contentText, headerText, activeScreenNumber} = props;
+type Props = {
+  navigation: NavigationStackProp;
+  contentText?: string;
+  headerText?: string;
+  activeScreenNumber?: number;
+};
+
+const Introduction: React.FC<Props> = ({
+  contentText,
+  headerText,
+  activeScreenNumber,
+  navigation,
+}) => {
   const {registerText, loginText, textColorWhite} = buttonsData;
+  const navigateToOtherScreen = (screenName: string) => {
+    navigation.navigate({routeName: screenName});
+  };
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -54,22 +70,14 @@ const Introduction = (props: any) => {
         <View style={styles.buttonsWrapper}>
           <FlatButton
             textValue={registerText}
-            onPress={() =>
-              props.navigation
-                .dangerouslyGetParent()
-                .navigate({routeName: 'Register'})
-            }
+            onPress={() => navigateToOtherScreen('Register')}
             colorVariantIndex={0}
             textColor={textColorWhite}
           />
           <View style={styles.singleButtonWrapper}>
             <FlatButton
               textValue={loginText}
-              onPress={() =>
-                props.navigation
-                  .dangerouslyGetParent()
-                  .navigate({routeName: 'Login'})
-              }
+              onPress={() => navigateToOtherScreen('Login')}
               colorVariantIndex={0}
               textColor={textColorWhite}
             />

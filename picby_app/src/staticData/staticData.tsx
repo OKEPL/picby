@@ -53,3 +53,11 @@ export const introHeaderText = {
   registerHeaderTextOne: 'Zaloguj się',
   loginHeaderTextOne: 'Zarejestruj się',
 };
+
+export const introductionTextContent = {
+  firstScreenContentText: `aplikacji budującej język ${'\n'} w umyśle dziecka,${'\n'} a także uczącącej komunikacji.`,
+  secondScreenContentText: `Dodawaj zdjęcia i nagrania głosowe,${'\n'} twórz opisy, przesyłaj pliki,${'\n'} komponuj albumy${'\n'} pełne wyjątkowych wspomnień!`,
+  firstScreenTitle: 'WITAJ W',
+  secondScreenTitle: 'POZNAJ',
+  thirdScreenTitle: 'ŚWIAT OCZAMI DZIECKA',
+};
