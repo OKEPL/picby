@@ -1,14 +1,29 @@
-import { Entry } from "src/entity/Entry";
-import { Stream } from "stream";
 import { Field, InputType } from "type-graphql";
 
 @InputType()
-export class AddEntryInput {
+export class UpdateEntryInput {
+
   @Field()
-  entry: Entry;
+  id: string;
 
   @Field({nullable: true})
-  catalogId: string;
+  description: string;
 
-  createReadStream: () => Stream;
+  @Field({nullable: true})
+  currentCatalogId: string;
+
+  @Field({nullable: true})
+  newCatalogId: string;
+
+
+
+}
+
+@InputType() 
+export class RemoveEntryInput {
+  @Field()
+  id: string;
+
+  @Field()
+  catalogId: string;
 }

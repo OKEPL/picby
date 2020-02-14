@@ -27,7 +27,11 @@ const DEFAULT_PORT = 4000;
 
   const apolloServer = new ApolloServer({
     schema: await createSchema(),
-    context: ({ req, res }) => ({ req, res })
+    context: ({ req, res  }) => ({ 
+      req,
+      res,
+      /* url is used to serve the path to files */
+      url: req.protocol + "://" + req.get('host')})
   });
 
   const RedisStore = connectRedis(session);
@@ -54,6 +58,8 @@ const DEFAULT_PORT = 4000;
       }
     })
   )
+
+  app.use("/images", express.static("images"));
 
   apolloServer.applyMiddleware({ app, cors: false });
   const port = process.env.PORT || DEFAULT_PORT;

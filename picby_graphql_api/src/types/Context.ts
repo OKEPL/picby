@@ -5,4 +5,5 @@ export interface Context {
   req: Request,
   res: Response
   user?: User;
+  url: string;
 }
