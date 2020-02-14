@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity, Text, Dimensions} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import GoogleIcon from '../../views/auth/icons/googleIcon.svg';
+import {buttonsData} from '../../staticData/staticData';
 
 let {width: vw} = Dimensions.get('window');
 
@@ -11,7 +12,7 @@ interface ButtonProps {
   textColor: object;
   textValue: string;
   icon?: boolean;
-  disabled?: any;
+  disabled?: boolean;
 }
 
 const FlatButton: React.FC<ButtonProps> = props => {
@@ -21,14 +22,10 @@ const FlatButton: React.FC<ButtonProps> = props => {
     colorVariantIndex,
     textColor,
     icon = false,
-    disabled,
+    disabled = false,
   } = props;
+  const {backgroundColorVariants} = buttonsData;
 
-  const colorVariants = [
-    ['#3180AE', '#074782'],
-    ['rgba(255, 255, 255, 0.87)', 'rgba(255, 255, 255, 0.87)'],
-    ['#FBB114', '#FBB114'],
-  ];
   return (
     <TouchableOpacity onPress={onPress} disabled={disabled}>
       <LinearGradient
@@ -36,7 +33,7 @@ const FlatButton: React.FC<ButtonProps> = props => {
         angle={33}
         start={{x: -0.13, y: 0}}
         end={{x: 0.7, y: 0}}
-        colors={colorVariants[colorVariantIndex]}
+        colors={backgroundColorVariants[colorVariantIndex]}
         style={
           disabled
             ? [styles.linearGradient, {opacity: 0.5}]

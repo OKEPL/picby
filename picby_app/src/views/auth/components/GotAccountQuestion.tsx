@@ -1,21 +1,18 @@
 import * as React from 'react';
-import {View, Text, StyleSheet, Dimensions} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
 interface Props {
   questionText: string;
   actionText: string;
-  onPress: () => any;
+  onPress: () => void;
 }
 
 const GotAccountQuestion: React.FC<Props> = props => {
   const {questionText, actionText, onPress} = props;
   return (
     <View style={styles.gotAccountQuestion}>
-      <Text>
-        {questionText}
-        <Text> </Text>
-      </Text>
+      <Text>{questionText}</Text>
       <TouchableOpacity onPress={onPress}>
         <Text style={styles.actionText}>{actionText}</Text>
       </TouchableOpacity>

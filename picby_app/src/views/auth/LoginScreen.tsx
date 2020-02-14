@@ -5,7 +5,6 @@ import {
   Text,
   StyleSheet,
   Dimensions,
-  Image,
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
@@ -25,24 +24,36 @@ import {useHandlePopupAnimation} from './hooks/useHandlePopupAnimation';
 import {useSubmit} from './hooks/useSubmit';
 
 import PopUp from '../auth/components/Popup';
+import {
+  introHeaderText,
+  buttonsData,
+  inputData,
+  loginMessages,
+} from '../../staticData/staticData';
 
 const {width: vw} = Dimensions.get('window');
 
 const LoginScreen: React.FC = (props: any) => {
-  const {
-    loginHeaderTextTwo,
-    loginHeaderTextOne,
-    loginServerResponseStatus,
-  } = useContext(AuthContext);
+  const {loginServerResponseStatus, dismissKeyboard} = useContext(AuthContext);
   const {navigate} = props.navigation;
   const [passwordError, setPasswordError] = useState(false);
   const {handlePopUpAnimation, fadeAnim} = useHandlePopupAnimation();
-
-  const messageEmailConfirmation = `E-mail został potwierdzony,${'\n'}możesz się zalogować.`;
-  const messageLoginSuccess = `Logowanie pomyślne,${'\n'} nastąpi przekierowanie`;
-  const messageBadPassword = 'Hasło jest nieprawidłowe';
-  const messageBadEmail = 'Wprowadź poprawny adres e-mail.';
+  const {loginHeaderTextTwo, loginHeaderTextOne} = introHeaderText;
+  const {
+    messageBadEmail,
+    messageBadPassword,
+    messageEmailConfirmation,
+    messageLoginSuccess,
+    forgotPasswordText,
+  } = loginMessages;
+  const {placeholderTextBlueColor} = inputData;
   const [messagePopUpText, setMessagePopUpText] = useState('');
+  const {
+    loginText,
+    loginWithGoogle,
+    textColorBlue,
+    textColorWhite,
+  } = buttonsData;
 
   const reviewSchema = yup.object({
     email: yup
@@ -70,10 +81,7 @@ const LoginScreen: React.FC = (props: any) => {
   const {handleSubmit, loading, serverError} = useSubmit(handleSendData);
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        Keyboard.dismiss();
-      }}>
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={globalStyles.screenWrapper}>
         <PopUp popUpText={messagePopUpText} fadeAnim={fadeAnim} />
         <View style={styles.gotAccountQuestion}>
@@ -100,7 +108,7 @@ const LoginScreen: React.FC = (props: any) => {
                       keyboardType="email-address"
                       style={globalStyles.input}
                       placeholder="E-mail"
-                      placeholderTextColor="rgba(7, 71, 130, 0.68)"
+                      placeholderTextColor={placeholderTextBlueColor}
                       onChangeText={formikProps.handleChange('email')}
                       value={formikProps.values.email}
                       onBlur={formikProps.handleBlur('email')}
@@ -122,7 +130,7 @@ const LoginScreen: React.FC = (props: any) => {
                       secureTextEntry={true}
                       style={globalStyles.input}
                       placeholder="Hasło"
-                      placeholderTextColor="rgba(7, 71, 130, 0.68)"
+                      placeholderTextColor={placeholderTextBlueColor}
                       onChangeText={formikProps.handleChange('password')}
                       value={formikProps.values.password}
                       onBlur={formikProps.handleBlur('password')}
@@ -141,8 +149,8 @@ const LoginScreen: React.FC = (props: any) => {
                     <FlatButton
                       onPress={formikProps.handleSubmit}
                       colorVariantIndex={1}
-                      textValue="Zaloguj się z google"
-                      textColor={{color: '#3180AE'}}
+                      textValue={loginWithGoogle}
+                      textColor={textColorBlue}
                       icon={true}
                       disabled={loading}
                     />
@@ -150,8 +158,8 @@ const LoginScreen: React.FC = (props: any) => {
                   <FlatButton
                     onPress={formikProps.handleSubmit}
                     colorVariantIndex={0}
-                    textValue="Zaloguj się"
-                    textColor={{color: 'white'}}
+                    textValue={loginText}
+                    textColor={textColorWhite}
                     disabled={loading}
                   />
                 </View>
@@ -161,7 +169,7 @@ const LoginScreen: React.FC = (props: any) => {
         </View>
         <View>
           <TouchableOpacity onPress={() => navigate('ForgotPass')}>
-            <Text style={styles.forgotPassword}>Zapomniałeś hasła?</Text>
+            <Text style={styles.forgotPassword}>{forgotPasswordText}</Text>
           </TouchableOpacity>
         </View>
       </View>

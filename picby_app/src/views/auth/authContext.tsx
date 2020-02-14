@@ -1,46 +1,72 @@
-import React, {useState} from 'react';
+import React, {useState, Dispatch, SetStateAction} from 'react';
+import {Keyboard} from 'react-native';
 
 export interface AuthProps {
-  registerHeaderTextTwo: string;
-  loginHeaderTextTwo: string;
-  registerHeaderTextOne: string;
-  loginHeaderTextOne: string;
-  registerServerResponseStatus: boolean | null;
-  loginServerResponseStatus: boolean | null;
+  registerServerResponseStatus: number | undefined;
+  loginServerResponseStatus?: number;
+  sendRegstrationRequest: (values: Values) => void;
+  loadingData: boolean;
+  setRegisterServerResponseStatus: (
+    value: React.SetStateAction<number | undefined>,
+  ) => void;
+  dismissKeyboard: () => void;
 }
-const registerHeaderTextTwo = 'Masz już konto? Doskonale!';
-const loginHeaderTextTwo = 'Nie masz jeszcze konta?';
-const registerHeaderTextOne = 'Zaloguj się';
-const loginHeaderTextOne = 'Zarejestruj się';
-
-export const AuthContext = React.createContext<AuthProps>({
-  registerHeaderTextTwo,
-  loginHeaderTextTwo,
-  registerHeaderTextOne,
-  loginHeaderTextOne,
-  registerServerResponseStatus: null,
-  loginServerResponseStatus: false,
-});
+export interface Values {
+  password: string;
+  email: string;
+  passwordRepeat: string;
+}
+export const AuthContext = React.createContext<AuthProps>({} as AuthProps);
 
 const AuthContextProvider: React.FC = ({children}) => {
   const [
     registerServerResponseStatus,
     setRegisterServerResponseStatus,
-  ] = useState(true);
-  const [loginServerResponseStatus, setLoginServerResponseStatus] = useState(
-    true,
-  );
+  ] = useState<number | undefined>();
 
-  const queryRegisterUser = () => {};
+  const [loginServerResponseStatus, setLoginServerResponseStatus] = useState<
+    number
+  >();
+
+  const [loadingData, setLoadingData] = useState(false);
+
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
+  const sendRegstrationRequest = (values: Values) => {
+    setLoadingData(true);
+    setTimeout(() => {
+      fetch('https://pokeapi.co/api/v2/pokemon/')
+        .then(response => {
+          console.log(response);
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error(`${response.status}`);
+          }
+        })
+        .then(data => {
+          setRegisterServerResponseStatus(200);
+          setLoadingData(false);
+        })
+        .catch(error => {
+          console.log(typeof error.message);
+          setRegisterServerResponseStatus(Number(error.message));
+          setLoadingData(false);
+        });
+    }, 3000);
+  };
+
   return (
     <AuthContext.Provider
       value={{
-        registerHeaderTextTwo,
-        loginHeaderTextTwo,
-        registerHeaderTextOne,
-        loginHeaderTextOne,
         registerServerResponseStatus,
         loginServerResponseStatus,
+        sendRegstrationRequest,
+        setRegisterServerResponseStatus,
+        loadingData,
+        dismissKeyboard,
       }}>
       {children}
     </AuthContext.Provider>

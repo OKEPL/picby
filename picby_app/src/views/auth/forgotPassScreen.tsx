@@ -1,14 +1,13 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {
-  Keyboard,
   StyleSheet,
   Text,
   View,
   Image,
   Dimensions,
   TextInput,
-  Animated,
 } from 'react-native';
+import {AuthContext} from './authContext';
 
 import eyePic from '../../common/images/bigEye.png';
 import FlatButton from '../../common/components/Button';
@@ -21,6 +20,11 @@ import {globalStyles} from '../../common/styles/globalStyles';
 import {useHandlePopupAnimation} from './hooks/useHandlePopupAnimation';
 import PopUp from '../auth/components/Popup';
 import {useSubmit} from './hooks/useSubmit';
+import {
+  forgotPasswordMessages,
+  inputData,
+  buttonsData,
+} from '../../staticData/staticData';
 
 const {width: vw, height: vh} = Dimensions.get('window');
 
@@ -34,13 +38,18 @@ const reviewSchema = yup.object({
 const ForgotPasswordScreen = (props: any) => {
   const {navigate} = props.navigation;
   const {handlePopUpAnimation, fadeAnim} = useHandlePopupAnimation();
+  const {dismissKeyboard} = useContext(AuthContext);
   const [emailNotFoundError, setEmailNotFoundError] = useState(false);
   const [serverResponseStatus, setServerResponseStatus] = useState(true);
-
-  const messageBadMail = 'Wprowadź poprawny adres e-mail.';
-  const messageEmailNotFound = 'Podany adres e-mail nie istnieje w bazie';
-  const popUpText = `Przypomnienie zostało wysłane.${'\n'} Sprawdź skrzynkę odbiorczą.`;
-  const contentText = `Wprowadź swój adres e-mail ${'\n'} żeby zresetować hasło.`;
+  const {
+    messageBadMail,
+    messageEmailNotFound,
+    popUpText,
+    contentText,
+    contentHeader,
+  } = forgotPasswordMessages;
+  const {placeholderTextBlueColor} = inputData;
+  const {textColorWhite, textColorBlue, sendText, goBackText} = buttonsData;
 
   const handleSendEmailRequest = () => {
     let promise = new Promise((res, rej) =>
@@ -56,20 +65,18 @@ const ForgotPasswordScreen = (props: any) => {
         setEmailNotFoundError(true);
       });
   };
+
   const {handleSubmit, loading, serverError} = useSubmit(
     handleSendEmailRequest,
   );
+
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        Keyboard.dismiss();
-      }}
-      style={styles.wrapper}>
+    <TouchableWithoutFeedback onPress={dismissKeyboard} style={styles.wrapper}>
       <View style={styles.container}>
         <PopUp popUpText={popUpText} fadeAnim={fadeAnim} />
         <View style={styles.content}>
           <Image style={styles.bigEye} source={eyePic} />
-          <Text style={styles.headerText}>ZAPOMNIAŁEŚ HASŁA?</Text>
+          <Text style={styles.headerText}>{contentHeader}</Text>
           <Text style={styles.contentText}>{contentText}</Text>
         </View>
         <View>
@@ -88,12 +95,12 @@ const ForgotPasswordScreen = (props: any) => {
                       keyboardType="email-address"
                       style={globalStyles.input}
                       placeholder="E-mail"
-                      placeholderTextColor="rgba(7, 71, 130, 0.68)"
+                      placeholderTextColor={placeholderTextBlueColor}
                       onChangeText={formikProps.handleChange('email')}
                       value={formikProps.values.email}
                       onBlur={formikProps.handleBlur('email')}
                       onFocus={() =>
-                        emailNotFoundError ? setEmailNotFoundError(false) : null
+                        emailNotFoundError && setEmailNotFoundError(false)
                       }
                     />
                   </View>
@@ -111,18 +118,18 @@ const ForgotPasswordScreen = (props: any) => {
                   </View>
                   <View style={styles.buttonsWrapper}>
                     <FlatButton
-                      textValue="Wyślij"
+                      textValue={sendText}
                       onPress={formikProps.handleSubmit}
                       colorVariantIndex={0}
-                      textColor={{color: 'white'}}
+                      textColor={textColorWhite}
                       disabled={loading}
                     />
                     <View style={styles.singleButtonWrapper}>
                       <FlatButton
-                        textValue="Wróć"
+                        textValue={goBackText}
                         onPress={() => navigate('Login')}
                         colorVariantIndex={2}
-                        textColor={{color: '#3180AE'}}
+                        textColor={textColorBlue}
                         disabled={loading}
                       />
                     </View>

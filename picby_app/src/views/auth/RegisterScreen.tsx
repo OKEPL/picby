@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Dimensions,
   TouchableWithoutFeedback,
-  Keyboard,
 } from 'react-native';
 import {Formik} from 'formik';
 import * as yup from 'yup';
@@ -22,25 +21,46 @@ import KeyLogo from './icons/key.svg';
 import FlatButton from '../../common/components/Button';
 import {useHandlePopupAnimation} from './hooks/useHandlePopupAnimation';
 import PopUp from '../auth/components/Popup';
-import {useSubmit} from './hooks/useSubmit';
+import {
+  registerMessages,
+  serverErrors,
+  buttonsData,
+  inputData,
+  introHeaderText,
+} from '../../staticData/staticData';
 
 const {width: vw} = Dimensions.get('window');
 
 const RegisterScreen: React.FC = (props: any) => {
   const {
-    registerHeaderTextTwo,
-    registerHeaderTextOne,
     registerServerResponseStatus,
+    sendRegstrationRequest,
+    loadingData,
+    setRegisterServerResponseStatus,
+    dismissKeyboard,
   } = useContext(AuthContext);
+
   const {navigate} = props.navigation;
   const [emailAlreadyTaken, setEmailAlreadyTakenError] = useState(false);
   const {handlePopUpAnimation, fadeAnim} = useHandlePopupAnimation();
   const [messagePopUpText, setMessagePopUpText] = useState('');
-  const messageEmailAlreadyTaken = 'Konto o podanym e-mail już istnieje.';
-  const messageBadEmail = 'Wprowadź poprawny adres e-mail.';
-  const messagePasswordError = 'Hasło musi zawierać min. 8 znaków';
-  const messagePasswordNotSimilar = 'Podane hasła nie są identyczne.';
-  const messageRegisterSuccess = `Zarejestrowano pomyślnie,${'\n'}sprawdź skrzynkę pocztową.`;
+  const {
+    messageBadEmail,
+    messageEmailAlreadyTaken,
+    messagePasswordError,
+    messageRegisterSuccess,
+    messagePasswordNotSimilar,
+    messageFieldRequired,
+  } = registerMessages;
+  const {serverError} = serverErrors;
+  const {
+    registerText,
+    registerWithGoogle,
+    textColorBlue,
+    textColorWhite,
+  } = buttonsData;
+  const {placeholderTextBlueColor} = inputData;
+  const {registerHeaderTextTwo, registerHeaderTextOne} = introHeaderText;
 
   const reviewSchema = yup.object({
     email: yup
@@ -53,36 +73,26 @@ const RegisterScreen: React.FC = (props: any) => {
       .min(8),
     passwordRepeat: yup
       .string()
-      .required('To pole jest wymagane')
+      .required(messageFieldRequired)
       .oneOf([yup.ref('password'), null], messagePasswordNotSimilar),
   });
 
-  const handleSendData = () => {
-    let promise = new Promise((res, rej) =>
-      setTimeout(
-        () => (registerServerResponseStatus ? res(true) : rej(true)),
-        3000,
-      ),
-    );
-    return promise
-      .then(() => {
-        //dane ok// wyślij email potwierdzajacy -> //
-        setMessagePopUpText(messageRegisterSuccess);
-        handlePopUpAnimation();
-      })
-      .catch(() => {
-        setMessagePopUpText(messageEmailAlreadyTaken);
-        handlePopUpAnimation();
-        setEmailAlreadyTakenError(true);
-      });
-  };
-  const {handleSubmit, loading, serverError} = useSubmit(handleSendData);
+  React.useEffect(() => {
+    console.log(registerServerResponseStatus);
+    if (registerServerResponseStatus === 404) {
+      //w sumie to 500//
+      setMessagePopUpText(serverError);
+      handlePopUpAnimation();
+      setRegisterServerResponseStatus(undefined);
+    } else if (registerServerResponseStatus == 200) {
+      setMessagePopUpText(messageRegisterSuccess);
+      handlePopUpAnimation();
+      setRegisterServerResponseStatus(undefined);
+    }
+  }, [registerServerResponseStatus]);
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        Keyboard.dismiss();
-      }}>
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.screenWrapper}>
         <PopUp fadeAnim={fadeAnim} popUpText={messagePopUpText} />
         <View style={styles.gotAccountQuestion}>
@@ -98,7 +108,7 @@ const RegisterScreen: React.FC = (props: any) => {
             validationSchema={reviewSchema}
             initialValues={{email: '', password: '', passwordRepeat: ''}}
             onSubmit={(values, actions) => {
-              handleSubmit();
+              sendRegstrationRequest(values);
             }}>
             {formikProps => {
               return (
@@ -109,7 +119,7 @@ const RegisterScreen: React.FC = (props: any) => {
                       keyboardType="email-address"
                       style={globalStyles.input}
                       placeholder="E-mail"
-                      placeholderTextColor="rgba(7, 71, 130, 0.68)"
+                      placeholderTextColor={placeholderTextBlueColor}
                       onChangeText={formikProps.handleChange('email')}
                       value={formikProps.values.email}
                       onBlur={formikProps.handleBlur('email')}
@@ -136,7 +146,7 @@ const RegisterScreen: React.FC = (props: any) => {
                       secureTextEntry={true}
                       style={globalStyles.input}
                       placeholder="Hasło"
-                      placeholderTextColor="rgba(7, 71, 130, 0.68)"
+                      placeholderTextColor={placeholderTextBlueColor}
                       onChangeText={formikProps.handleChange('password')}
                       value={formikProps.values.password}
                       onBlur={formikProps.handleBlur('password')}
@@ -144,9 +154,9 @@ const RegisterScreen: React.FC = (props: any) => {
                   </View>
                   <View style={globalStyles.errorTextWrapper}>
                     {formikProps.touched.password &&
-                    formikProps.errors.password ? (
-                      <ErrorLogo style={globalStyles.errorExlamationMark} />
-                    ) : null}
+                      formikProps.errors.password && (
+                        <ErrorLogo style={globalStyles.errorExlamationMark} />
+                      )}
                     <Text style={globalStyles.errorText}>
                       {formikProps.touched.password &&
                         formikProps.errors.password &&
@@ -159,16 +169,16 @@ const RegisterScreen: React.FC = (props: any) => {
                       secureTextEntry={true}
                       style={globalStyles.input}
                       placeholder="Powtórz hasło"
-                      placeholderTextColor="rgba(7, 71, 130, 0.68)"
+                      placeholderTextColor={placeholderTextBlueColor}
                       onChangeText={formikProps.handleChange('passwordRepeat')}
                       value={formikProps.values.passwordRepeat}
                     />
                   </View>
                   <View style={globalStyles.errorTextWrapper}>
                     {formikProps.touched.passwordRepeat &&
-                    formikProps.errors.passwordRepeat ? (
-                      <ErrorLogo style={globalStyles.errorExlamationMark} />
-                    ) : null}
+                      formikProps.errors.passwordRepeat && (
+                        <ErrorLogo style={globalStyles.errorExlamationMark} />
+                      )}
                     <Text style={globalStyles.errorText}>
                       {formikProps.touched.passwordRepeat &&
                         formikProps.errors.passwordRepeat}
@@ -178,18 +188,18 @@ const RegisterScreen: React.FC = (props: any) => {
                     <FlatButton
                       onPress={formikProps.handleSubmit}
                       colorVariantIndex={1}
-                      textValue="Zarejestruj się z google"
-                      textColor={{color: '#3180AE'}}
+                      textValue={registerWithGoogle}
+                      textColor={textColorBlue}
                       icon={true}
-                      disabled={loading}
+                      disabled={loadingData}
                     />
                   </View>
                   <FlatButton
                     onPress={formikProps.handleSubmit}
                     colorVariantIndex={0}
-                    textValue="Zarejestruj się"
-                    textColor={{color: 'white'}}
-                    disabled={loading}
+                    textValue={registerText}
+                    textColor={textColorWhite}
+                    disabled={loadingData}
                   />
                 </View>
               );

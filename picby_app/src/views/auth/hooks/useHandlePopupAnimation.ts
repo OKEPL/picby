@@ -5,18 +5,18 @@ const {width: vw} = Dimensions.get('window');
 
 export const useHandlePopupAnimation = () => {
   const [fadeAnim] = useState(new Animated.Value(-1 * vw));
+  const HIDE_VALUE = -1;
+  const SHOW_VALUE = 0;
+  const ANIMATION_DURATION = 300;
 
   const handlePopUpAnimation = () => {
-    const hideValue = -1;
-    const showValue = 0;
-
     const animate = (value: number) =>
       Animated.timing(fadeAnim, {
         toValue: value * vw,
-        duration: 300,
+        duration: ANIMATION_DURATION,
       }).start();
-    setTimeout(() => animate(showValue), 300);
-    setTimeout(() => animate(hideValue), 4000);
+    setTimeout(() => animate(SHOW_VALUE), 300);
+    setTimeout(() => animate(HIDE_VALUE), 4000);
   };
 
   return {

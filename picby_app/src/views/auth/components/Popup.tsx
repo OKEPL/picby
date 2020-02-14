@@ -4,7 +4,7 @@ import {Animated, Text, Dimensions, StyleSheet} from 'react-native';
 const {width: vw, height: vh} = Dimensions.get('window');
 
 interface Props {
-  fadeAnim: any;
+  fadeAnim: Animated.Value;
   popUpText: string;
 }
 

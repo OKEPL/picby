@@ -10,11 +10,13 @@ import {
 import PicbyLogo from '../../common/images/PICBY.svg';
 import eyePic from '../../common/images/bigEye.png';
 import FlatButton from '../../common/components/Button';
+import {buttonsData} from '../../staticData/staticData';
 
 const {width: vw} = Dimensions.get('window');
 
 const Introduction = (props: any) => {
   const {contentText, headerText, activeScreenNumber} = props;
+  const {registerText, loginText, textColorWhite} = buttonsData;
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -51,25 +53,25 @@ const Introduction = (props: any) => {
         </View>
         <View style={styles.buttonsWrapper}>
           <FlatButton
-            textValue="Zarejestruj się"
+            textValue={registerText}
             onPress={() =>
               props.navigation
                 .dangerouslyGetParent()
                 .navigate({routeName: 'Register'})
             }
             colorVariantIndex={0}
-            textColor={{color: 'white'}}
+            textColor={textColorWhite}
           />
           <View style={styles.singleButtonWrapper}>
             <FlatButton
-              textValue={'Zaloguj się'}
+              textValue={loginText}
               onPress={() =>
                 props.navigation
                   .dangerouslyGetParent()
                   .navigate({routeName: 'Login'})
               }
               colorVariantIndex={0}
-              textColor={{color: 'white'}}
+              textColor={textColorWhite}
             />
           </View>
         </View>

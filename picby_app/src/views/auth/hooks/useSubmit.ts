@@ -10,7 +10,7 @@ export const useSubmit = (submitFunction: Function) => {
       setServerError(null);
       await submitFunction();
     } catch (error) {
-      setServerError(error);
+      setServerError(error.response.status);
     } finally {
       setLoading(false);
     }

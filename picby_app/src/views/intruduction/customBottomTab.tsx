@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, ReactNode} from 'react';
 import {StyleSheet, View, TouchableOpacity, Dimensions} from 'react-native';
 import ClosedEye from './images/eyeClosed.svg';
 import OpenEye from './images/eyeOpen.svg';
@@ -6,47 +6,40 @@ import {IntroductionContext} from './introductionContext';
 
 let {width: vw} = Dimensions.get('window');
 
+interface EyeComponentProps {
+  screenOrder: string;
+  screenNumber: number;
+}
+
 const CustomBottomTab: React.FC = (props: any) => {
   const {navigate} = props.navigation;
   const {activeScreenNumber, setActiveScreenNumber} = useContext(
     IntroductionContext,
   );
 
+  const EyeComponent: React.FC<EyeComponentProps> = ({
+    screenNumber,
+    screenOrder,
+  }) => {
+    const navigateToOtherScreen = () => {
+      navigate(screenOrder);
+      setActiveScreenNumber(screenNumber);
+    };
+    return (
+      <TouchableOpacity onPress={navigateToOtherScreen}>
+        {activeScreenNumber === screenNumber ? (
+          <OpenEye style={styles.eyeIcon} />
+        ) : (
+          <ClosedEye style={styles.eyeIcon} />
+        )}
+      </TouchableOpacity>
+    );
+  };
   return (
     <View style={styles.eyesWrapper}>
-      <TouchableOpacity
-        onPress={() => {
-          navigate('first');
-          setActiveScreenNumber(1);
-        }}>
-        {activeScreenNumber === 1 ? (
-          <OpenEye style={styles.eyeIcon} />
-        ) : (
-          <ClosedEye style={styles.eyeIcon} />
-        )}
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          navigate('second');
-          setActiveScreenNumber(2);
-        }}>
-        {activeScreenNumber === 2 ? (
-          <OpenEye style={styles.eyeIcon} />
-        ) : (
-          <ClosedEye style={styles.eyeIcon} />
-        )}
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          navigate('third');
-          setActiveScreenNumber(3);
-        }}>
-        {activeScreenNumber === 3 ? (
-          <OpenEye style={styles.eyeIcon} />
-        ) : (
-          <ClosedEye style={styles.eyeIcon} />
-        )}
-      </TouchableOpacity>
+      <EyeComponent screenOrder={'first'} screenNumber={1} />
+      <EyeComponent screenOrder={'second'} screenNumber={2} />
+      <EyeComponent screenOrder={'third'} screenNumber={3} />
     </View>
   );
 };
@@ -62,8 +55,8 @@ const styles = StyleSheet.create({
     marginBottom: vw * 0.07,
   },
   eyeIcon: {
-    minWidth: (vw / 100) * 9,
-    minHeight: (vw / 100) * 9,
+    minWidth: vw * 0.09,
+    minHeight: vw * 0.09,
     resizeMode: 'contain',
   },
 });
