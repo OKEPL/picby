@@ -7,7 +7,7 @@ import { gCall } from '../../test-utils/gCall';
 import { testConnection } from '../../test-utils/testConnection';
 
 let conn: Connection;
-let userId: number;
+let userId: string;
 
 const registerMutation = `
   mutation Register($data: RegisterInput!) {
@@ -20,7 +20,7 @@ const registerMutation = `
 
 interface RegisterResponse {
   register: {
-    id: number;
+    id: string;
   };
 }
 
