@@ -7,7 +7,8 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "devtools": "react-devtools"
   },
   "dependencies": {
     "@react-native-community/cli-platform-android": "3.0.3",
@@ -29,6 +30,7 @@
     "react-native-svg": "^11.0.1",
     "react-native-viewport-units": "0.0.5",
     "react-navigation": "^4.1.0",
+    "react-navigation-drawer": "^2.3.4",
     "react-navigation-stack": "^2.1.1",
     "react-navigation-tabs": "^2.7.0",
     "typescript": "^3.7.5",

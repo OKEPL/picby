@@ -3,7 +3,7 @@ import {Keyboard} from 'react-native';
 
 export interface AuthProps {
   registerServerResponseStatus: number | undefined;
-  loginServerResponseStatus?: number;
+  loginServerResponseStatus?: boolean;
   sendRegstrationRequest: (values: Values) => void;
   loadingData: boolean;
   setRegisterServerResponseStatus: (
@@ -25,8 +25,8 @@ const AuthContextProvider: React.FC = ({children}) => {
   ] = useState<number | undefined>();
 
   const [loginServerResponseStatus, setLoginServerResponseStatus] = useState<
-    number
-  >();
+    boolean
+  >(true);
 
   const [loadingData, setLoadingData] = useState(false);
 

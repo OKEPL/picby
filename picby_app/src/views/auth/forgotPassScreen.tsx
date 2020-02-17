@@ -44,7 +44,7 @@ const ForgotPasswordScreen: React.FC<Props> = ({navigation: {navigate}}) => {
   const {handlePopUpAnimation, fadeAnim} = useHandlePopupAnimation();
   const {dismissKeyboard} = useContext(AuthContext);
   const [emailNotFoundError, setEmailNotFoundError] = useState(false);
-  const [serverResponseStatus, setServerResponseStatus] = useState(true);
+  const [serverResponseStatus] = useState(true);
   const {
     messageBadMail,
     messageEmailNotFound,
@@ -70,9 +70,7 @@ const ForgotPasswordScreen: React.FC<Props> = ({navigation: {navigate}}) => {
       });
   };
 
-  const {handleSubmit, loading, serverError} = useSubmit(
-    handleSendEmailRequest,
-  );
+  const {handleSubmit, loading} = useSubmit(handleSendEmailRequest);
 
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard} style={styles.wrapper}>
@@ -87,7 +85,8 @@ const ForgotPasswordScreen: React.FC<Props> = ({navigation: {navigate}}) => {
           <Formik
             validationSchema={reviewSchema}
             initialValues={{email: ''}}
-            onSubmit={(values, actions) => {
+            onSubmit={() => {
+              // (values, actions)
               handleSubmit();
             }}>
             {formikProps => {

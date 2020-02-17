@@ -37,7 +37,8 @@ type Props = {
   navigation: NavigationStackProp;
 };
 
-const LoginScreen: React.FC<Props> = ({navigation: {navigate}}) => {
+const LoginScreen: React.FC<Props> = ({navigation}) => {
+  const {navigate} = navigation;
   const {loginServerResponseStatus, dismissKeyboard} = useContext(AuthContext);
   const [passwordError, setPasswordError] = useState(false);
   const {handlePopUpAnimation, fadeAnim} = useHandlePopupAnimation();
@@ -82,9 +83,14 @@ const LoginScreen: React.FC<Props> = ({navigation: {navigate}}) => {
         setMessagePopUpText(messageLoginSuccess);
         handlePopUpAnimation();
       })
+      .then(() => navigateToDashboard())
       .catch(() => setPasswordError(true));
   };
   const {handleSubmit, loading, serverError} = useSubmit(handleSendData);
+
+  const navigateToDashboard = () => {
+    navigation.dangerouslyGetParent()?.navigate('Dashboard');
+  };
 
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
@@ -153,7 +159,7 @@ const LoginScreen: React.FC<Props> = ({navigation: {navigate}}) => {
                   </View>
                   <View style={styles.googleButtonWrapper}>
                     <FlatButton
-                      onPress={formikProps.handleSubmit}
+                      onPress={() => navigateToDashboard()}
                       colorVariantIndex={1}
                       textValue={loginWithGoogle}
                       textColor={textColorBlue}

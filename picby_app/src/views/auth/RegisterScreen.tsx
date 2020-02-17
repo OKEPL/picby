@@ -85,19 +85,19 @@ const RegisterScreen: React.FC<Props> = ({navigation: {navigate}}) => {
       .oneOf([yup.ref('password'), null], messagePasswordNotSimilar),
   });
 
-  React.useEffect(() => {
-    console.log(registerServerResponseStatus);
-    if (registerServerResponseStatus === 404) {
-      //w sumie to 500//
-      setMessagePopUpText(serverError);
-      handlePopUpAnimation();
-      setRegisterServerResponseStatus(undefined);
-    } else if (registerServerResponseStatus == 200) {
-      setMessagePopUpText(messageRegisterSuccess);
-      handlePopUpAnimation();
-      setRegisterServerResponseStatus(undefined);
-    }
-  }, [registerServerResponseStatus]);
+  // React.useEffect(() => {
+  //   console.log(registerServerResponseStatus);
+  //   if (registerServerResponseStatus === 404) {
+  //     //w sumie to 500//
+  //     setMessagePopUpText(serverError);
+  //     handlePopUpAnimation();
+  //     setRegisterServerResponseStatus(undefined);
+  //   } else if (registerServerResponseStatus === 200) {
+  //     setMessagePopUpText(messageRegisterSuccess);
+  //     handlePopUpAnimation();
+  //     setRegisterServerResponseStatus(undefined);
+  //   }
+  // }, [registerServerResponseStatus]);
 
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
