@@ -20,7 +20,7 @@ export class User extends BaseEntity {
   @Column('bool', {default: false})
   isConfirmed: boolean;
 
-  @Field(() =>[Catalog])
+  @Field(() =>[Catalog], {nullable: true})
   @OneToMany(() => Catalog, catalog => catalog.user, {eager: true})
   catalogs: Catalog[];
 
