@@ -41,7 +41,6 @@ const LoginScreen: React.FC<Props> = ({navigation}) => {
   const {navigate} = navigation;
   const {loginServerResponseStatus, dismissKeyboard} = useContext(AuthContext);
   const [passwordError, setPasswordError] = useState(false);
-  const {handlePopUpAnimation, fadeAnim} = useHandlePopupAnimation();
   const {loginHeaderTextTwo, loginHeaderTextOne} = introHeaderText;
 
   const {
@@ -83,7 +82,6 @@ const LoginScreen: React.FC<Props> = ({navigation}) => {
         setMessagePopUpText(messageLoginSuccess);
         handlePopUpAnimation();
       })
-      .then(() => navigateToDashboard())
       .catch(() => setPasswordError(true));
   };
   const {handleSubmit, loading, serverError} = useSubmit(handleSendData);
@@ -91,6 +89,9 @@ const LoginScreen: React.FC<Props> = ({navigation}) => {
   const navigateToDashboard = () => {
     navigation.dangerouslyGetParent()?.navigate('Dashboard');
   };
+  const {handlePopUpAnimation, fadeAnim} = useHandlePopupAnimation(
+    navigateToDashboard,
+  );
 
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>

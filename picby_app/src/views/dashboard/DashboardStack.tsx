@@ -1,9 +1,12 @@
-import {createStackNavigator} from 'react-navigation-stack';
+import {
+  createStackNavigator,
+  NavigationStackProp,
+} from 'react-navigation-stack';
 import WelcomeDashboard from './DashboardScreen';
 import Header from '../../navigation/Header';
 import React from 'react';
 
-type nav = any;
+type nav = NavigationStackProp;
 
 const screens = {
   Welcome: {
