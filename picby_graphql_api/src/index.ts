@@ -9,11 +9,11 @@ import { redis } from "./redis";
 import { createSchema } from "./utils/createSchema";
 
 
-const COOKIE_MAX_AGE_LIMIT = 1000*60*60*24*7*36; //7 years
+const COOKIE_MAX_AGE_LIMIT = 1000 * 60 * 60 * 24 * 7 * 36; //7 years
 
 // TODO: we should find a way to store it secretly somewhere
 const AUTH_COOKIE_SECRET = "asdasda";
-const DEFAULT_PORT = 4000;
+const DEFAULT_PORT = 8081;
 
 
 (async () => {
@@ -21,17 +21,18 @@ const DEFAULT_PORT = 4000;
   const app = express();
 
   const options = await getConnectionOptions(
-    process.env.NODE_ENV || "development"
+    'production'
   );
   await createConnection({ ...options, name: "default" });
 
   const apolloServer = new ApolloServer({
     schema: await createSchema(),
-    context: ({ req, res  }) => ({ 
+    context: ({ req, res }) => ({
       req,
       res,
       /* url is used to serve the path to files */
-      url: req.protocol + "://" + req.get('host')})
+      url: req.protocol + "://" + req.get('host')
+    })
   });
 
   const RedisStore = connectRedis(session);
@@ -53,7 +54,7 @@ const DEFAULT_PORT = 4000;
       cookie: {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        maxAge:  COOKIE_MAX_AGE_LIMIT
+        maxAge: COOKIE_MAX_AGE_LIMIT
 
       }
     })
