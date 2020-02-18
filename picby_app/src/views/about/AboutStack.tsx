@@ -2,22 +2,24 @@ import {
   createStackNavigator,
   NavigationStackProp,
 } from 'react-navigation-stack';
-import WelcomeDashboard from './DashboardScreen';
+import AboutScreen from './AboutScreen';
 import Header from '../../navigation/Header';
 import React from 'react';
 
 type nav = NavigationStackProp;
 
 const screens = {
-  Welcome: {
-    screen: WelcomeDashboard,
+  About: {
+    screen: AboutScreen,
     navigationOptions: ({navigation}: {navigation: nav}) => {
       return {
-        headerTitle: () => <Header title="PICBY" navigation={navigation} />,
+        headerTitle: () => (
+          <Header title="O APLIKACJI " navigation={navigation} />
+        ),
       };
     },
   },
 };
-const DashboardStackNav = createStackNavigator(screens);
+const AboutStackNav = createStackNavigator(screens);
 
-export default DashboardStackNav;
+export default AboutStackNav;

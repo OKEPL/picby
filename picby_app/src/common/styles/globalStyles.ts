@@ -48,4 +48,11 @@ export const globalStyles = StyleSheet.create({
     fontSize: 16,
     color: 'rgba(7, 71, 130, 0.68)',
   },
+  menuIcon: {
+    borderRadius: 18,
+    width: 36,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

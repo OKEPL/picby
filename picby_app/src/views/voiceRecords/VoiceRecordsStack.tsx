@@ -2,7 +2,7 @@ import {
   createStackNavigator,
   NavigationStackProp,
 } from 'react-navigation-stack';
-import WelcomeDashboard from './DashboardScreen';
+import VoiceRecordsScreen from './VioceRecordsScreen';
 import Header from '../../navigation/Header';
 import React from 'react';
 
@@ -10,14 +10,16 @@ type nav = NavigationStackProp;
 
 const screens = {
   Welcome: {
-    screen: WelcomeDashboard,
+    screen: VoiceRecordsScreen,
     navigationOptions: ({navigation}: {navigation: nav}) => {
       return {
-        headerTitle: () => <Header title="PICBY" navigation={navigation} />,
+        headerTitle: () => (
+          <Header title="NAGRANIA GŁOSOWE" navigation={navigation} />
+        ),
       };
     },
   },
 };
-const DashboardStackNav = createStackNavigator(screens);
+const VoiceRecordsStackNav = createStackNavigator(screens);
 
-export default DashboardStackNav;
+export default VoiceRecordsStackNav;

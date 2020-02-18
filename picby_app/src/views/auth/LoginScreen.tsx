@@ -87,7 +87,7 @@ const LoginScreen: React.FC<Props> = ({navigation}) => {
   const {handleSubmit, loading, serverError} = useSubmit(handleSendData);
 
   const navigateToDashboard = () => {
-    navigation.dangerouslyGetParent()?.navigate('Dashboard');
+    navigation.dangerouslyGetParent()?.navigate('ParentDashboard');
   };
   const {handlePopUpAnimation, fadeAnim} = useHandlePopupAnimation(
     navigateToDashboard,

@@ -3,6 +3,7 @@ import {View, StyleSheet, ScrollView} from 'react-native';
 import {DrawerNavigatorItems} from 'react-navigation-drawer';
 
 const Sidebar = (props: any) => {
+  console.log(props);
   return (
     <ScrollView>
       <View style={styles.liWrapper}>
