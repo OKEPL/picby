@@ -5,6 +5,7 @@ import {
 import SettingsScreen from './SettingsScreen';
 import Header from '../../navigation/Header';
 import React from 'react';
+import {DrawerActions} from 'react-navigation-drawer';
 
 type nav = NavigationStackProp;
 
@@ -13,8 +14,11 @@ const screens = {
     screen: SettingsScreen,
     navigationOptions: ({navigation}: {navigation: nav}) => {
       return {
-        headerTitle: () => (
-          <Header title="USTAWIENIA" navigation={navigation} />
+        header: () => (
+          <Header
+            title="USTAWIENIA"
+            openMenu={() => navigation.dispatch(DrawerActions.openDrawer())}
+          />
         ),
       };
     },

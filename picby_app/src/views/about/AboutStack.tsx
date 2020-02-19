@@ -5,6 +5,7 @@ import {
 import AboutScreen from './AboutScreen';
 import Header from '../../navigation/Header';
 import React from 'react';
+import {DrawerActions} from 'react-navigation-drawer';
 
 type nav = NavigationStackProp;
 
@@ -13,8 +14,11 @@ const screens = {
     screen: AboutScreen,
     navigationOptions: ({navigation}: {navigation: nav}) => {
       return {
-        headerTitle: () => (
-          <Header title="O APLIKACJI " navigation={navigation} />
+        header: () => (
+          <Header
+            title="O APLIKACJI "
+            openMenu={() => navigation.dispatch(DrawerActions.openDrawer())}
+          />
         ),
       };
     },

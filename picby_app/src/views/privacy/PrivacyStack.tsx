@@ -5,6 +5,7 @@ import {
 import PrivacyScreen from './PrivacyScreen';
 import Header from '../../navigation/Header';
 import React from 'react';
+import {DrawerActions} from 'react-navigation-drawer';
 
 type nav = NavigationStackProp;
 
@@ -13,8 +14,11 @@ const screens = {
     screen: PrivacyScreen,
     navigationOptions: ({navigation}: {navigation: nav}) => {
       return {
-        headerTitle: () => (
-          <Header title="POLITYKA PRYWATNOŚCI" navigation={navigation} />
+        header: () => (
+          <Header
+            title="POLITYKA PRYWATNOŚCI"
+            openMenu={() => navigation.dispatch(DrawerActions.openDrawer())}
+          />
         ),
       };
     },

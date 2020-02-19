@@ -11,11 +11,13 @@ export interface AuthProps {
   ) => void;
   dismissKeyboard: () => void;
 }
+
 export interface Values {
   password: string;
   email: string;
   passwordRepeat: string;
 }
+
 export const AuthContext = React.createContext<AuthProps>({} as AuthProps);
 
 const AuthContextProvider: React.FC = ({children}) => {

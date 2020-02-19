@@ -5,6 +5,7 @@ import {
 import VoiceRecordsScreen from './VioceRecordsScreen';
 import Header from '../../navigation/Header';
 import React from 'react';
+import {DrawerActions} from 'react-navigation-drawer';
 
 type nav = NavigationStackProp;
 
@@ -13,8 +14,11 @@ const screens = {
     screen: VoiceRecordsScreen,
     navigationOptions: ({navigation}: {navigation: nav}) => {
       return {
-        headerTitle: () => (
-          <Header title="NAGRANIA GŁOSOWE" navigation={navigation} />
+        header: () => (
+          <Header
+            title="NAGRANIA GŁOSOWE"
+            openMenu={() => navigation.dispatch(DrawerActions.openDrawer())}
+          />
         ),
       };
     },

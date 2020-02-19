@@ -5,6 +5,7 @@ import {
 import WelcomeDashboard from './DashboardScreen';
 import Header from '../../navigation/Header';
 import React from 'react';
+import {DrawerActions} from 'react-navigation-drawer';
 
 type nav = NavigationStackProp;
 
@@ -13,7 +14,12 @@ const screens = {
     screen: WelcomeDashboard,
     navigationOptions: ({navigation}: {navigation: nav}) => {
       return {
-        headerTitle: () => <Header title="PICBY" navigation={navigation} />,
+        header: () => (
+          <Header
+            title="PICBY"
+            openMenu={() => navigation.dispatch(DrawerActions.openDrawer())}
+          />
+        ),
       };
     },
   },

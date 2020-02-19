@@ -5,6 +5,7 @@ import {
 import CatalogsScreen from './CatalogsScreen';
 import Header from '../../navigation/Header';
 import React from 'react';
+import {DrawerActions} from 'react-navigation-drawer';
 
 type nav = NavigationStackProp;
 
@@ -13,7 +14,12 @@ const screens = {
     screen: CatalogsScreen,
     navigationOptions: ({navigation}: {navigation: nav}) => {
       return {
-        headerTitle: () => <Header title="KATALOGI" navigation={navigation} />,
+        header: () => (
+          <Header
+            title="KATALOGI"
+            openMenu={() => navigation.dispatch(DrawerActions.openDrawer())}
+          />
+        ),
       };
     },
   },

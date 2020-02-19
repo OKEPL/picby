@@ -61,3 +61,8 @@ export const introductionTextContent = {
   secondScreenTitle: 'POZNAJ',
   thirdScreenTitle: 'ŚWIAT OCZAMI DZIECKA',
 };
+
+export const menuColors = {
+  RED_COLOR: '#EB5F34',
+  YELLOW_COLOR: '#FBB114',
+};
