@@ -166,6 +166,7 @@ const LoginScreen: React.FC<Props> = ({navigation}) => {
                       textColor={textColorBlue}
                       icon={true}
                       disabled={loading}
+                      googleButton={true}
                     />
                   </View>
                   <FlatButton
@@ -180,11 +181,9 @@ const LoginScreen: React.FC<Props> = ({navigation}) => {
             }}
           </Formik>
         </View>
-        <View>
-          <TouchableOpacity onPress={() => navigate('ForgotPass')}>
-            <Text style={styles.forgotPassword}>{forgotPasswordText}</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity onPress={() => navigate('ForgotPass')}>
+          <Text style={styles.forgotPassword}>{forgotPasswordText}</Text>
+        </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>
   );

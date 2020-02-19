@@ -1,6 +1,6 @@
 import {StyleSheet, Dimensions} from 'react-native';
 
-const {width: vw} = Dimensions.get('window');
+const {width: vw, height: vh} = Dimensions.get('window');
 
 export const globalStyles = StyleSheet.create({
   container: {
@@ -8,6 +8,8 @@ export const globalStyles = StyleSheet.create({
   },
   screenWrapper: {
     alignItems: 'center',
+    backgroundColor: '#fff',
+    minHeight: vh,
   },
   errorTextWrapper: {
     marginTop: 3,

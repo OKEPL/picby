@@ -101,7 +101,7 @@ const RegisterScreen: React.FC<Props> = ({navigation: {navigate}}) => {
 
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
-      <View style={styles.screenWrapper}>
+      <View style={globalStyles.screenWrapper}>
         <PopUp fadeAnim={fadeAnim} popUpText={messagePopUpText} />
         <View style={styles.gotAccountQuestion}>
           <GotAccountQuestion
@@ -200,6 +200,7 @@ const RegisterScreen: React.FC<Props> = ({navigation: {navigate}}) => {
                       textColor={textColorBlue}
                       icon={true}
                       disabled={loadingData}
+                      googleButton={true}
                     />
                   </View>
                   <FlatButton
@@ -219,9 +220,6 @@ const RegisterScreen: React.FC<Props> = ({navigation: {navigate}}) => {
   );
 };
 const styles = StyleSheet.create({
-  screenWrapper: {
-    alignItems: 'center',
-  },
   gotAccountQuestion: {
     alignSelf: 'flex-start',
     marginLeft: 0.1 * vw,

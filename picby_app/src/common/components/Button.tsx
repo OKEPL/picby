@@ -13,6 +13,7 @@ interface ButtonProps {
   textValue: string;
   icon?: boolean;
   disabled?: boolean;
+  googleButton?: boolean;
 }
 
 const FlatButton: React.FC<ButtonProps> = props => {
@@ -23,7 +24,9 @@ const FlatButton: React.FC<ButtonProps> = props => {
     textColor,
     icon = false,
     disabled = false,
+    googleButton = false,
   } = props;
+
   const {backgroundColorVariants} = buttonsData;
 
   return (
@@ -37,6 +40,8 @@ const FlatButton: React.FC<ButtonProps> = props => {
         style={
           disabled
             ? [styles.linearGradient, {opacity: 0.5}]
+            : googleButton
+            ? [styles.linearGradient, styles.googleButton]
             : [styles.linearGradient]
         }>
         {icon && <GoogleIcon style={styles.icon} />}
@@ -65,6 +70,19 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.12,
     shadowRadius: 2,
+    elevation: 2,
+  },
+  googleButton: {
+    borderWidth: 2,
+    borderColor: 'rgba(49, 128, 174, 0.1)',
+    borderRadius: 2,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 1,
+      height: 1,
+    },
+    elevation: 2,
+    shadowOpacity: 0.12,
   },
   buttonText: {
     fontSize: 0.043 * vw,
