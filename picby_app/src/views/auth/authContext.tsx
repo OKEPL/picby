@@ -1,14 +1,20 @@
 import React, {useState, Dispatch, SetStateAction} from 'react';
 import {Keyboard} from 'react-native';
-import {debug} from 'react-native-reanimated';
 
 export interface AuthProps {
-  registerServerResponseStatus: number | undefined;
-  sendRegstrationRequest: (values: Values) => void;
-  loadingData: boolean;
-  setRegisterServerResponseStatus: (
-    value: React.SetStateAction<number | undefined>,
-  ) => void;
+  registerContextData: {
+    isEmailAlreadyTaken: boolean;
+    setIsEmailAlreadyTaken: Dispatch<SetStateAction<boolean>>;
+    isItServerError: boolean;
+    isRegisterSuccess: boolean;
+    handleRegisterRequestAndErrors: (
+      email: string,
+      password: string,
+      resetForm: () => void,
+    ) => Promise<void>;
+    setAreRegisterButtonsDisabled: Dispatch<SetStateAction<boolean>>;
+    areRegisterButtonsDisabled: boolean;
+  };
   dismissKeyboard: () => void;
   loginContextData: {
     isPasswordBad: boolean;
@@ -18,7 +24,11 @@ export interface AuthProps {
     setIsPasswordBad: Dispatch<SetStateAction<boolean>>;
     areButtonsDisabled: boolean;
     setAreButtonsDisabled: Dispatch<SetStateAction<boolean>>;
-    sendCredentialsToApi: (email: string, password: string) => Promise<void>;
+    handleLoginRequestAndErrors: (
+      email: string,
+      password: string,
+      resetForm: () => void,
+    ) => Promise<void>;
   };
 }
 
@@ -43,30 +53,36 @@ const AuthContextProvider: React.FC = ({children}) => {
 
   const [areButtonsDisabled, setAreButtonsDisabled] = useState<boolean>(false);
 
-  const loginQraphQLQuery = async () => {
+  const loginGraphQLQuery = async () => {
     try {
       await fetch('https://pokeapi.co/api/v2/pokemon/asdasd').then(response => {
         if (response.status > 400) {
           throw new Error();
-          //add else if with different status to pass to catch
+          //add else if with different status to pass error to catch
         }
         return response;
       });
     } catch (error) {
+      console.log(error.message);
       throw new Error('2');
     }
   };
 
-  const sendCredentialsToApi = async (email: string, password: string) => {
+  const handleLoginRequestAndErrors = async (
+    email: string,
+    password: string,
+    resetForm: () => void,
+  ) => {
     try {
       setAreButtonsDisabled(true);
       await setIsServerNotResponding(false);
-      await loginQraphQLQuery();
+      await loginGraphQLQuery();
       setIsLoginSuccess(true);
+      resetForm();
     } catch (error) {
       // console.log(error.message);
-      // setIsServerNotResponding(true);
-      setIsPasswordBad(true);
+      setIsServerNotResponding(true);
+      // setIsPasswordBad(true);
     } finally {
       console.log('request zakonczony');
       setIsLoginSuccess(false);
@@ -82,49 +98,80 @@ const AuthContextProvider: React.FC = ({children}) => {
     setIsPasswordBad,
     areButtonsDisabled,
     setAreButtonsDisabled,
-    sendCredentialsToApi,
+    handleLoginRequestAndErrors,
   };
 
   ////////////  end of login logic //////////////
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };
-  const [loadingData, setLoadingData] = useState(false);
-  const [
-    registerServerResponseStatus,
-    setRegisterServerResponseStatus,
-  ] = useState<number | undefined>();
-  const sendRegstrationRequest = (values: Values) => {
-    setLoadingData(true);
-    setTimeout(() => {
-      fetch('https://pokeapi.co/api/v2/pokemon/')
-        .then(response => {
-          console.log(response);
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error(`${response.status}`);
-          }
-        })
-        .then(data => {
-          setRegisterServerResponseStatus(200);
-          setLoadingData(false);
-        })
-        .catch(error => {
-          console.log(typeof error.message);
-          setRegisterServerResponseStatus(Number(error.message));
-          setLoadingData(false);
-        });
-    }, 3000);
+
+  /////////// start of register logic //////////////
+
+  const [isEmailAlreadyTaken, setIsEmailAlreadyTaken] = useState<boolean>(
+    false,
+  );
+  const [isItServerError, setIsItServerError] = useState<boolean>(false);
+  const [areRegisterButtonsDisabled, setAreRegisterButtonsDisabled] = useState<
+    boolean
+  >(false);
+  const [isRegisterSuccess, setIsRegisterSuccess] = useState<boolean>(false);
+
+  const registerGraphQLQuery = async () => {
+    try {
+      //to have good response delete /"random string" after /pokemon/
+      await fetch('https://pokeapi.co/api/v2/pokemon').then(response => {
+        if (response.status > 400) {
+          throw new Error();
+          //add else if with different status to pass error to catch
+        }
+        return response;
+      });
+    } catch (error) {
+      console.log(error.message);
+      throw new Error('2');
+    }
   };
+
+  const handleRegisterRequestAndErrors = async (
+    email: string,
+    password: string,
+    resetForm: () => void,
+  ) => {
+    try {
+      setAreRegisterButtonsDisabled(true);
+      await setIsItServerError(false);
+      await registerGraphQLQuery();
+      await setIsRegisterSuccess(true);
+      resetForm();
+    } catch (error) {
+      // console.log(error.message);
+      setIsItServerError(true);
+      // setIsEmailAlreadyTaken(true);
+    } finally {
+      setIsRegisterSuccess(false);
+      setIsItServerError(false);
+      setIsRegisterSuccess(false);
+      console.log('register request finished');
+    }
+  };
+
+  const registerContextData = {
+    isEmailAlreadyTaken,
+    isRegisterSuccess,
+    isItServerError,
+    handleRegisterRequestAndErrors,
+    setAreRegisterButtonsDisabled,
+    areRegisterButtonsDisabled,
+    setIsEmailAlreadyTaken,
+  };
+
+  ////////// end of reigster logic ////////////////
 
   return (
     <AuthContext.Provider
       value={{
-        registerServerResponseStatus,
-        sendRegstrationRequest,
-        setRegisterServerResponseStatus,
-        loadingData,
+        registerContextData,
         dismissKeyboard,
         loginContextData,
       }}>

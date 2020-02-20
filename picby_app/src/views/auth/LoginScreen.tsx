@@ -20,8 +20,6 @@ import EmailLogo from './icons/envelope.svg';
 import KeyLogo from './icons/key.svg';
 import ErrorLogo from './icons/exclamationMark.svg';
 import {useHandlePopupAnimation} from './hooks/useHandlePopupAnimation';
-import {useSubmit} from './hooks/useSubmit';
-
 import PopUp from '../auth/components/Popup';
 import {
   introHeaderText,
@@ -42,6 +40,10 @@ interface CredentialTypes {
   password: string;
 }
 
+interface ActionTypes {
+  resetForm: () => void;
+}
+
 const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
   const {navigate} = navigation;
 
@@ -51,7 +53,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
       isServerNotResponding,
       isPasswordBad,
       isUserLoggedInFirstTime,
-      sendCredentialsToApi,
+      handleLoginRequestAndErrors,
       setIsPasswordBad,
       areButtonsDisabled,
       setAreButtonsDisabled,
@@ -102,9 +104,13 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     navigation.dangerouslyGetParent()?.navigate('ParentDashboard');
   };
   const {handlePopUpAnimation, fadeAnim} = useHandlePopupAnimation();
-  const sendLoginRequest = async (values: CredentialTypes) => {
+  const sendLoginRequest = async (
+    values: CredentialTypes,
+    actions: ActionTypes,
+  ) => {
     const {email, password} = values;
-    await sendCredentialsToApi(email, password);
+    const {resetForm} = actions;
+    await handleLoginRequestAndErrors(email, password, resetForm);
   };
 
   return (
@@ -124,7 +130,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
             validationSchema={reviewSchema}
             initialValues={{email: '', password: ''}}
             onSubmit={(values, actions) => {
-              sendLoginRequest(values);
+              sendLoginRequest(values, actions);
             }}>
             {formikProps => {
               return (

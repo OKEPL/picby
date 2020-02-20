@@ -5,6 +5,7 @@ export const registerMessages = {
   messagePasswordNotSimilar: 'Podane hasła nie są identyczne.',
   messageRegisterSuccess: `Zarejestrowano pomyślnie,${'\n'}sprawdź skrzynkę pocztową.`,
   messageFieldRequired: 'To pole jest wymagane',
+  messageServerError: 'Błąd serwera',
 };
 
 export const loginMessages = {
@@ -22,10 +23,6 @@ export const forgotPasswordMessages = {
   popUpText: `Przypomnienie zostało wysłane.${'\n'} Sprawdź skrzynkę odbiorczą.`,
   contentText: `Wprowadź swój adres e-mail ${'\n'} żeby zresetować hasło.`,
   contentHeader: 'ZAPOMNIAŁEŚ HASŁA?',
-};
-
-export const serverErrors = {
-  serverError: 'Błąd serwera',
 };
 
 export const buttonsData = {

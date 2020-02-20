@@ -7,7 +7,7 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
 } from 'react-native';
-import {Formik} from 'formik';
+import {Formik, FormikProps, FormikHandlers} from 'formik';
 import * as yup from 'yup';
 import {TextInput} from 'react-native-gesture-handler';
 
@@ -23,7 +23,6 @@ import {useHandlePopupAnimation} from './hooks/useHandlePopupAnimation';
 import PopUp from '../auth/components/Popup';
 import {
   registerMessages,
-  serverErrors,
   buttonsData,
   inputData,
   introHeaderText,
@@ -36,16 +35,29 @@ type Props = {
   navigation: NavigationStackProp;
 };
 
+interface CredentialTypes {
+  email: string;
+  password: string;
+}
+
+interface ActionTypes {
+  resetForm: () => void;
+}
+
 const RegisterScreen: React.FC<Props> = ({navigation: {navigate}}) => {
   const {
-    registerServerResponseStatus,
-    sendRegstrationRequest,
-    loadingData,
-    setRegisterServerResponseStatus,
     dismissKeyboard,
+    registerContextData: {
+      isEmailAlreadyTaken,
+      handleRegisterRequestAndErrors,
+      isRegisterSuccess,
+      areRegisterButtonsDisabled,
+      setAreRegisterButtonsDisabled,
+      isItServerError,
+      setIsEmailAlreadyTaken,
+    },
   } = useContext(AuthContext);
 
-  const [emailAlreadyTaken, setEmailAlreadyTakenError] = useState(false);
   const {handlePopUpAnimation, fadeAnim} = useHandlePopupAnimation();
   const [messagePopUpText, setMessagePopUpText] = useState('');
 
@@ -56,9 +68,8 @@ const RegisterScreen: React.FC<Props> = ({navigation: {navigate}}) => {
     messageRegisterSuccess,
     messagePasswordNotSimilar,
     messageFieldRequired,
+    messageServerError,
   } = registerMessages;
-
-  const {serverError} = serverErrors;
 
   const {
     registerText,
@@ -85,20 +96,24 @@ const RegisterScreen: React.FC<Props> = ({navigation: {navigate}}) => {
       .oneOf([yup.ref('password'), null], messagePasswordNotSimilar),
   });
 
-  // React.useEffect(() => {
-  //   console.log(registerServerResponseStatus);
-  //   if (registerServerResponseStatus === 404) {
-  //     //w sumie to 500//
-  //     setMessagePopUpText(serverError);
-  //     handlePopUpAnimation();
-  //     setRegisterServerResponseStatus(undefined);
-  //   } else if (registerServerResponseStatus === 200) {
-  //     setMessagePopUpText(messageRegisterSuccess);
-  //     handlePopUpAnimation();
-  //     setRegisterServerResponseStatus(undefined);
-  //   }
-  // }, [registerServerResponseStatus]);
+  React.useEffect(() => {
+    if (isItServerError) {
+      setMessagePopUpText(messageServerError);
+      handlePopUpAnimation();
+    } else if (isRegisterSuccess) {
+      setMessagePopUpText(messageRegisterSuccess);
+      handlePopUpAnimation();
+    }
+  }, [isItServerError, isRegisterSuccess]);
 
+  const sendRegisterRequest = async (
+    values: CredentialTypes,
+    actions: ActionTypes,
+  ) => {
+    const {email, password} = values;
+    const {resetForm} = actions;
+    handleRegisterRequestAndErrors(email, password, resetForm);
+  };
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={globalStyles.screenWrapper}>
@@ -116,7 +131,7 @@ const RegisterScreen: React.FC<Props> = ({navigation: {navigate}}) => {
             validationSchema={reviewSchema}
             initialValues={{email: '', password: '', passwordRepeat: ''}}
             onSubmit={(values, actions) => {
-              sendRegstrationRequest(values);
+              sendRegisterRequest(values, actions);
             }}>
             {formikProps => {
               return (
@@ -131,21 +146,24 @@ const RegisterScreen: React.FC<Props> = ({navigation: {navigate}}) => {
                       onChangeText={formikProps.handleChange('email')}
                       value={formikProps.values.email}
                       onBlur={formikProps.handleBlur('email')}
-                      onFocus={() =>
-                        emailAlreadyTaken && setEmailAlreadyTakenError(false)
-                      }
+                      onFocus={() => {
+                        if (isEmailAlreadyTaken) {
+                          setIsEmailAlreadyTaken(false);
+                          setAreRegisterButtonsDisabled(false);
+                        }
+                      }}
                     />
                   </View>
                   <View style={globalStyles.errorTextWrapper}>
                     {(formikProps.touched.email && formikProps.errors.email) ||
-                    emailAlreadyTaken ? (
+                    isEmailAlreadyTaken ? (
                       <ErrorLogo style={globalStyles.errorExlamationMark} />
                     ) : null}
                     <Text style={globalStyles.errorText}>
                       {formikProps.touched.email &&
                         formikProps.errors.email &&
                         messageBadEmail}
-                      {emailAlreadyTaken && messageEmailAlreadyTaken}
+                      {isEmailAlreadyTaken && messageEmailAlreadyTaken}
                     </Text>
                   </View>
                   <View style={styles.inputWrapper}>
@@ -199,7 +217,7 @@ const RegisterScreen: React.FC<Props> = ({navigation: {navigate}}) => {
                       textValue={registerWithGoogle}
                       textColor={textColorBlue}
                       icon={true}
-                      disabled={loadingData}
+                      disabled={areRegisterButtonsDisabled}
                       googleButton={true}
                     />
                   </View>
@@ -208,7 +226,7 @@ const RegisterScreen: React.FC<Props> = ({navigation: {navigate}}) => {
                     colorVariantIndex={0}
                     textValue={registerText}
                     textColor={textColorWhite}
-                    disabled={loadingData}
+                    disabled={areRegisterButtonsDisabled}
                   />
                 </View>
               );
