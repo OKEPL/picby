@@ -18,7 +18,7 @@ import ErrorLogo from './icons/exclamationMark.svg';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {globalStyles} from '../../common/styles/globalStyles';
 import {useHandlePopupAnimation} from './hooks/useHandlePopupAnimation';
-import PopUp from '../auth/components/Popup';
+import PopUp from './components/Popup';
 import {useSubmit} from './hooks/useSubmit';
 import {
   forgotPasswordMessages,

@@ -63,14 +63,6 @@ const styles = StyleSheet.create({
     maxHeight: 0.125 * vw,
     minWidth: 0.8 * vw,
     maxWidth: 0.8 * vw,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 2,
-      height: 2,
-    },
-    shadowOpacity: 0.12,
-    shadowRadius: 2,
-    elevation: 2,
   },
   googleButton: {
     borderWidth: 2,

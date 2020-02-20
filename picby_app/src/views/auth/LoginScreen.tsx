@@ -33,22 +33,40 @@ import {NavigationStackProp} from 'react-navigation-stack';
 
 const {width: vw} = Dimensions.get('window');
 
-type Props = {
+type LoginScreenProps = {
   navigation: NavigationStackProp;
 };
 
-const LoginScreen: React.FC<Props> = ({navigation}) => {
+interface CredentialTypes {
+  email: string;
+  password: string;
+}
+
+const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
   const {navigate} = navigation;
-  const {loginServerResponseStatus, dismissKeyboard} = useContext(AuthContext);
-  const [passwordError, setPasswordError] = useState(false);
+
+  const {
+    loginContextData: {
+      isLoginSuccess,
+      isServerNotResponding,
+      isPasswordBad,
+      isUserLoggedInFirstTime,
+      sendCredentialsToApi,
+      setIsPasswordBad,
+      areButtonsDisabled,
+      setAreButtonsDisabled,
+    },
+    dismissKeyboard,
+  } = useContext(AuthContext);
+
   const {loginHeaderTextTwo, loginHeaderTextOne} = introHeaderText;
 
   const {
     messageBadEmail,
     messageBadPassword,
-    messageEmailConfirmation,
     messageLoginSuccess,
     forgotPasswordText,
+    messageServerError,
   } = loginMessages;
 
   const {placeholderTextBlueColor} = inputData;
@@ -69,29 +87,25 @@ const LoginScreen: React.FC<Props> = ({navigation}) => {
     password: yup.string().required(),
   });
 
-  const handleSendData = () => {
-    let promise = new Promise((resolve, reject) => {
-      setTimeout(
-        () => (loginServerResponseStatus ? resolve(true) : reject(true)),
-        3000,
-      );
-    });
+  // handle errors //
+  React.useEffect(() => {
+    if (isServerNotResponding) {
+      setMessagePopUpText(messageServerError);
+      handlePopUpAnimation();
+    } else if (isLoginSuccess) {
+      setMessagePopUpText(messageLoginSuccess);
+      handlePopUpAnimation(redirectToDashboard);
+    }
+  }, [isLoginSuccess, isServerNotResponding, isPasswordBad]);
 
-    return promise
-      .then(() => {
-        setMessagePopUpText(messageLoginSuccess);
-        handlePopUpAnimation();
-      })
-      .catch(() => setPasswordError(true));
-  };
-  const {handleSubmit, loading, serverError} = useSubmit(handleSendData);
-
-  const navigateToDashboard = () => {
+  const redirectToDashboard = () => {
     navigation.dangerouslyGetParent()?.navigate('ParentDashboard');
   };
-  const {handlePopUpAnimation, fadeAnim} = useHandlePopupAnimation(
-    navigateToDashboard,
-  );
+  const {handlePopUpAnimation, fadeAnim} = useHandlePopupAnimation();
+  const sendLoginRequest = async (values: CredentialTypes) => {
+    const {email, password} = values;
+    await sendCredentialsToApi(email, password);
+  };
 
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
@@ -110,7 +124,7 @@ const LoginScreen: React.FC<Props> = ({navigation}) => {
             validationSchema={reviewSchema}
             initialValues={{email: '', password: ''}}
             onSubmit={(values, actions) => {
-              handleSubmit();
+              sendLoginRequest(values);
             }}>
             {formikProps => {
               return (
@@ -147,25 +161,30 @@ const LoginScreen: React.FC<Props> = ({navigation}) => {
                       onChangeText={formikProps.handleChange('password')}
                       value={formikProps.values.password}
                       onBlur={formikProps.handleBlur('password')}
-                      onFocus={() => passwordError && setPasswordError(false)}
+                      onFocus={() => {
+                        if (isPasswordBad) {
+                          setIsPasswordBad(false);
+                          setAreButtonsDisabled(false);
+                        }
+                      }}
                     />
                   </View>
                   <View style={globalStyles.errorTextWrapper}>
-                    {passwordError && (
+                    {isPasswordBad && (
                       <ErrorLogo style={globalStyles.errorExlamationMark} />
                     )}
                     <Text style={globalStyles.errorText}>
-                      {passwordError && messageBadPassword}
+                      {isPasswordBad && messageBadPassword}
                     </Text>
                   </View>
                   <View style={styles.googleButtonWrapper}>
                     <FlatButton
-                      onPress={() => navigateToDashboard()}
+                      onPress={() => redirectToDashboard()}
                       colorVariantIndex={1}
                       textValue={loginWithGoogle}
                       textColor={textColorBlue}
                       icon={true}
-                      disabled={loading}
+                      disabled={areButtonsDisabled}
                       googleButton={true}
                     />
                   </View>
@@ -174,7 +193,7 @@ const LoginScreen: React.FC<Props> = ({navigation}) => {
                     colorVariantIndex={0}
                     textValue={loginText}
                     textColor={textColorWhite}
-                    disabled={loading}
+                    disabled={areButtonsDisabled}
                   />
                 </View>
               );

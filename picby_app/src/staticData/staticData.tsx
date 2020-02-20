@@ -13,6 +13,7 @@ export const loginMessages = {
   messageBadPassword: 'Hasło jest nieprawidłowe',
   messageBadEmail: 'Wprowadź poprawny adres e-mail.',
   forgotPasswordText: 'Zapomniałeś hasła?',
+  messageServerError: 'Błąd serwera',
 };
 
 export const forgotPasswordMessages = {
