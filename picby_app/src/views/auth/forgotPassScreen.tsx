@@ -6,6 +6,7 @@ import {
   Image,
   Dimensions,
   TextInput,
+  KeyboardAvoidingView,
 } from 'react-native';
 import {AuthContext} from './authContext';
 
@@ -15,7 +16,10 @@ import {Formik} from 'formik';
 import * as yup from 'yup';
 import EmailLogo from './icons/envelope.svg';
 import ErrorLogo from './icons/exclamationMark.svg';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
+import {
+  TouchableWithoutFeedback,
+  ScrollView,
+} from 'react-native-gesture-handler';
 import {globalStyles} from '../../common/styles/globalStyles';
 import {useHandlePopupAnimation} from './hooks/useHandlePopupAnimation';
 import PopUp from './components/Popup';
@@ -103,82 +107,89 @@ const ForgotPasswordScreen: React.FC<Props> = ({navigation}) => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={dismissKeyboard} style={styles.wrapper}>
-      <View style={styles.container}>
-        <PopUp popUpText={messagePopUpText} fadeAnim={fadeAnim} />
-        <View style={styles.content}>
-          <Image style={styles.bigEye} source={eyePic} />
-          <Text style={styles.headerText}>{contentHeader}</Text>
-          <Text style={styles.contentText}>{contentText}</Text>
-        </View>
-        <View>
-          <Formik
-            validationSchema={reviewSchema}
-            initialValues={{email: ''}}
-            onSubmit={(values, actions) => {
-              //
-              sendReminderEmail(values, actions);
-            }}>
-            {formikProps => {
-              return (
-                <View>
-                  <View style={styles.inputWrapper}>
-                    <EmailLogo style={globalStyles.emailLogo} />
-                    <TextInput
-                      keyboardType="email-address"
-                      style={globalStyles.input}
-                      placeholder="E-mail"
-                      placeholderTextColor={placeholderTextBlueColor}
-                      onChangeText={formikProps.handleChange('email')}
-                      value={formikProps.values.email}
-                      onBlur={formikProps.handleBlur('email')}
-                      onFocus={() => {
-                        if (isEmailNotFound) {
-                          setIsEmailNotFound(false);
-                          setAreForgotPassButtonsDisabled(false);
-                        }
-                      }}
-                    />
-                  </View>
-                  <View style={globalStyles.errorTextWrapper}>
-                    {(formikProps.touched.email && formikProps.errors.email) ||
-                    isEmailNotFound ? (
-                      <ErrorLogo style={globalStyles.errorExlamationMark} />
-                    ) : null}
-                    <Text style={globalStyles.errorText}>
-                      {formikProps.touched.email &&
-                        formikProps.errors.email &&
-                        messageBadMail}
-                      {isEmailNotFound && messageEmailNotFound}
-                    </Text>
-                  </View>
-                  <View style={styles.buttonsWrapper}>
-                    <FlatButton
-                      textValue={sendText}
-                      onPress={formikProps.handleSubmit}
-                      colorVariantIndex={0}
-                      textColor={textColorWhite}
-                      disabled={areForgotPassButtonsDisabled}
-                    />
-                    <View style={styles.singleButtonWrapper}>
-                      <FlatButton
-                        textValue={goBackText}
-                        onPress={() => navigate('Login')}
-                        colorVariantIndex={2}
-                        textColor={textColorBlue}
-                        disabled={
-                          areForgotPassButtonsDisabled && !isEmailNotFound
-                        }
-                      />
+    <ScrollView>
+      <KeyboardAvoidingView keyboardVerticalOffset={100}>
+        <TouchableWithoutFeedback
+          onPress={dismissKeyboard}
+          style={styles.wrapper}>
+          <View style={styles.container}>
+            <PopUp popUpText={messagePopUpText} fadeAnim={fadeAnim} />
+            <View style={styles.content}>
+              <Image style={styles.bigEye} source={eyePic} />
+              <Text style={styles.headerText}>{contentHeader}</Text>
+              <Text style={styles.contentText}>{contentText}</Text>
+            </View>
+            <View>
+              <Formik
+                validationSchema={reviewSchema}
+                initialValues={{email: ''}}
+                onSubmit={(values, actions) => {
+                  //
+                  sendReminderEmail(values, actions);
+                }}>
+                {formikProps => {
+                  return (
+                    <View>
+                      <View style={styles.inputWrapper}>
+                        <EmailLogo style={globalStyles.emailLogo} />
+                        <TextInput
+                          keyboardType="email-address"
+                          style={globalStyles.input}
+                          placeholder="E-mail"
+                          placeholderTextColor={placeholderTextBlueColor}
+                          onChangeText={formikProps.handleChange('email')}
+                          value={formikProps.values.email}
+                          onBlur={formikProps.handleBlur('email')}
+                          onFocus={() => {
+                            if (isEmailNotFound) {
+                              setIsEmailNotFound(false);
+                              setAreForgotPassButtonsDisabled(false);
+                            }
+                          }}
+                        />
+                      </View>
+                      <View style={globalStyles.errorTextWrapper}>
+                        {(formikProps.touched.email &&
+                          formikProps.errors.email) ||
+                        isEmailNotFound ? (
+                          <ErrorLogo style={globalStyles.errorExlamationMark} />
+                        ) : null}
+                        <Text style={globalStyles.errorText}>
+                          {formikProps.touched.email &&
+                            formikProps.errors.email &&
+                            messageBadMail}
+                          {isEmailNotFound && messageEmailNotFound}
+                        </Text>
+                      </View>
+                      <View style={styles.buttonsWrapper}>
+                        <FlatButton
+                          textValue={sendText}
+                          onPress={formikProps.handleSubmit}
+                          colorVariantIndex={0}
+                          textColor={textColorWhite}
+                          disabled={areForgotPassButtonsDisabled}
+                        />
+                        <View style={styles.singleButtonWrapper}>
+                          <FlatButton
+                            textValue={goBackText}
+                            onPress={() => navigate('Login')}
+                            colorVariantIndex={2}
+                            textColor={textColorBlue}
+                            disabled={
+                              areForgotPassButtonsDisabled && !isEmailNotFound
+                            }
+                          />
+                        </View>
+                      </View>
                     </View>
-                  </View>
-                </View>
-              );
-            }}
-          </Formik>
-        </View>
-      </View>
-    </TouchableWithoutFeedback>
+                  );
+                }}
+              </Formik>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 
