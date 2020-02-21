@@ -55,8 +55,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
       isUserLoggedInFirstTime,
       handleLoginRequestAndErrors,
       setIsPasswordBad,
-      areButtonsDisabled,
-      setAreButtonsDisabled,
+      areLoginButtonsDisabled,
+      setAreLoginButtonsDisabled,
     },
     dismissKeyboard,
   } = useContext(AuthContext);
@@ -170,7 +170,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
                       onFocus={() => {
                         if (isPasswordBad) {
                           setIsPasswordBad(false);
-                          setAreButtonsDisabled(false);
+                          setAreLoginButtonsDisabled(false);
                         }
                       }}
                     />
@@ -183,6 +183,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
                       {isPasswordBad && messageBadPassword}
                     </Text>
                   </View>
+
                   <View style={styles.googleButtonWrapper}>
                     <FlatButton
                       onPress={() => redirectToDashboard()}
@@ -190,7 +191,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
                       textValue={loginWithGoogle}
                       textColor={textColorBlue}
                       icon={true}
-                      disabled={areButtonsDisabled}
+                      disabled={areLoginButtonsDisabled}
                       googleButton={true}
                     />
                   </View>
@@ -199,7 +200,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
                     colorVariantIndex={0}
                     textValue={loginText}
                     textColor={textColorWhite}
-                    disabled={areButtonsDisabled}
+                    disabled={areLoginButtonsDisabled}
                   />
                 </View>
               );

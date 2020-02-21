@@ -22,8 +22,8 @@ export interface AuthProps {
     isLoginSuccess: boolean;
     isUserLoggedInFirstTime: boolean;
     setIsPasswordBad: Dispatch<SetStateAction<boolean>>;
-    areButtonsDisabled: boolean;
-    setAreButtonsDisabled: Dispatch<SetStateAction<boolean>>;
+    areLoginButtonsDisabled: boolean;
+    setAreLoginButtonsDisabled: Dispatch<SetStateAction<boolean>>;
     handleLoginRequestAndErrors: (
       email: string,
       password: string,
@@ -41,7 +41,7 @@ export interface Values {
 export const AuthContext = React.createContext<AuthProps>({} as AuthProps);
 
 const AuthContextProvider: React.FC = ({children}) => {
-  //////// beginning of login logic /////////////
+  //////// beginning of login logic /////////////////////////////////////////////////
   const [isPasswordBad, setIsPasswordBad] = useState<boolean>(false);
   const [isServerNotResponding, setIsServerNotResponding] = useState<boolean>(
     false,
@@ -51,7 +51,9 @@ const AuthContextProvider: React.FC = ({children}) => {
     boolean
   >(false);
 
-  const [areButtonsDisabled, setAreButtonsDisabled] = useState<boolean>(false);
+  const [areLoginButtonsDisabled, setAreLoginButtonsDisabled] = useState<
+    boolean
+  >(false);
 
   const loginGraphQLQuery = async () => {
     try {
@@ -74,7 +76,7 @@ const AuthContextProvider: React.FC = ({children}) => {
     resetForm: () => void,
   ) => {
     try {
-      setAreButtonsDisabled(true);
+      setAreLoginButtonsDisabled(true);
       await setIsServerNotResponding(false);
       await loginGraphQLQuery();
       setIsLoginSuccess(true);
@@ -96,17 +98,17 @@ const AuthContextProvider: React.FC = ({children}) => {
     isLoginSuccess,
     isUserLoggedInFirstTime,
     setIsPasswordBad,
-    areButtonsDisabled,
-    setAreButtonsDisabled,
+    areLoginButtonsDisabled,
+    setAreLoginButtonsDisabled,
     handleLoginRequestAndErrors,
   };
 
-  ////////////  end of login logic //////////////
+  /////////////////////  end of login logic /////////////////////////////////////////
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };
 
-  /////////// start of register logic //////////////
+  ////////////////////////// start of register logic //////////////////////////////////////
 
   const [isEmailAlreadyTaken, setIsEmailAlreadyTaken] = useState<boolean>(
     false,
@@ -120,13 +122,15 @@ const AuthContextProvider: React.FC = ({children}) => {
   const registerGraphQLQuery = async () => {
     try {
       //to have good response delete /"random string" after /pokemon/
-      await fetch('https://pokeapi.co/api/v2/pokemon').then(response => {
-        if (response.status > 400) {
-          throw new Error();
-          //add else if with different status to pass error to catch
-        }
-        return response;
-      });
+      await fetch('https://pokeapi.co/api/v2/pokemon/asdasdasd').then(
+        response => {
+          if (response.status > 400) {
+            throw new Error();
+            //add else if with different status to pass error to catch
+          }
+          return response;
+        },
+      );
     } catch (error) {
       console.log(error.message);
       throw new Error('2');
@@ -166,8 +170,11 @@ const AuthContextProvider: React.FC = ({children}) => {
     setIsEmailAlreadyTaken,
   };
 
-  ////////// end of reigster logic ////////////////
+  //////////////////////// end of reigster logic ////////////////////////////////////////////
 
+  /////////////////////// start of forgot password logic////////////////////////
+
+  ////////////////////////////// end of forgot password logic /////////////////////
   return (
     <AuthContext.Provider
       value={{

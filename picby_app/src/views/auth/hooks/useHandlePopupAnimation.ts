@@ -12,13 +12,13 @@ export const useHandlePopupAnimation = () => {
   const ANIMATION_SHORT_DELAY = 300;
   const ANIMATION_LONG_DELAY = 4000;
   const {
-    loginContextData: {setAreButtonsDisabled},
+    loginContextData: {setAreLoginButtonsDisabled},
     registerContextData: {setAreRegisterButtonsDisabled},
   } = useContext(AuthContext);
 
   const handlePopUpAnimation = (redirectFunction?: () => void | undefined) => {
     const functionFiredAfterAnimationEnds = () => {
-      setAreButtonsDisabled(false);
+      setAreLoginButtonsDisabled(false);
       setAreRegisterButtonsDisabled(false);
       redirectFunction && redirectFunction();
     };
