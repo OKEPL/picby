@@ -44,7 +44,8 @@ interface ActionTypes {
   resetForm: () => void;
 }
 
-const RegisterScreen: React.FC<Props> = ({navigation: {navigate}}) => {
+const RegisterScreen: React.FC<Props> = ({navigation}) => {
+  const {navigate} = navigation;
   const {
     dismissKeyboard,
     registerContextData: {
@@ -55,6 +56,7 @@ const RegisterScreen: React.FC<Props> = ({navigation: {navigate}}) => {
       setAreRegisterButtonsDisabled,
       isItServerError,
       setIsEmailAlreadyTaken,
+      setRegisterScreenStateToDefault,
     },
   } = useContext(AuthContext);
 
@@ -94,6 +96,15 @@ const RegisterScreen: React.FC<Props> = ({navigation: {navigate}}) => {
       .string()
       .required(messageFieldRequired)
       .oneOf([yup.ref('password'), null], messagePasswordNotSimilar),
+  });
+
+  React.useEffect(() => {
+    console.log('register screen mounted');
+    return () => {
+      console.log('register screen unmounted');
+      console.log('                              ');
+      !navigation.isFocused() && setRegisterScreenStateToDefault();
+    };
   });
 
   React.useEffect(() => {

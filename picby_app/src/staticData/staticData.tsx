@@ -20,8 +20,9 @@ export const loginMessages = {
 export const forgotPasswordMessages = {
   messageBadMail: 'Wprowadź poprawny adres e-mail.',
   messageEmailNotFound: 'Podany adres e-mail nie istnieje w bazie',
-  popUpText: `Przypomnienie zostało wysłane.${'\n'} Sprawdź skrzynkę odbiorczą.`,
+  messageSendSuccess: `Przypomnienie zostało wysłane.${'\n'} Sprawdź skrzynkę odbiorczą.`,
   contentText: `Wprowadź swój adres e-mail ${'\n'} żeby zresetować hasło.`,
+  messageServerError: 'Błąd serwera',
   contentHeader: 'ZAPOMNIAŁEŚ HASŁA?',
 };
 

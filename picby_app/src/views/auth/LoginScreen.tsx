@@ -6,6 +6,8 @@ import {
   StyleSheet,
   Dimensions,
   TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  SegmentedControlIOSComponent,
 } from 'react-native';
 import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
 import {Formik} from 'formik';
@@ -46,7 +48,17 @@ interface ActionTypes {
 
 const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
   const {navigate} = navigation;
-
+  React.useEffect(() => {
+    console.log('login screen mounted ^^');
+    // // console.log(navigation);
+    // console.log('component rendered');
+    // console.log(navigation.isFocused());
+    return () => {
+      // console.log(navigation.isFocused());
+      console.log('login screen unmounted ^^');
+      !navigation.isFocused() && setLoginScreenStateToDefault();
+    };
+  });
   const {
     loginContextData: {
       isLoginSuccess,
@@ -57,6 +69,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
       setIsPasswordBad,
       areLoginButtonsDisabled,
       setAreLoginButtonsDisabled,
+      setLoginScreenStateToDefault,
     },
     dismissKeyboard,
   } = useContext(AuthContext);
@@ -90,6 +103,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
   });
 
   // handle errors //
+
   React.useEffect(() => {
     if (isServerNotResponding) {
       setMessagePopUpText(messageServerError);
@@ -103,7 +117,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
   const redirectToDashboard = () => {
     navigation.dangerouslyGetParent()?.navigate('ParentDashboard');
   };
+
   const {handlePopUpAnimation, fadeAnim} = useHandlePopupAnimation();
+
   const sendLoginRequest = async (
     values: CredentialTypes,
     actions: ActionTypes,
@@ -127,6 +143,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
         <PicbyLogo style={styles.logo} />
         <View>
           <Formik
+            enableReinitialize={true}
             validationSchema={reviewSchema}
             initialValues={{email: '', password: ''}}
             onSubmit={(values, actions) => {

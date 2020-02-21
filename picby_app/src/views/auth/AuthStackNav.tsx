@@ -4,8 +4,8 @@ import RegisterScreen from './RegisterScreen';
 import ForgotPasswordScreen from './ForgotPassScreen';
 
 const screens = {
-  Login: LoginScreen,
   ForgotPass: ForgotPasswordScreen,
+  Login: LoginScreen,
   Register: RegisterScreen,
 };
 const AuthStackNav = createStackNavigator(screens, {

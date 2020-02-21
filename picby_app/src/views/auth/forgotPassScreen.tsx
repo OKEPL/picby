@@ -40,42 +40,72 @@ type Props = {
   navigation: NavigationStackProp;
 };
 
-const ForgotPasswordScreen: React.FC<Props> = ({navigation: {navigate}}) => {
+interface InputValueType {
+  email: string;
+}
+
+interface ActionTypes {
+  resetForm: () => void;
+}
+
+const ForgotPasswordScreen: React.FC<Props> = ({navigation}) => {
+  const {navigate} = navigation;
   const {handlePopUpAnimation, fadeAnim} = useHandlePopupAnimation();
-  const {dismissKeyboard} = useContext(AuthContext);
-  const [emailNotFoundError, setEmailNotFoundError] = useState(false);
-  const [serverResponseStatus] = useState(true);
+  const {
+    dismissKeyboard,
+    forgotPassContextData: {
+      isEmailNotFound,
+      isItForgotPassServerError,
+      areForgotPassButtonsDisabled,
+      setAreForgotPassButtonsDisabled,
+      setIsEmailNotFound,
+      isEmailSendSuccess,
+      handleForgotPasswordRequestAndErrors,
+      setForgotScreenStateToDefault,
+    },
+  } = useContext(AuthContext);
   const {
     messageBadMail,
     messageEmailNotFound,
-    popUpText,
+    messageSendSuccess,
     contentText,
     contentHeader,
+    messageServerError,
   } = forgotPasswordMessages;
   const {placeholderTextBlueColor} = inputData;
   const {textColorWhite, textColorBlue, sendText, goBackText} = buttonsData;
 
-  const handleSendEmailRequest = () => {
-    let promise = new Promise((res, rej) =>
-      setTimeout(() => {
-        serverResponseStatus ? res(true) : rej(true);
-      }, 3000),
-    );
-    return promise
-      .then(() => {
-        handlePopUpAnimation();
-      })
-      .catch(() => {
-        setEmailNotFoundError(true);
-      });
-  };
+  const [messagePopUpText, setMessagePopUpText] = useState('');
 
-  const {handleSubmit, loading} = useSubmit(handleSendEmailRequest);
+  // React.useEffect(() => {
+  //   return () => {
+  //     !navigation.isFocused() && setForgotScreenStateToDefault();
+  //   };
+  // });
+
+  React.useEffect(() => {
+    if (isEmailSendSuccess) {
+      setMessagePopUpText(messageSendSuccess);
+      handlePopUpAnimation();
+    } else if (isItForgotPassServerError) {
+      setMessagePopUpText(messageServerError);
+      handlePopUpAnimation();
+    }
+  }, [isItForgotPassServerError, isEmailSendSuccess]);
+
+  const sendReminderEmail = async (
+    values: InputValueType,
+    actions: ActionTypes,
+  ) => {
+    const {email} = values;
+    const {resetForm} = actions;
+    handleForgotPasswordRequestAndErrors(email, resetForm);
+  };
 
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard} style={styles.wrapper}>
       <View style={styles.container}>
-        <PopUp popUpText={popUpText} fadeAnim={fadeAnim} />
+        <PopUp popUpText={messagePopUpText} fadeAnim={fadeAnim} />
         <View style={styles.content}>
           <Image style={styles.bigEye} source={eyePic} />
           <Text style={styles.headerText}>{contentHeader}</Text>
@@ -85,9 +115,9 @@ const ForgotPasswordScreen: React.FC<Props> = ({navigation: {navigate}}) => {
           <Formik
             validationSchema={reviewSchema}
             initialValues={{email: ''}}
-            onSubmit={() => {
-              // (values, actions)
-              handleSubmit();
+            onSubmit={(values, actions) => {
+              //
+              sendReminderEmail(values, actions);
             }}>
             {formikProps => {
               return (
@@ -102,21 +132,24 @@ const ForgotPasswordScreen: React.FC<Props> = ({navigation: {navigate}}) => {
                       onChangeText={formikProps.handleChange('email')}
                       value={formikProps.values.email}
                       onBlur={formikProps.handleBlur('email')}
-                      onFocus={() =>
-                        emailNotFoundError && setEmailNotFoundError(false)
-                      }
+                      onFocus={() => {
+                        if (isEmailNotFound) {
+                          setIsEmailNotFound(false);
+                          setAreForgotPassButtonsDisabled(false);
+                        }
+                      }}
                     />
                   </View>
                   <View style={globalStyles.errorTextWrapper}>
                     {(formikProps.touched.email && formikProps.errors.email) ||
-                    emailNotFoundError ? (
+                    isEmailNotFound ? (
                       <ErrorLogo style={globalStyles.errorExlamationMark} />
                     ) : null}
                     <Text style={globalStyles.errorText}>
                       {formikProps.touched.email &&
                         formikProps.errors.email &&
                         messageBadMail}
-                      {emailNotFoundError && messageEmailNotFound}
+                      {isEmailNotFound && messageEmailNotFound}
                     </Text>
                   </View>
                   <View style={styles.buttonsWrapper}>
@@ -125,7 +158,7 @@ const ForgotPasswordScreen: React.FC<Props> = ({navigation: {navigate}}) => {
                       onPress={formikProps.handleSubmit}
                       colorVariantIndex={0}
                       textColor={textColorWhite}
-                      disabled={loading}
+                      disabled={areForgotPassButtonsDisabled}
                     />
                     <View style={styles.singleButtonWrapper}>
                       <FlatButton
@@ -133,7 +166,9 @@ const ForgotPasswordScreen: React.FC<Props> = ({navigation: {navigate}}) => {
                         onPress={() => navigate('Login')}
                         colorVariantIndex={2}
                         textColor={textColorBlue}
-                        disabled={loading}
+                        disabled={
+                          areForgotPassButtonsDisabled && !isEmailNotFound
+                        }
                       />
                     </View>
                   </View>

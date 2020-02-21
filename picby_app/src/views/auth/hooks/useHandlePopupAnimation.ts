@@ -14,12 +14,15 @@ export const useHandlePopupAnimation = () => {
   const {
     loginContextData: {setAreLoginButtonsDisabled},
     registerContextData: {setAreRegisterButtonsDisabled},
+    forgotPassContextData: {setAreForgotPassButtonsDisabled},
   } = useContext(AuthContext);
 
   const handlePopUpAnimation = (redirectFunction?: () => void | undefined) => {
+    console.log('animacja odpalona');
     const functionFiredAfterAnimationEnds = () => {
       setAreLoginButtonsDisabled(false);
       setAreRegisterButtonsDisabled(false);
+      setAreForgotPassButtonsDisabled(false);
       redirectFunction && redirectFunction();
     };
 
