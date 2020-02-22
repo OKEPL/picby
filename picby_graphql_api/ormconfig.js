@@ -1,20 +1,21 @@
 module.exports = [
   {
-    name: 'production',
+    name: 'development',
     type: 'postgres',
-    host: 'db',
     database: 'picby_db',
-    username: 'postgres',
-    password: 'postgres',
-    synchronize: true, // switch this to false once you have the initial tables created and use migrations instead
-    logging: false,
-    entities: ['dist/entity/**/*.js'],
-    migrations: ['dist/migration/**/*.js'],
-    subscribers: ['dist/subscriber/**/*.js'],
+    host: 'localhost',
+    port: 5432,
+    synchronize: true,
+    logging: true,
+    username: 'test',
+    password: 'test',
+    entities: ['src/entity/**/*.ts'],
+    migrations: ['src/migration/**/*.ts'],
+    subscribers: ['src/subscriber/**/*.ts'],
     cli: {
-      entitiesDir: 'dist/entity',
-      migrationsDir: 'dist/migration',
-      subscribersDir: 'dist/subscriber'
+      entitiesDir: 'src/entity',
+      migrationsDir: 'src/migration',
+      subscribersDir: 'src/subscriber'
     }
   }
 ];

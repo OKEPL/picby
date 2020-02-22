@@ -21,11 +21,14 @@ const DEFAULT_PORT = 8081;
   const app = express();
 
   const options = await getConnectionOptions(
-    'production'
+    process.env.NODE_ENV === 'production' ? 'production' : 'development'
   );
+
   await createConnection({ ...options, name: "default" });
 
   const apolloServer = new ApolloServer({
+    introspection: true,
+    playground: true,
     schema: await createSchema(),
     context: ({ req, res }) => ({
       req,
