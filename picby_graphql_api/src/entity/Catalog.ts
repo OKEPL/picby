@@ -15,9 +15,8 @@ export class Catalog extends BaseEntity {
   @Column("text", {unique: true})
   name: string;
 
-  //
   @OneToMany(() => Entry, entry => entry.catalog)
-  entries: Entry[]
+  entries: Promise<Entry[]>
 
   @ManyToOne(() => User, user => user.catalogs)
   user: User;
