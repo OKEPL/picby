@@ -3,7 +3,7 @@ WORKDIR /app
 COPY package*.json ./
 ENV NODE_ENV=production
 RUN npm install
-RUN npm build
+RUN npm run build
 COPY ./dist ./ 
 ADD ormconfig.docker.js ormconfig.js
 COPY wait-for-it.sh .
