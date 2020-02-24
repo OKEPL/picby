@@ -11,7 +11,7 @@ resources:
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: 'b5737a3e-03db-49f9-9b56-1c55b4b64db7'
-  imageRepository: 'picbygraphqlapi'
+  imageRepository: 'picby_graphql_api'
   containerRegistry: 'picbyapi.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/picby_graphql_api/Dockerfile'
   tag: '$(Build.BuildId)'
