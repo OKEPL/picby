@@ -104,14 +104,26 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     if (isServerNotResponding) {
       setMessagePopUpText(messageServerError);
       handlePopUpAnimation();
-    } else if (isLoginSuccess) {
+    } else if (isLoginSuccess && isUserLoggedInFirstTime) {
+      setMessagePopUpText(messageLoginSuccess);
+      handlePopUpAnimation(redirectToFirstLoginDashboard);
+    } else if (isLoginSuccess && !isUserLoggedInFirstTime) {
       setMessagePopUpText(messageLoginSuccess);
       handlePopUpAnimation(redirectToDashboard);
     }
-  }, [isLoginSuccess, isServerNotResponding, isPasswordBad]);
+  }, [
+    isLoginSuccess,
+    isServerNotResponding,
+    isPasswordBad,
+    isUserLoggedInFirstTime,
+  ]);
+
+  const redirectToFirstLoginDashboard = () => {
+    navigation.dangerouslyGetParent()?.navigate('FirstLogin');
+  };
 
   const redirectToDashboard = () => {
-    navigation.dangerouslyGetParent()?.navigate('ParentDashboard');
+    navigation.dangerouslyGetParent()?.navigate('Catalogs');
   };
 
   const {handlePopUpAnimation, fadeAnim} = useHandlePopupAnimation();

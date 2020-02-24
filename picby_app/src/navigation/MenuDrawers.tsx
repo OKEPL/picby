@@ -35,40 +35,46 @@ export const passIconElement = (
 
 export const ParentDrawer = createDrawerNavigator(
   {
-    'PANEL DZIECKA': {
+    KidPanel: {
       screen: ChangeUserStackNav,
       navigationOptions: {
         drawerIcon: () => passIconElement(<KidIcon />, RED_COLOR),
+        drawerLabel: 'PANEL DZIECKA',
       },
     },
-    'KATALOGI ': {
+    Catalogs: {
       screen: CatalogsStackNav,
       navigationOptions: {
         drawerIcon: () => passIconElement(<CatalogIcon />, YELLOW_COLOR),
+        drawerLabel: 'KATALOGI',
       },
     },
-    'NAGRANIA GŁOSOWE': {
+    VoiceRecords: {
       screen: VoiceRecordsStackNav,
       navigationOptions: {
         drawerIcon: () => passIconElement(<VoiceIcon />, YELLOW_COLOR),
+        drawerLabel: 'NAGRANIA GŁOSOWE',
       },
     },
-    'USTAWIENIA ': {
+    Settings: {
       screen: SettingsStackNav,
       navigationOptions: {
         drawerIcon: () => passIconElement(<SettingsIcon />, YELLOW_COLOR),
+        drawerLabel: 'USTAWIENIA',
       },
     },
-    'O APLIKACJI': {
+    AboutApp: {
       screen: AboutStackNav,
       navigationOptions: {
         drawerIcon: () => passIconElement(<AboutIcon />, YELLOW_COLOR),
+        drawerLabel: 'O APLIKACJI',
       },
     },
-    'POLITYKA PRYWATNOŚCI': {
+    PrivacyPolicy: {
       screen: PrivacyStackNav,
       navigationOptions: {
         drawerIcon: () => passIconElement(<PrivacyIcon />, YELLOW_COLOR),
+        drawerLabel: 'POLITYKA PRYWATNOŚCI',
       },
     },
     FirstLogin: {

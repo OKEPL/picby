@@ -67,7 +67,7 @@ const AuthContextProvider: React.FC = ({children}) => {
   const [isLoginSuccess, setIsLoginSuccess] = useState<boolean>(false);
   const [isUserLoggedInFirstTime, setIsUserLoggedInFirstTime] = useState<
     boolean
-  >(false);
+  >(true);
 
   const [areLoginButtonsDisabled, setAreLoginButtonsDisabled] = useState<
     boolean
@@ -77,8 +77,6 @@ const AuthContextProvider: React.FC = ({children}) => {
     setIsPasswordBad(false);
     setIsServerNotResponding(false);
     setIsLoginSuccess(false);
-    setIsUserLoggedInFirstTime(false);
-    ///////// rethink that line ^^^^^ //////////////
     setAreLoginButtonsDisabled(false);
   };
   const loginGraphQLQuery = async () => {
