@@ -1,11 +1,12 @@
 FROM node:latest
-WORKDIR /app
+WORKDIR /usr/app
 COPY package*.json ./
 ENV NODE_ENV=production
-RUN npm install -g typescript
 RUN npm install
+COPY . .
 RUN npm run build
 COPY ./dist ./ 
-ADD ormconfig.docker.js ormconfig.js
+ADD ormconfig.docker.js ./dist/ormconfig.js
+WORKDIR ./dist
 COPY wait-for-it.sh .
 CMD node index.js
