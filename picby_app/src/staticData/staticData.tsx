@@ -65,3 +65,15 @@ export const menuColors = {
   RED_COLOR: '#EB5F34',
   YELLOW_COLOR: '#FBB114',
 };
+
+export const firstLoginDashboard = {
+  buttonText: 'USTAWIENIA KONTA',
+  headerText: 'WITAJ W APLIKACJI',
+  subtitle: `Aby rozpocząć korzystanie z aplikacji, ${'\n'} przejdź do ustawień konta.`,
+  contentText: `Wszystkie zmiany możesz edytować ${'\n'} w dowolnym momencie.${'\n'}Ustawienia zawsze znajdziesz${'\n'} w menu głównym.`,
+};
+
+export const commonColors = {
+  orangeRed: '#EB5F34',
+  lightBlue: 'rgba(7, 71, 130, 0.68)',
+};
