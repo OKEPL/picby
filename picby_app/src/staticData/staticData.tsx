@@ -76,4 +76,10 @@ export const firstLoginDashboard = {
 export const commonColors = {
   orangeRed: '#EB5F34',
   lightBlue: 'rgba(7, 71, 130, 0.68)',
+  darkRed: '#CC1919',
+};
+
+export const catalogsData = {
+  title: 'Brak katalogów w PICBY.',
+  subtitle: `Nie utworzyłeś jeszcze żadnego katalogu. ${'\n'} Kliknij w ikonę plusa z prawej strony,${'\n'} aby dodać pierwszy katalog.`,
 };
