@@ -7,7 +7,7 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
 } from 'react-native';
-import {Formik, FormikProps, FormikHandlers} from 'formik';
+import {Formik} from 'formik';
 import * as yup from 'yup';
 import {TextInput, ScrollView} from 'react-native-gesture-handler';
 
@@ -99,10 +99,7 @@ const RegisterScreen: React.FC<Props> = ({navigation}) => {
   });
 
   React.useEffect(() => {
-    console.log('register screen mounted');
     return () => {
-      console.log('register screen unmounted');
-      console.log('                             ');
       !navigation.isFocused() && setRegisterScreenStateToDefault();
     };
   });

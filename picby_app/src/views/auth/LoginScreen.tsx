@@ -6,8 +6,6 @@ import {
   StyleSheet,
   Dimensions,
   TouchableWithoutFeedback,
-  KeyboardAvoidingView,
-  SegmentedControlIOSComponent,
 } from 'react-native';
 import {
   TextInput,
@@ -56,6 +54,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
   React.useEffect(() => {
     navigation.addListener('didBlur', () => setLoginScreenStateToDefault());
   }, []);
+
   const {
     loginContextData: {
       isLoginSuccess,

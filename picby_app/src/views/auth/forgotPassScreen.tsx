@@ -23,7 +23,6 @@ import {
 import {globalStyles} from '../../common/styles/globalStyles';
 import {useHandlePopupAnimation} from './hooks/useHandlePopupAnimation';
 import PopUp from './components/Popup';
-import {useSubmit} from './hooks/useSubmit';
 import {
   forgotPasswordMessages,
   inputData,
@@ -81,11 +80,11 @@ const ForgotPasswordScreen: React.FC<Props> = ({navigation}) => {
 
   const [messagePopUpText, setMessagePopUpText] = useState('');
 
-  // React.useEffect(() => {
-  //   return () => {
-  //     !navigation.isFocused() && setForgotScreenStateToDefault();
-  //   };
-  // });
+  React.useEffect(() => {
+    return () => {
+      !navigation.isFocused() && setForgotScreenStateToDefault();
+    };
+  });
 
   React.useEffect(() => {
     if (isEmailSendSuccess) {

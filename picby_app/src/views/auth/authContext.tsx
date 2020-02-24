@@ -83,7 +83,7 @@ const AuthContextProvider: React.FC = ({children}) => {
   };
   const loginGraphQLQuery = async () => {
     try {
-      await fetch('https://pokeapi.co/api/v2/pokemon/asdasd').then(response => {
+      await fetch('https://pokeapi.co/api/v2/pokemon').then(response => {
         if (response.status > 400) {
           throw new Error();
           //add else if with different status to pass error to catch
@@ -108,11 +108,9 @@ const AuthContextProvider: React.FC = ({children}) => {
       setIsLoginSuccess(true);
       resetForm();
     } catch (error) {
-      // console.log(error.message);
       // setIsServerNotResponding(true);
       setIsPasswordBad(true);
     } finally {
-      console.log('request zakonczony');
       setIsLoginSuccess(false);
       setIsServerNotResponding(false);
     }
@@ -163,8 +161,7 @@ const AuthContextProvider: React.FC = ({children}) => {
         },
       );
     } catch (error) {
-      console.log(error.message);
-      throw new Error('2');
+      throw new Error('error');
     }
   };
 
@@ -180,13 +177,11 @@ const AuthContextProvider: React.FC = ({children}) => {
       await setIsRegisterSuccess(true);
       resetForm();
     } catch (error) {
-      // console.log(error.message);
       // setIsItServerError(true);
       setIsEmailAlreadyTaken(true);
     } finally {
       setIsRegisterSuccess(false);
       setIsItServerError(false);
-      console.log('register request finished');
     }
   };
 
