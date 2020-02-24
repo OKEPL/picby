@@ -10,14 +10,21 @@ import {globalStyles} from '../common/styles/globalStyles';
 import {menuColors} from '../staticData/staticData';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Header from './Header';
+import {NavigationRoute, NavigationParams} from 'react-navigation';
 
 const {YELLOW_COLOR} = menuColors;
 const {width: vw} = Dimensions.get('window');
 
+const navItemsWithoutOne = (array: NavigationRoute<NavigationParams>[]) => {
+  return array.filter(navItem => navItem.key !== 'FirstLogin');
+};
+
 const Sidebar = (
   props: React.PropsWithChildren<DrawerContentComponentProps>,
 ) => {
-  const {navigation} = props;
+  const {navigation, items} = props;
+  const desiredDrawerItems = navItemsWithoutOne(items);
+
   return (
     <View>
       <Header
@@ -28,7 +35,7 @@ const Sidebar = (
       />
       <ScrollView>
         <View style={styles.liWrapper}>
-          <DrawerNavigatorItems {...props} />
+          <DrawerNavigatorItems {...props} items={desiredDrawerItems} />
         </View>
         <TouchableOpacity style={styles.elementWrapper}>
           <View

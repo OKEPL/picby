@@ -17,6 +17,7 @@ import {globalStyles} from '../common/styles/globalStyles';
 import {createDrawerNavigator} from 'react-navigation-drawer';
 import {menuColors} from '../staticData/staticData';
 import IntroductionSceneStack from '../views/intruduction/introductionScene';
+import ChangeUserStackNav from '../views/changeUserMode/changeUserModeStack';
 
 const {width: vw} = Dimensions.get('window');
 const {RED_COLOR, YELLOW_COLOR} = menuColors;
@@ -35,7 +36,7 @@ export const passIconElement = (
 export const ParentDrawer = createDrawerNavigator(
   {
     'PANEL DZIECKA': {
-      screen: DashboardStackNav,
+      screen: ChangeUserStackNav,
       navigationOptions: {
         drawerIcon: () => passIconElement(<KidIcon />, RED_COLOR),
       },
@@ -69,6 +70,9 @@ export const ParentDrawer = createDrawerNavigator(
       navigationOptions: {
         drawerIcon: () => passIconElement(<PrivacyIcon />, YELLOW_COLOR),
       },
+    },
+    FirstLogin: {
+      screen: DashboardStackNav,
     },
   },
   {
