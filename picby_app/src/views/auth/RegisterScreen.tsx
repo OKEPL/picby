@@ -7,9 +7,9 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
 } from 'react-native';
-import {Formik, FormikProps, FormikHandlers} from 'formik';
+import {Formik} from 'formik';
 import * as yup from 'yup';
-import {TextInput} from 'react-native-gesture-handler';
+import {TextInput, ScrollView} from 'react-native-gesture-handler';
 
 import {globalStyles} from '../../common/styles/globalStyles';
 import {AuthContext} from './authContext';
@@ -44,7 +44,8 @@ interface ActionTypes {
   resetForm: () => void;
 }
 
-const RegisterScreen: React.FC<Props> = ({navigation: {navigate}}) => {
+const RegisterScreen: React.FC<Props> = ({navigation}) => {
+  const {navigate} = navigation;
   const {
     dismissKeyboard,
     registerContextData: {
@@ -55,6 +56,7 @@ const RegisterScreen: React.FC<Props> = ({navigation: {navigate}}) => {
       setAreRegisterButtonsDisabled,
       isItServerError,
       setIsEmailAlreadyTaken,
+      setRegisterScreenStateToDefault,
     },
   } = useContext(AuthContext);
 
@@ -97,6 +99,12 @@ const RegisterScreen: React.FC<Props> = ({navigation: {navigate}}) => {
   });
 
   React.useEffect(() => {
+    return () => {
+      !navigation.isFocused() && setRegisterScreenStateToDefault();
+    };
+  });
+
+  React.useEffect(() => {
     if (isItServerError) {
       setMessagePopUpText(messageServerError);
       handlePopUpAnimation();
@@ -115,126 +123,131 @@ const RegisterScreen: React.FC<Props> = ({navigation: {navigate}}) => {
     handleRegisterRequestAndErrors(email, password, resetForm);
   };
   return (
-    <TouchableWithoutFeedback onPress={dismissKeyboard}>
-      <View style={globalStyles.screenWrapper}>
-        <PopUp fadeAnim={fadeAnim} popUpText={messagePopUpText} />
-        <View style={styles.gotAccountQuestion}>
-          <GotAccountQuestion
-            questionText={registerHeaderTextTwo}
-            actionText={registerHeaderTextOne}
-            onPress={() => navigate('Login')}
-          />
-        </View>
-        <PicbyLogo style={styles.logo} />
-        <View>
-          <Formik
-            validationSchema={reviewSchema}
-            initialValues={{email: '', password: '', passwordRepeat: ''}}
-            onSubmit={(values, actions) => {
-              sendRegisterRequest(values, actions);
-            }}>
-            {formikProps => {
-              return (
-                <View>
-                  <View style={styles.inputWrapper}>
-                    <EmailLogo style={globalStyles.emailLogo} />
-                    <TextInput
-                      keyboardType="email-address"
-                      style={globalStyles.input}
-                      placeholder="E-mail"
-                      placeholderTextColor={placeholderTextBlueColor}
-                      onChangeText={formikProps.handleChange('email')}
-                      value={formikProps.values.email}
-                      onBlur={formikProps.handleBlur('email')}
-                      onFocus={() => {
-                        if (isEmailAlreadyTaken) {
-                          setIsEmailAlreadyTaken(false);
-                          setAreRegisterButtonsDisabled(false);
-                        }
-                      }}
-                    />
-                  </View>
-                  <View style={globalStyles.errorTextWrapper}>
-                    {(formikProps.touched.email && formikProps.errors.email) ||
-                    isEmailAlreadyTaken ? (
-                      <ErrorLogo style={globalStyles.errorExlamationMark} />
-                    ) : null}
-                    <Text style={globalStyles.errorText}>
-                      {formikProps.touched.email &&
-                        formikProps.errors.email &&
-                        messageBadEmail}
-                      {isEmailAlreadyTaken && messageEmailAlreadyTaken}
-                    </Text>
-                  </View>
-                  <View style={styles.inputWrapper}>
-                    <KeyLogo style={globalStyles.keyLogo} />
-                    <TextInput
-                      secureTextEntry={true}
-                      style={globalStyles.input}
-                      placeholder="Hasło"
-                      placeholderTextColor={placeholderTextBlueColor}
-                      onChangeText={formikProps.handleChange('password')}
-                      value={formikProps.values.password}
-                      onBlur={formikProps.handleBlur('password')}
-                    />
-                  </View>
-                  <View style={globalStyles.errorTextWrapper}>
-                    {formikProps.touched.password &&
-                      formikProps.errors.password && (
+    <ScrollView>
+      <TouchableWithoutFeedback onPress={dismissKeyboard}>
+        <View style={globalStyles.screenWrapper}>
+          <PopUp fadeAnim={fadeAnim} popUpText={messagePopUpText} />
+          <View style={styles.gotAccountQuestion}>
+            <GotAccountQuestion
+              questionText={registerHeaderTextTwo}
+              actionText={registerHeaderTextOne}
+              onPress={() => navigate('Login')}
+            />
+          </View>
+          <PicbyLogo style={styles.logo} />
+          <View>
+            <Formik
+              validationSchema={reviewSchema}
+              initialValues={{email: '', password: '', passwordRepeat: ''}}
+              onSubmit={(values, actions) => {
+                sendRegisterRequest(values, actions);
+              }}>
+              {formikProps => {
+                return (
+                  <View>
+                    <View style={styles.inputWrapper}>
+                      <EmailLogo style={globalStyles.emailLogo} />
+                      <TextInput
+                        keyboardType="email-address"
+                        style={globalStyles.input}
+                        placeholder="E-mail"
+                        placeholderTextColor={placeholderTextBlueColor}
+                        onChangeText={formikProps.handleChange('email')}
+                        value={formikProps.values.email}
+                        onBlur={formikProps.handleBlur('email')}
+                        onFocus={() => {
+                          if (isEmailAlreadyTaken) {
+                            setIsEmailAlreadyTaken(false);
+                            setAreRegisterButtonsDisabled(false);
+                          }
+                        }}
+                      />
+                    </View>
+                    <View style={globalStyles.errorTextWrapper}>
+                      {(formikProps.touched.email &&
+                        formikProps.errors.email) ||
+                      isEmailAlreadyTaken ? (
                         <ErrorLogo style={globalStyles.errorExlamationMark} />
-                      )}
-                    <Text style={globalStyles.errorText}>
+                      ) : null}
+                      <Text style={globalStyles.errorText}>
+                        {formikProps.touched.email &&
+                          formikProps.errors.email &&
+                          messageBadEmail}
+                        {isEmailAlreadyTaken && messageEmailAlreadyTaken}
+                      </Text>
+                    </View>
+                    <View style={styles.inputWrapper}>
+                      <KeyLogo style={globalStyles.keyLogo} />
+                      <TextInput
+                        secureTextEntry={true}
+                        style={globalStyles.input}
+                        placeholder="Hasło"
+                        placeholderTextColor={placeholderTextBlueColor}
+                        onChangeText={formikProps.handleChange('password')}
+                        value={formikProps.values.password}
+                        onBlur={formikProps.handleBlur('password')}
+                      />
+                    </View>
+                    <View style={globalStyles.errorTextWrapper}>
                       {formikProps.touched.password &&
-                        formikProps.errors.password &&
-                        messagePasswordError}
-                    </Text>
-                  </View>
-                  <View style={styles.inputWrapper}>
-                    <KeyLogo style={globalStyles.keyLogo} />
-                    <TextInput
-                      secureTextEntry={true}
-                      style={globalStyles.input}
-                      placeholder="Powtórz hasło"
-                      placeholderTextColor={placeholderTextBlueColor}
-                      onChangeText={formikProps.handleChange('passwordRepeat')}
-                      value={formikProps.values.passwordRepeat}
-                    />
-                  </View>
-                  <View style={globalStyles.errorTextWrapper}>
-                    {formikProps.touched.passwordRepeat &&
-                      formikProps.errors.passwordRepeat && (
-                        <ErrorLogo style={globalStyles.errorExlamationMark} />
-                      )}
-                    <Text style={globalStyles.errorText}>
+                        formikProps.errors.password && (
+                          <ErrorLogo style={globalStyles.errorExlamationMark} />
+                        )}
+                      <Text style={globalStyles.errorText}>
+                        {formikProps.touched.password &&
+                          formikProps.errors.password &&
+                          messagePasswordError}
+                      </Text>
+                    </View>
+                    <View style={styles.inputWrapper}>
+                      <KeyLogo style={globalStyles.keyLogo} />
+                      <TextInput
+                        secureTextEntry={true}
+                        style={globalStyles.input}
+                        placeholder="Powtórz hasło"
+                        placeholderTextColor={placeholderTextBlueColor}
+                        onChangeText={formikProps.handleChange(
+                          'passwordRepeat',
+                        )}
+                        value={formikProps.values.passwordRepeat}
+                      />
+                    </View>
+                    <View style={globalStyles.errorTextWrapper}>
                       {formikProps.touched.passwordRepeat &&
-                        formikProps.errors.passwordRepeat}
-                    </Text>
-                  </View>
-                  <View style={styles.googleButtonWrapper}>
+                        formikProps.errors.passwordRepeat && (
+                          <ErrorLogo style={globalStyles.errorExlamationMark} />
+                        )}
+                      <Text style={globalStyles.errorText}>
+                        {formikProps.touched.passwordRepeat &&
+                          formikProps.errors.passwordRepeat}
+                      </Text>
+                    </View>
+                    <View style={styles.googleButtonWrapper}>
+                      <FlatButton
+                        onPress={formikProps.handleSubmit}
+                        colorVariantIndex={1}
+                        textValue={registerWithGoogle}
+                        textColor={textColorBlue}
+                        icon={true}
+                        disabled={areRegisterButtonsDisabled}
+                        googleButton={true}
+                      />
+                    </View>
                     <FlatButton
                       onPress={formikProps.handleSubmit}
-                      colorVariantIndex={1}
-                      textValue={registerWithGoogle}
-                      textColor={textColorBlue}
-                      icon={true}
+                      colorVariantIndex={0}
+                      textValue={registerText}
+                      textColor={textColorWhite}
                       disabled={areRegisterButtonsDisabled}
-                      googleButton={true}
                     />
                   </View>
-                  <FlatButton
-                    onPress={formikProps.handleSubmit}
-                    colorVariantIndex={0}
-                    textValue={registerText}
-                    textColor={textColorWhite}
-                    disabled={areRegisterButtonsDisabled}
-                  />
-                </View>
-              );
-            }}
-          </Formik>
+                );
+              }}
+            </Formik>
+          </View>
         </View>
-      </View>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+    </ScrollView>
   );
 };
 const styles = StyleSheet.create({
