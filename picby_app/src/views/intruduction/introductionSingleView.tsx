@@ -12,6 +12,7 @@ import eyePic from '../../common/images/bigEye.png';
 import FlatButton from '../../common/components/Button';
 import {buttonsData} from '../../staticData/staticData';
 import {NavigationStackProp} from 'react-navigation-stack';
+import sampleQueryDataToConsole from '../../../gqlSampleQuery';
 
 const {width: vw} = Dimensions.get('window');
 
@@ -32,6 +33,7 @@ const Introduction: React.FC<Props> = ({
   const navigateToOtherScreen = (screenName: string) => {
     navigation.navigate({routeName: screenName});
   };
+  sampleQueryDataToConsole();
 
   return (
     <ScrollView>
