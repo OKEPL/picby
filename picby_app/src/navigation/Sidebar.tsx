@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, ScrollView, Text, Dimensions} from 'react-native';
 import {
   DrawerNavigatorItems,
@@ -11,19 +11,24 @@ import {menuColors} from '../staticData/staticData';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Header from './Header';
 import {NavigationRoute, NavigationParams} from 'react-navigation';
+import {omitNavItems} from './nav.utils';
 
 const {YELLOW_COLOR} = menuColors;
 const {width: vw} = Dimensions.get('window');
-
-const navItemsWithoutOne = (array: NavigationRoute<NavigationParams>[]) => {
-  return array.filter(navItem => navItem.key !== 'FirstLogin');
-};
+const OMIT_NAV_KEY = 'FirstLogin';
 
 const Sidebar = (
   props: React.PropsWithChildren<DrawerContentComponentProps>,
 ) => {
   const {navigation, items} = props;
-  const desiredDrawerItems = navItemsWithoutOne(items);
+  const [desiredDrawerItems, setDesiredDrawerItems] = useState<
+    NavigationRoute<NavigationParams>[]
+  >(items);
+
+  useEffect(() => {
+    const navItemsAfterFilter = omitNavItems(items, OMIT_NAV_KEY);
+    setDesiredDrawerItems(navItemsAfterFilter);
+  }, []);
 
   return (
     <View>

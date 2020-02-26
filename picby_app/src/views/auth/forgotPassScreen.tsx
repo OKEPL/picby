@@ -84,7 +84,7 @@ const ForgotPasswordScreen: React.FC<Props> = ({navigation}) => {
     return () => {
       !navigation.isFocused() && setForgotScreenStateToDefault();
     };
-  });
+  }, []);
 
   React.useEffect(() => {
     if (isEmailSendSuccess) {
