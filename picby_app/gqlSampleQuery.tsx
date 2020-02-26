@@ -1,7 +1,7 @@
-import {useQuery} from '@apollo/react-hooks';
+import {useQuery, useMutation} from '@apollo/react-hooks';
 import {gql} from 'apollo-boost';
 
-const FIRST_QUERY = gql`
+export const FIRST_QUERY = gql`
   {
     hello
   }
@@ -18,4 +18,20 @@ const sampleQueryDataToConsole = () => {
   console.log('data ^^');
 };
 
-export default sampleQueryDataToConsole;
+const registerQuery = ({email, password}: RegisterParametersTypes) => {
+  registerUser({variables: {password, email}});
+  console.log(email, password);
+  console.log(registerUser);
+  console.log(data);
+  console.log(called);
+  console.log(loading);
+  console.log(error);
+  console.log(client);
+};
+
+const queries = {
+  sampleQueryDataToConsole,
+  registerQuery,
+};
+
+export default queries;

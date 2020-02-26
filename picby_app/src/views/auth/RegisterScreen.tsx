@@ -43,9 +43,29 @@ interface CredentialTypes {
 interface ActionTypes {
   resetForm: () => void;
 }
+interface RegisterParametersTypes {
+  email: String;
+  password: String;
+}
+
+// const registerQuery = ({email, password}: RegisterParametersTypes) => {
+//   const [registerUser, {data, called, loading, error, client}] = useMutation(
+//     REGISTER_QUERY,
+//   );
+
+//   registerUser({variables: {password, email}});
+//   console.log(email, password);
+//   console.log(registerUser);
+//   console.log(data);
+//   console.log(called);
+//   console.log(loading);
+//   console.log(error);
+//   console.log(client);
+// };
 
 const RegisterScreen: React.FC<Props> = ({navigation}) => {
   const {navigate} = navigation;
+
   const {
     dismissKeyboard,
     registerContextData: {

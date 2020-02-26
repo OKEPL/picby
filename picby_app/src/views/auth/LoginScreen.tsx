@@ -210,7 +210,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
 
                   <View style={styles.googleButtonWrapper}>
                     <FlatButton
-                      onPress={() => redirectToDashboard()}
+                      onPress={formikProps.handleSubmit}
                       colorVariantIndex={1}
                       textValue={loginWithGoogle}
                       textColor={textColorBlue}
