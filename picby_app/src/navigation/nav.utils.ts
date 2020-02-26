@@ -1,8 +1,9 @@
 import {NavigationRoute, NavigationParams} from 'react-navigation';
 
-export const omitNavItems: (
-  navItems: NavigationRoute<NavigationParams>[],
-  omitNavKey: String,
-) => NavigationRoute<NavigationParams>[] = (navItems, omitNavKey) => {
-  return navItems.filter(navItem => navItem.key !== omitNavKey);
-};
+interface OmitNavKeyItemsArgs {
+  navItems: NavigationRoute<NavigationParams>[];
+  omitNavKey: String;
+}
+
+export const omitNavItems = ({navItems, omitNavKey}: OmitNavKeyItemsArgs) =>
+  navItems.filter(navItem => navItem.key !== omitNavKey);

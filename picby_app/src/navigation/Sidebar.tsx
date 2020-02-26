@@ -26,7 +26,10 @@ const Sidebar = (
   >(items);
 
   useEffect(() => {
-    const navItemsAfterFilter = omitNavItems(items, OMIT_NAV_KEY);
+    const navItemsAfterFilter = omitNavItems({
+      navItems: items,
+      omitNavKey: OMIT_NAV_KEY,
+    });
     setDesiredDrawerItems(navItemsAfterFilter);
   }, []);
 
