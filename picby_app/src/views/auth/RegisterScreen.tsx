@@ -122,6 +122,7 @@ const RegisterScreen: React.FC<Props> = ({navigation}) => {
     const {resetForm} = actions;
     handleRegisterRequestAndErrors(email, password, resetForm);
   };
+
   return (
     <ScrollView>
       <TouchableWithoutFeedback onPress={dismissKeyboard}>
