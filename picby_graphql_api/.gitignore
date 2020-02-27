@@ -3,3 +3,4 @@ dist
 database.sqlite
 pgdata
 .yarn
+src/modules/utils/picbyEmailPassword.ts
