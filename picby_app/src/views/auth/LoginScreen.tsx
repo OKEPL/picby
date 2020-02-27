@@ -157,80 +157,77 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
               onSubmit={(values, actions) => {
                 sendLoginRequest(values, actions);
               }}>
-              {formikProps => {
-                return (
-                  <View>
-                    <View style={styles.inputWrapper}>
-                      <EmailLogo style={globalStyles.emailLogo} />
-                      <TextInput
-                        keyboardType="email-address"
-                        style={globalStyles.input}
-                        placeholder="E-mail"
-                        placeholderTextColor={placeholderTextBlueColor}
-                        onChangeText={formikProps.handleChange('email')}
-                        value={formikProps.values.email}
-                        onBlur={formikProps.handleBlur('email')}
-                      />
-                    </View>
-                    <View style={globalStyles.errorTextWrapper}>
-                      {formikProps.touched.email &&
-                        formikProps.errors.email && (
-                          <ErrorLogo style={globalStyles.errorExlamationMark} />
-                        )}
-                      <Text style={globalStyles.errorText}>
-                        {formikProps.touched.email &&
-                          formikProps.errors.email &&
-                          messageBadEmail}
-                      </Text>
-                    </View>
-                    <View style={styles.inputWrapper}>
-                      <KeyLogo style={globalStyles.keyLogo} />
-                      <TextInput
-                        secureTextEntry={true}
-                        style={globalStyles.input}
-                        placeholder="Hasło"
-                        placeholderTextColor={placeholderTextBlueColor}
-                        onChangeText={formikProps.handleChange('password')}
-                        value={formikProps.values.password}
-                        onBlur={formikProps.handleBlur('password')}
-                        onFocus={() => {
-                          if (isPasswordBad) {
-                            setIsPasswordBad(false);
-                            setAreLoginButtonsDisabled(false);
-                          }
-                        }}
-                      />
-                    </View>
-                    <View style={globalStyles.errorTextWrapper}>
-                      {isPasswordBad && (
-                        <ErrorLogo style={globalStyles.errorExlamationMark} />
-                      )}
-                      <Text style={globalStyles.errorText}>
-                        {isPasswordBad && messageBadPassword}
-                      </Text>
-                    </View>
-
-                    <View style={styles.googleButtonWrapper}>
-                      <FlatButton
-                        onPress={() => redirectToDashboard()}
-                        colorVariantIndex={1}
-                        textValue={loginWithGoogle}
-                        textColor={textColorBlue}
-                        icon={true}
-                        disabled={areLoginButtonsDisabled}
-                        googleButton={true}
-                      />
-                    </View>
-                    <FlatButton
-                      onPress={formikProps.handleSubmit}
-                      colorVariantIndex={0}
-                      textValue={loginText}
-                      textColor={textColorWhite}
-                      disabled={areLoginButtonsDisabled}
+              {formikProps => (
+                <View>
+                  <View style={styles.inputWrapper}>
+                    <EmailLogo style={globalStyles.emailLogo} />
+                    <TextInput
+                      keyboardType="email-address"
+                      style={globalStyles.input}
+                      placeholder="E-mail"
+                      placeholderTextColor={placeholderTextBlueColor}
+                      onChangeText={formikProps.handleChange('email')}
+                      value={formikProps.values.email}
+                      onBlur={formikProps.handleBlur('email')}
                     />
                   </View>
-                );
-              }}
+                  <View style={globalStyles.errorTextWrapper}>
+                    {formikProps.touched.email && formikProps.errors.email && (
+                      <ErrorLogo style={globalStyles.errorExlamationMark} />
+                    )}
+                    <Text style={globalStyles.errorText}>
+                      {formikProps.touched.email &&
+                        formikProps.errors.email &&
+                        messageBadEmail}
+                    </Text>
+                  </View>
+                  <View style={styles.inputWrapper}>
+                    <KeyLogo style={globalStyles.keyLogo} />
+                    <TextInput
+                      secureTextEntry={true}
+                      style={globalStyles.input}
+                      placeholder="Hasło"
+                      placeholderTextColor={placeholderTextBlueColor}
+                      onChangeText={formikProps.handleChange('password')}
+                      value={formikProps.values.password}
+                      onBlur={formikProps.handleBlur('password')}
+                      onFocus={() => {
+                        if (isPasswordBad) {
+                          setIsPasswordBad(false);
+                          setAreLoginButtonsDisabled(false);
+                        }
+                      }}
+                    />
+                  </View>
+                  <View style={globalStyles.errorTextWrapper}>
+                    {isPasswordBad && (
+                      <ErrorLogo style={globalStyles.errorExlamationMark} />
+                    )}
+                    <Text style={globalStyles.errorText}>
+                      {isPasswordBad && messageBadPassword}
+                    </Text>
+                  </View>
+
+                  <View style={styles.googleButtonWrapper}>
+                    <FlatButton
+                      onPress={formikProps.handleSubmit}
+                      colorVariantIndex={1}
+                      textValue={loginWithGoogle}
+                      textColor={textColorBlue}
+                      icon={true}
+                      disabled={areLoginButtonsDisabled}
+                      googleButton={true}
+                    />
+                  </View>
+                  <FlatButton
+                    onPress={formikProps.handleSubmit}
+                    colorVariantIndex={0}
+                    textValue={loginText}
+                    textColor={textColorWhite}
+                    disabled={areLoginButtonsDisabled}
+                  />
+                </View>
+              )}
             </Formik>
           </View>
           <TouchableOpacity onPress={() => navigate('ForgotPass')}>

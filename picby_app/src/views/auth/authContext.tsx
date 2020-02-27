@@ -1,5 +1,10 @@
-import React, {useState, Dispatch, SetStateAction} from 'react';
-import {Keyboard} from 'react-native';
+import React, {useState, Dispatch, SetStateAction, useEffect} from 'react';
+import {Keyboard, SegmentedControlIOSComponent} from 'react-native';
+import {gql, ApolloError} from 'apollo-boost';
+import {useQuery, useMutation} from '@apollo/react-hooks';
+import {ErrorMessage} from 'formik';
+import {REGISTER_QUERY} from './queriesGQL';
+import {undefinedVarMessage} from 'graphql/validation/rules/NoUndefinedVariables';
 
 export interface AuthProps {
   registerContextData: {
@@ -146,20 +151,30 @@ const AuthContextProvider: React.FC = ({children}) => {
     setIsRegisterSuccess(false);
   };
 
-  const registerGraphQLQuery = async () => {
+  const [registerUser, {data}] = useMutation(REGISTER_QUERY, {
+    onError: errorData => {
+      const [extensions] = errorData.graphQLErrors;
+      const errorCode = extensions.extensions?.exception.code;
+      throw new Error(errorCode);
+    },
+    onCompleted: data => {
+      console.log(data);
+    },
+  });
+
+  interface RegisterParametersTypes {
+    email: String;
+    password: String;
+  }
+
+  const registerGraphQLQuery = async ({
+    email,
+    password,
+  }: RegisterParametersTypes) => {
     try {
-      //to have good response delete /"random string" after /pokemon/
-      await fetch('https://pokeapi.co/api/v2/pokemon/asdasdasd').then(
-        response => {
-          if (response.status > 400) {
-            throw new Error();
-            //add else if with different status to pass error to catch
-          }
-          return response;
-        },
-      );
+      await registerUser({variables: {email, password}});
     } catch (error) {
-      throw new Error('error');
+      throw new Error(error.message);
     }
   };
 
@@ -171,12 +186,14 @@ const AuthContextProvider: React.FC = ({children}) => {
     try {
       setAreRegisterButtonsDisabled(true);
       await setIsItServerError(false);
-      await registerGraphQLQuery();
+      await registerGraphQLQuery({email, password});
       await setIsRegisterSuccess(true);
       resetForm();
     } catch (error) {
-      // setIsItServerError(true);
-      setIsEmailAlreadyTaken(true);
+      let errorCode = error.message;
+      Number(errorCode) == 23505
+        ? setIsEmailAlreadyTaken(true)
+        : setIsItServerError(true);
     } finally {
       setIsRegisterSuccess(false);
       setIsItServerError(false);
