@@ -151,11 +151,14 @@ const AuthContextProvider: React.FC = ({children}) => {
     setIsRegisterSuccess(false);
   };
 
-  const [registerUser] = useMutation(REGISTER_QUERY, {
+  const [registerUser, {data}] = useMutation(REGISTER_QUERY, {
     onError: errorData => {
       const [extensions] = errorData.graphQLErrors;
       const errorCode = extensions.extensions?.exception.code;
       throw new Error(errorCode);
+    },
+    onCompleted: data => {
+      console.log(data);
     },
   });
 
