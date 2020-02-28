@@ -31,7 +31,7 @@ export const globalStyles = StyleSheet.create({
   },
   errorText: {
     color: '#CC1919',
-    letterSpacing: 0.3,
+    letterSpacing: 0.1,
     fontSize: 14,
   },
   emailLogo: {
