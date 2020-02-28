@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   TouchableWithoutFeedback,
+  Linking,
 } from 'react-native';
 import {
   TextInput,

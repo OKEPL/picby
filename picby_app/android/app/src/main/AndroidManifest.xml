@@ -10,12 +10,13 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
       android:theme="@style/AppTheme"
-      android:launchMode="singleTask">
+      >
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-        android:windowSoftInputMode="adjustResize">
+        android:windowSoftInputMode="adjustResize"
+        android:launchMode="singleTask">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
@@ -28,7 +29,9 @@
           <!-- Accepts URIs that begin with "example://gizmos” android:pathPattern="..*"-->
           
           <data android:scheme="https"
-                android:host="hungry-kilby-128f75.netlify.com"/>
+                android:host="hungry-kilby-128f75.netlify.com"
+                pathPattern="/login/..*"
+                />
         </intent-filter>
       </activity>
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />

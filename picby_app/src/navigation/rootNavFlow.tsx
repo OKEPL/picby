@@ -5,14 +5,23 @@ import {ParentDrawer, ChildDrawer} from './MenuDrawers';
 
 const switchContainer = createSwitchNavigator(
   {
-    Intro: IntroductionSceneStack,
-    Auth: AuthStackNav,
-    ParentDashboard: ParentDrawer,
-    ChildDashboard: ChildDrawer,
+    Intro: {
+      screen: IntroductionSceneStack,
+    },
+    Auth: {
+      screen: AuthStackNav,
+      path: '',
+    },
+    ParentDashboard: {
+      screen: ParentDrawer,
+    },
+    ChildDashboard: {
+      screen: ChildDrawer,
+    },
   },
-  {
-    initialRouteName: 'Intro',
-  },
+  // {
+  //   initialRouteName: 'Intro',
+  // },
 );
 
 export default createAppContainer(switchContainer);
