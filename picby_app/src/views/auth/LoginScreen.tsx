@@ -33,6 +33,11 @@ import {
   loginMessages,
 } from '../../staticData/staticData';
 import {NavigationStackProp} from 'react-navigation-stack';
+import {
+  NavigationParams,
+  NavigationRoute,
+  NavigationScreenProp,
+} from 'react-navigation';
 
 const {width: vw} = Dimensions.get('window');
 
@@ -48,6 +53,8 @@ interface CredentialTypes {
 interface ActionTypes {
   resetForm: () => void;
 }
+
+type userTokenType = string | undefined;
 
 const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
   const {navigate} = navigation;
@@ -67,6 +74,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
       areLoginButtonsDisabled,
       setAreLoginButtonsDisabled,
       setLoginScreenStateToDefault,
+      isUserConfirmedSuccess,
+      handleConfirmUserAndHandleErrors,
     },
     dismissKeyboard,
   } = useContext(AuthContext);
@@ -79,10 +88,14 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     messageLoginSuccess,
     forgotPasswordText,
     messageServerError,
+    messageEmailConfirmation,
   } = loginMessages;
 
   const {placeholderTextBlueColor} = inputData;
   const [messagePopUpText, setMessagePopUpText] = useState('');
+  const [userTokenValue, setUserTokenValue] = useState<userTokenType>(
+    undefined,
+  );
 
   const {
     loginText,
@@ -99,6 +112,23 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     password: yup.string().required(),
   });
 
+  React.useEffect(() => {
+    const userToken: userTokenType = navigation.getParam('token');
+    console.log(navigation.getParam('token'));
+    userToken && handleConfirmUserAndHandleErrors(userToken);
+
+    // userToken && handleConfirmUserAndHandleErrors({userToken});
+  }, []);
+
+  // React.useEffect(() => {
+  //   console.log(userTokenValue);
+  //   console.log(typeof userTokenValue);
+  //   // const userTokenToString = String(userTokenValue);
+  //   userTokenValue &&
+  //     handleConfirmUserAndHandleErrors(userTokenValue) &&
+  //     console.log('odpalanie handle confirm');
+  // }, [userTokenValue]);
+
   // handle errors //
   React.useEffect(() => {
     if (isServerNotResponding) {
@@ -110,12 +140,16 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     } else if (isLoginSuccess && !isUserLoggedInFirstTime) {
       setMessagePopUpText(messageLoginSuccess);
       handlePopUpAnimation(redirectToDashboard);
+    } else if (isUserConfirmedSuccess) {
+      setMessagePopUpText(messageEmailConfirmation);
+      handlePopUpAnimation();
     }
   }, [
     isLoginSuccess,
     isServerNotResponding,
     isPasswordBad,
     isUserLoggedInFirstTime,
+    isUserConfirmedSuccess,
   ]);
 
   const redirectToFirstLoginDashboard = () => {

@@ -12,3 +12,5 @@ export const REGISTER_QUERY = gql`
     }
   }
 `;
+
+// export const CONFIRM_USER =

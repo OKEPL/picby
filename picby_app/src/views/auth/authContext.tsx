@@ -1,10 +1,17 @@
-import React, {useState, Dispatch, SetStateAction, useEffect} from 'react';
-import {Keyboard, SegmentedControlIOSComponent} from 'react-native';
-import {gql, ApolloError} from 'apollo-boost';
+import React, {useState, Dispatch, SetStateAction} from 'react';
+import {Keyboard} from 'react-native';
 import {useQuery, useMutation} from '@apollo/react-hooks';
-import {ErrorMessage} from 'formik';
-import {REGISTER_QUERY} from './queriesGQL';
-import {undefinedVarMessage} from 'graphql/validation/rules/NoUndefinedVariables';
+import {REGISTER_QUERY, CONFIRM_USER} from './mutationsGQL';
+import {
+  NavigationScreenProp,
+  NavigationRoute,
+  NavigationParams,
+} from 'react-navigation';
+import {gql} from 'apollo-boost';
+
+type TokenType =
+  | NavigationScreenProp<NavigationRoute<NavigationParams>, NavigationParams>
+  | undefined;
 
 export interface AuthProps {
   registerContextData: {
@@ -23,6 +30,7 @@ export interface AuthProps {
   };
   dismissKeyboard: () => void;
   loginContextData: {
+    isUserConfirmedSuccess: boolean;
     isPasswordBad: boolean;
     isServerNotResponding: boolean;
     isLoginSuccess: boolean;
@@ -36,6 +44,7 @@ export interface AuthProps {
       resetForm: () => void,
     ) => Promise<void>;
     setLoginScreenStateToDefault: () => void;
+    handleConfirmUserAndHandleErrors: (userToken: string) => Promise<void>;
   };
   forgotPassContextData: {
     isEmailNotFound: boolean;
@@ -78,6 +87,10 @@ const AuthContextProvider: React.FC = ({children}) => {
     boolean
   >(false);
 
+  const [isUserConfirmedSuccess, setIsUserConfirmedSuccess] = useState<boolean>(
+    false,
+  );
+
   const setLoginScreenStateToDefault = () => {
     setIsPasswordBad(false);
     setIsServerNotResponding(false);
@@ -119,6 +132,52 @@ const AuthContextProvider: React.FC = ({children}) => {
     }
   };
 
+  const [confirmUser] = useMutation(
+    gql`
+      mutation confirmUser($token: String!) {
+        confirmUser(token: $token)
+      }
+    `,
+    {
+      onError: errorData => {
+        console.log('wyjebalo blad');
+        console.log(errorData.networkError);
+        // const [extensions] = errorData.graphQLErrors;
+        // const errorCode = extensions?.extensions?.exception.code;
+        // console.log(errorCode); errorCode
+        throw new Error();
+      },
+      onCompleted: returnedData => {
+        console.log(returnedData);
+      },
+    },
+  );
+
+  const confirmUserRequest = async (userToken: string) => {
+    console.log(userToken);
+    try {
+      await confirmUser({variables: {userToken}});
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  const handleConfirmUserAndHandleErrors = async (userToken: string) => {
+    try {
+      setAreLoginButtonsDisabled(true);
+      await setIsServerNotResponding(false);
+      await confirmUserRequest(userToken);
+      setIsUserConfirmedSuccess(true);
+    } catch (error) {
+      console.log(error.message);
+      //set error animation//
+      setIsServerNotResponding(true);
+    } finally {
+      // setIsUserConfirmedSuccess(false);
+      setIsServerNotResponding(false);
+    }
+  };
+
   const loginContextData = {
     isPasswordBad,
     isServerNotResponding,
@@ -129,6 +188,8 @@ const AuthContextProvider: React.FC = ({children}) => {
     setAreLoginButtonsDisabled,
     handleLoginRequestAndErrors,
     setLoginScreenStateToDefault,
+    isUserConfirmedSuccess,
+    handleConfirmUserAndHandleErrors,
   };
 
   /////////////////////  end of login logic /////////////////////////////////////////
@@ -151,7 +212,7 @@ const AuthContextProvider: React.FC = ({children}) => {
     setIsRegisterSuccess(false);
   };
 
-  const [registerUser, {data}] = useMutation(REGISTER_QUERY, {
+  const [registerUser] = useMutation(REGISTER_QUERY, {
     onError: errorData => {
       const [extensions] = errorData.graphQLErrors;
       const errorCode = extensions.extensions?.exception.code;
