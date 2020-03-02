@@ -1,10 +1,17 @@
-import React, {useState, Dispatch, SetStateAction, useEffect} from 'react';
-import {Keyboard, SegmentedControlIOSComponent} from 'react-native';
-import {gql, ApolloError} from 'apollo-boost';
-import {useQuery, useMutation} from '@apollo/react-hooks';
-import {ErrorMessage} from 'formik';
-import {REGISTER_QUERY} from './queriesGQL';
-import {undefinedVarMessage} from 'graphql/validation/rules/NoUndefinedVariables';
+import React, {useState, Dispatch, SetStateAction} from 'react';
+import {Keyboard} from 'react-native';
+import {useMutation} from '@apollo/react-hooks';
+import {REGISTER_QUERY, CONFIRM_USER} from './mutationsGQL';
+
+export interface Values {
+  password: string;
+  email: string;
+  passwordRepeat: string;
+}
+export interface RegisterParametersTypes {
+  email: String;
+  password: String;
+}
 
 export interface AuthProps {
   registerContextData: {
@@ -23,6 +30,7 @@ export interface AuthProps {
   };
   dismissKeyboard: () => void;
   loginContextData: {
+    isUserConfirmedSuccess: boolean;
     isPasswordBad: boolean;
     isServerNotResponding: boolean;
     isLoginSuccess: boolean;
@@ -36,6 +44,7 @@ export interface AuthProps {
       resetForm: () => void,
     ) => Promise<void>;
     setLoginScreenStateToDefault: () => void;
+    handleConfirmUserAndHandleErrors: (userToken: string) => Promise<void>;
   };
   forgotPassContextData: {
     isEmailNotFound: boolean;
@@ -50,12 +59,6 @@ export interface AuthProps {
     ) => Promise<void>;
     setForgotScreenStateToDefault: () => void;
   };
-}
-
-export interface Values {
-  password: string;
-  email: string;
-  passwordRepeat: string;
 }
 
 export const AuthContext = React.createContext<AuthProps>({} as AuthProps);
@@ -78,6 +81,10 @@ const AuthContextProvider: React.FC = ({children}) => {
     boolean
   >(false);
 
+  const [isUserConfirmedSuccess, setIsUserConfirmedSuccess] = useState<boolean>(
+    false,
+  );
+
   const setLoginScreenStateToDefault = () => {
     setIsPasswordBad(false);
     setIsServerNotResponding(false);
@@ -94,7 +101,6 @@ const AuthContextProvider: React.FC = ({children}) => {
         return response;
       });
     } catch (error) {
-      console.log(error.message);
       throw new Error('2');
     }
   };
@@ -119,6 +125,38 @@ const AuthContextProvider: React.FC = ({children}) => {
     }
   };
 
+  const [confirmUser] = useMutation(CONFIRM_USER, {
+    onError: errorData => {
+      const [extensions] = errorData.graphQLErrors;
+      const errorCode = extensions?.extensions?.exception.code;
+      throw new Error(errorCode);
+    },
+    onCompleted: returnedData => {
+      console.log(returnedData);
+    },
+  });
+
+  const confirmUserRequest = async (userToken: string) => {
+    try {
+      await confirmUser({variables: {token: userToken}});
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  const handleConfirmUserAndHandleErrors = async (userToken: string) => {
+    try {
+      setAreLoginButtonsDisabled(true);
+      await setIsServerNotResponding(false);
+      await confirmUserRequest(userToken);
+      setIsUserConfirmedSuccess(true);
+    } catch (error) {
+      setIsServerNotResponding(true);
+    } finally {
+      setIsServerNotResponding(false);
+    }
+  };
+
   const loginContextData = {
     isPasswordBad,
     isServerNotResponding,
@@ -129,6 +167,8 @@ const AuthContextProvider: React.FC = ({children}) => {
     setAreLoginButtonsDisabled,
     handleLoginRequestAndErrors,
     setLoginScreenStateToDefault,
+    isUserConfirmedSuccess,
+    handleConfirmUserAndHandleErrors,
   };
 
   /////////////////////  end of login logic /////////////////////////////////////////
@@ -151,7 +191,7 @@ const AuthContextProvider: React.FC = ({children}) => {
     setIsRegisterSuccess(false);
   };
 
-  const [registerUser, {data}] = useMutation(REGISTER_QUERY, {
+  const [registerUser, {error}] = useMutation(REGISTER_QUERY, {
     onError: errorData => {
       const [extensions] = errorData.graphQLErrors;
       const errorCode = extensions.extensions?.exception.code;
@@ -161,11 +201,6 @@ const AuthContextProvider: React.FC = ({children}) => {
       console.log(data);
     },
   });
-
-  interface RegisterParametersTypes {
-    email: String;
-    password: String;
-  }
 
   const registerGraphQLQuery = async ({
     email,
@@ -183,10 +218,11 @@ const AuthContextProvider: React.FC = ({children}) => {
     password: string,
     resetForm: () => void,
   ) => {
+    const lowerCaseEmail: string = email.toLowerCase();
     try {
       setAreRegisterButtonsDisabled(true);
       await setIsItServerError(false);
-      await registerGraphQLQuery({email, password});
+      await registerGraphQLQuery({email: lowerCaseEmail, password});
       await setIsRegisterSuccess(true);
       resetForm();
     } catch (error) {
@@ -243,7 +279,6 @@ const AuthContextProvider: React.FC = ({children}) => {
         return response;
       });
     } catch (error) {
-      console.log(error.message);
       throw new Error('2');
     }
   };
@@ -259,14 +294,12 @@ const AuthContextProvider: React.FC = ({children}) => {
       await setIsEmailSendSuccess(true);
       resetForm();
     } catch (error) {
-      console.log('błąd');
       setIsEmailNotFound(true);
       // setIsItForgotPassServerError(true);
     } finally {
       // setIsEmailNotFound(false);
       setIsItForgotPassServerError(false);
       setIsEmailSendSuccess(false);
-      console.log('forgot pass request finished');
     }
   };
 

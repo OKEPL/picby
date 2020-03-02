@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useContext, useState} from 'react';
+import {useContext, useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -48,10 +48,12 @@ interface ActionTypes {
   resetForm: () => void;
 }
 
+type userTokenType = string | undefined;
+
 const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
   const {navigate} = navigation;
 
-  React.useEffect(() => {
+  useEffect(() => {
     navigation.addListener('didBlur', () => setLoginScreenStateToDefault());
   }, []);
 
@@ -66,6 +68,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
       areLoginButtonsDisabled,
       setAreLoginButtonsDisabled,
       setLoginScreenStateToDefault,
+      isUserConfirmedSuccess,
+      handleConfirmUserAndHandleErrors,
     },
     dismissKeyboard,
   } = useContext(AuthContext);
@@ -78,10 +82,14 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     messageLoginSuccess,
     forgotPasswordText,
     messageServerError,
+    messageEmailConfirmation,
   } = loginMessages;
 
   const {placeholderTextBlueColor} = inputData;
   const [messagePopUpText, setMessagePopUpText] = useState('');
+  const [userTokenValue, setUserTokenValue] = useState<userTokenType>(
+    undefined,
+  );
 
   const {
     loginText,
@@ -98,8 +106,17 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     password: yup.string().required(),
   });
 
+  useEffect(() => {
+    const userToken: userTokenType = navigation.getParam('token');
+    userToken && setUserTokenValue(userToken);
+  });
+
+  useEffect(() => {
+    userTokenValue && handleConfirmUserAndHandleErrors(userTokenValue);
+  }, [userTokenValue]);
+
   // handle errors //
-  React.useEffect(() => {
+  useEffect(() => {
     if (isServerNotResponding) {
       setMessagePopUpText(messageServerError);
       handlePopUpAnimation();
@@ -109,12 +126,16 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     } else if (isLoginSuccess && !isUserLoggedInFirstTime) {
       setMessagePopUpText(messageLoginSuccess);
       handlePopUpAnimation(redirectToDashboard);
+    } else if (isUserConfirmedSuccess) {
+      setMessagePopUpText(messageEmailConfirmation);
+      handlePopUpAnimation();
     }
   }, [
     isLoginSuccess,
     isServerNotResponding,
     isPasswordBad,
     isUserLoggedInFirstTime,
+    isUserConfirmedSuccess,
   ]);
 
   const redirectToFirstLoginDashboard = () => {

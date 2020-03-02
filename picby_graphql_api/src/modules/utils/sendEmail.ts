@@ -25,7 +25,7 @@ export async function sendEmail({ email, url }: SendEmailArgs) {
     from: '"Marcin" <picbyapp@gmail.com',
     to: email,
     subject: "Potwierdź swoje konto Picby",
-    html: `Aby potwierdzić swoje konto kliknij w link: <a href="${url}">${url}</a>`
+    html: `Aby potwierdzić swoje konto kliknij w link używając urządzenia mobilnego: <a href="${url}">${url}</a>`
   };
 
   transporter.sendMail(HelperOptions, (error: any, info: any) => {
