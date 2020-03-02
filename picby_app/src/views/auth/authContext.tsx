@@ -3,6 +3,16 @@ import {Keyboard} from 'react-native';
 import {useMutation} from '@apollo/react-hooks';
 import {REGISTER_QUERY, CONFIRM_USER} from './mutationsGQL';
 
+export interface Values {
+  password: string;
+  email: string;
+  passwordRepeat: string;
+}
+export interface RegisterParametersTypes {
+  email: String;
+  password: String;
+}
+
 export interface AuthProps {
   registerContextData: {
     isEmailAlreadyTaken: boolean;
@@ -51,12 +61,6 @@ export interface AuthProps {
   };
 }
 
-export interface Values {
-  password: string;
-  email: string;
-  passwordRepeat: string;
-}
-
 export const AuthContext = React.createContext<AuthProps>({} as AuthProps);
 
 const AuthContextProvider: React.FC = ({children}) => {
@@ -97,7 +101,6 @@ const AuthContextProvider: React.FC = ({children}) => {
         return response;
       });
     } catch (error) {
-      console.log(error.message);
       throw new Error('2');
     }
   };
@@ -126,7 +129,6 @@ const AuthContextProvider: React.FC = ({children}) => {
     onError: errorData => {
       const [extensions] = errorData.graphQLErrors;
       const errorCode = extensions?.extensions?.exception.code;
-      console.log(errorCode);
       throw new Error(errorCode);
     },
     onCompleted: returnedData => {
@@ -135,7 +137,6 @@ const AuthContextProvider: React.FC = ({children}) => {
   });
 
   const confirmUserRequest = async (userToken: string) => {
-    console.log(userToken);
     try {
       await confirmUser({variables: {token: userToken}});
     } catch (error) {
@@ -192,11 +193,6 @@ const AuthContextProvider: React.FC = ({children}) => {
 
   const [registerUser, {error}] = useMutation(REGISTER_QUERY, {
     onError: errorData => {
-      console.log(errorData);
-      console.log(errorData.extraInfo);
-      console.log(errorData.graphQLErrors);
-      console.log(errorData.networkError?.message);
-
       const [extensions] = errorData.graphQLErrors;
       const errorCode = extensions.extensions?.exception.code;
       throw new Error(errorCode);
@@ -205,11 +201,6 @@ const AuthContextProvider: React.FC = ({children}) => {
       console.log(data);
     },
   });
-  console.log(error?.networkError);
-  interface RegisterParametersTypes {
-    email: String;
-    password: String;
-  }
 
   const registerGraphQLQuery = async ({
     email,
@@ -288,7 +279,6 @@ const AuthContextProvider: React.FC = ({children}) => {
         return response;
       });
     } catch (error) {
-      console.log(error.message);
       throw new Error('2');
     }
   };
@@ -304,14 +294,12 @@ const AuthContextProvider: React.FC = ({children}) => {
       await setIsEmailSendSuccess(true);
       resetForm();
     } catch (error) {
-      console.log('błąd');
       setIsEmailNotFound(true);
       // setIsItForgotPassServerError(true);
     } finally {
       // setIsEmailNotFound(false);
       setIsItForgotPassServerError(false);
       setIsEmailSendSuccess(false);
-      console.log('forgot pass request finished');
     }
   };
 
