@@ -5,8 +5,8 @@ ENV NODE_ENV=production
 RUN npm install
 COPY . .
 RUN npm run build
-ADD ormconfig.docker.js ./dist/ormconfig.js
+ADD ormconfig.docker.js ormconfig.js
 
-WORKDIR ./dist
+WORKDIR  ./dist
 COPY wait-for-it.sh .
 CMD node index.js
