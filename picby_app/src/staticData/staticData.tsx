@@ -15,6 +15,7 @@ export const loginMessages = {
   messageBadEmail: 'Wprowadź poprawny adres e-mail.',
   forgotPasswordText: 'Zapomniałeś hasła?',
   messageServerError: 'Błąd serwera',
+  messageUserNotConfirmed: `Konto nie zostało potwierdzone ${'\n'} Sprawdź skrzynkę odbiorczą.`,
 };
 
 export const forgotPasswordMessages = {
@@ -82,4 +83,9 @@ export const commonColors = {
 export const catalogsData = {
   title: 'Brak katalogów w PICBY.',
   subtitle: `Nie utworzyłeś jeszcze żadnego katalogu. ${'\n'} Kliknij w ikonę plusa z prawej strony,${'\n'} aby dodać pierwszy katalog.`,
+};
+
+export const userLoginErrorCodes = {
+  badEmailOrPasswordCode: '100',
+  userNotConfirmedCode: '101',
 };

@@ -70,6 +70,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
       setLoginScreenStateToDefault,
       isUserConfirmedSuccess,
       handleConfirmUserAndHandleErrors,
+      isUserNotConfirmed,
     },
     dismissKeyboard,
   } = useContext(AuthContext);
@@ -83,6 +84,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     forgotPasswordText,
     messageServerError,
     messageEmailConfirmation,
+    messageUserNotConfirmed,
   } = loginMessages;
 
   const {placeholderTextBlueColor} = inputData;
@@ -129,6 +131,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     } else if (isUserConfirmedSuccess) {
       setMessagePopUpText(messageEmailConfirmation);
       handlePopUpAnimation();
+    } else if (isUserNotConfirmed) {
+      setMessagePopUpText(messageUserNotConfirmed);
+      handlePopUpAnimation();
     }
   }, [
     isLoginSuccess,
@@ -136,6 +141,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     isPasswordBad,
     isUserLoggedInFirstTime,
     isUserConfirmedSuccess,
+    isUserNotConfirmed,
   ]);
 
   const redirectToFirstLoginDashboard = () => {

@@ -2,6 +2,7 @@ import React, {useState, Dispatch, SetStateAction} from 'react';
 import {Keyboard} from 'react-native';
 import {useMutation} from '@apollo/react-hooks';
 import {REGISTER_QUERY, CONFIRM_USER, LOGIN_USER} from './mutationsGQL';
+import {userLoginErrorCodes} from '../../staticData/staticData';
 
 export interface Values {
   password: string;
@@ -38,6 +39,7 @@ export interface AuthProps {
     setIsPasswordBad: Dispatch<SetStateAction<boolean>>;
     areLoginButtonsDisabled: boolean;
     setAreLoginButtonsDisabled: Dispatch<SetStateAction<boolean>>;
+    isUserNotConfirmed: boolean;
     handleLoginRequestAndErrors: (
       email: string,
       password: string,
@@ -85,17 +87,24 @@ const AuthContextProvider: React.FC = ({children}) => {
     false,
   );
 
+  const [isUserNotConfirmed, setIsUserNotConfirmed] = useState<boolean>(false);
+
+  const {badEmailOrPasswordCode, userNotConfirmedCode} = userLoginErrorCodes;
+
   const setLoginScreenStateToDefault = () => {
     setIsPasswordBad(false);
     setIsServerNotResponding(false);
     setIsLoginSuccess(false);
     setAreLoginButtonsDisabled(false);
+    setIsUserNotConfirmed(false);
   };
 
   const [loginUser] = useMutation(LOGIN_USER, {
     onError: errorData => {
       const [extensions] = errorData.graphQLErrors;
-      const errorString = extensions.extensions?.code;
+      console.log(extensions);
+      const errorString = extensions.message;
+      console.log(errorString);
       throw new Error(errorString);
     },
     onCompleted: data => {
@@ -127,10 +136,14 @@ const AuthContextProvider: React.FC = ({children}) => {
       setIsLoginSuccess(true);
       resetForm();
     } catch (error) {
-      const errorMessage = 'GRAPHQL_VALIDATION_FAILED';
-      error.message == errorMessage
-        ? setIsPasswordBad(true)
-        : setIsServerNotResponding(true);
+      let errorCode = error.message;
+      console.log(errorCode);
+      if (errorCode == badEmailOrPasswordCode) {
+        setIsPasswordBad(true);
+      } else if (errorCode == userNotConfirmedCode) {
+        console.log('asd');
+        setIsUserNotConfirmed(true);
+      } else setIsServerNotResponding(true);
     } finally {
       setIsLoginSuccess(false);
       setIsServerNotResponding(false);
@@ -181,6 +194,7 @@ const AuthContextProvider: React.FC = ({children}) => {
     setLoginScreenStateToDefault,
     isUserConfirmedSuccess,
     handleConfirmUserAndHandleErrors,
+    isUserNotConfirmed,
   };
 
   /////////////////////  end of login logic /////////////////////////////////////////
