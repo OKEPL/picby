@@ -11,7 +11,7 @@ export const registerMessages = {
 export const loginMessages = {
   messageEmailConfirmation: `E-mail został potwierdzony,${'\n'}możesz się zalogować.`,
   messageLoginSuccess: `Logowanie pomyślne,${'\n'} nastąpi przekierowanie`,
-  messageBadPassword: 'Hasło jest nieprawidłowe',
+  messageBadPassword: 'Email lub hasło jest nieprawidłowe',
   messageBadEmail: 'Wprowadź poprawny adres e-mail.',
   forgotPasswordText: 'Zapomniałeś hasła?',
   messageServerError: 'Błąd serwera',

@@ -1,7 +1,7 @@
 import React, {useState, Dispatch, SetStateAction} from 'react';
 import {Keyboard} from 'react-native';
 import {useMutation} from '@apollo/react-hooks';
-import {REGISTER_QUERY, CONFIRM_USER} from './mutationsGQL';
+import {REGISTER_QUERY, CONFIRM_USER, LOGIN_USER} from './mutationsGQL';
 
 export interface Values {
   password: string;
@@ -91,17 +91,27 @@ const AuthContextProvider: React.FC = ({children}) => {
     setIsLoginSuccess(false);
     setAreLoginButtonsDisabled(false);
   };
-  const loginGraphQLQuery = async () => {
+
+  const [loginUser] = useMutation(LOGIN_USER, {
+    onError: errorData => {
+      const [extensions] = errorData.graphQLErrors;
+      const errorString = extensions.extensions?.code;
+      throw new Error(errorString);
+    },
+    onCompleted: data => {
+      console.log(data.login.id);
+    },
+  });
+
+  const loginGraphQLQuery = async ({
+    email,
+    password,
+  }: RegisterParametersTypes) => {
+    const emailLowerCase = email.toLowerCase();
     try {
-      await fetch('https://pokeapi.co/api/v2/pokemon').then(response => {
-        if (response.status > 400) {
-          throw new Error();
-          //add else if with different status to pass error to catch
-        }
-        return response;
-      });
+      await loginUser({variables: {email: emailLowerCase, password}});
     } catch (error) {
-      throw new Error('2');
+      throw new Error(error.message);
     }
   };
 
@@ -113,12 +123,14 @@ const AuthContextProvider: React.FC = ({children}) => {
     try {
       setAreLoginButtonsDisabled(true);
       await setIsServerNotResponding(false);
-      await loginGraphQLQuery();
+      await loginGraphQLQuery({email, password});
       setIsLoginSuccess(true);
       resetForm();
     } catch (error) {
-      // setIsServerNotResponding(true);
-      setIsPasswordBad(true);
+      const errorMessage = 'GRAPHQL_VALIDATION_FAILED';
+      error.message == errorMessage
+        ? setIsPasswordBad(true)
+        : setIsServerNotResponding(true);
     } finally {
       setIsLoginSuccess(false);
       setIsServerNotResponding(false);
