@@ -13,4 +13,21 @@ export const REGISTER_QUERY = gql`
   }
 `;
 
-// export const CONFIRM_USER =
+export const CONFIRM_USER = gql`
+  mutation confirmUser($token: String!) {
+    confirmUser(token: $token)
+  }
+`;
+
+export const LOGIN_USER = gql`
+  mutation login($password: String!, $email: String!) {
+    login(password: $password, email: $email) {
+      id
+      email
+      catalogs {
+        id
+        name
+      }
+    }
+  }
+`;

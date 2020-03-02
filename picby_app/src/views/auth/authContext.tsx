@@ -1,17 +1,7 @@
 import React, {useState, Dispatch, SetStateAction} from 'react';
 import {Keyboard} from 'react-native';
-import {useQuery, useMutation} from '@apollo/react-hooks';
+import {useMutation} from '@apollo/react-hooks';
 import {REGISTER_QUERY, CONFIRM_USER} from './mutationsGQL';
-import {
-  NavigationScreenProp,
-  NavigationRoute,
-  NavigationParams,
-} from 'react-navigation';
-import {gql} from 'apollo-boost';
-
-type TokenType =
-  | NavigationScreenProp<NavigationRoute<NavigationParams>, NavigationParams>
-  | undefined;
 
 export interface AuthProps {
   registerContextData: {
@@ -132,31 +122,22 @@ const AuthContextProvider: React.FC = ({children}) => {
     }
   };
 
-  const [confirmUser] = useMutation(
-    gql`
-      mutation confirmUser($token: String!) {
-        confirmUser(token: $token)
-      }
-    `,
-    {
-      onError: errorData => {
-        console.log('wyjebalo blad');
-        console.log(errorData.networkError);
-        // const [extensions] = errorData.graphQLErrors;
-        // const errorCode = extensions?.extensions?.exception.code;
-        // console.log(errorCode); errorCode
-        throw new Error();
-      },
-      onCompleted: returnedData => {
-        console.log(returnedData);
-      },
+  const [confirmUser] = useMutation(CONFIRM_USER, {
+    onError: errorData => {
+      const [extensions] = errorData.graphQLErrors;
+      const errorCode = extensions?.extensions?.exception.code;
+      console.log(errorCode);
+      throw new Error(errorCode);
     },
-  );
+    onCompleted: returnedData => {
+      console.log(returnedData);
+    },
+  });
 
   const confirmUserRequest = async (userToken: string) => {
     console.log(userToken);
     try {
-      await confirmUser({variables: {userToken}});
+      await confirmUser({variables: {token: userToken}});
     } catch (error) {
       throw new Error(error);
     }
@@ -169,11 +150,8 @@ const AuthContextProvider: React.FC = ({children}) => {
       await confirmUserRequest(userToken);
       setIsUserConfirmedSuccess(true);
     } catch (error) {
-      console.log(error.message);
-      //set error animation//
       setIsServerNotResponding(true);
     } finally {
-      // setIsUserConfirmedSuccess(false);
       setIsServerNotResponding(false);
     }
   };
@@ -212,8 +190,13 @@ const AuthContextProvider: React.FC = ({children}) => {
     setIsRegisterSuccess(false);
   };
 
-  const [registerUser] = useMutation(REGISTER_QUERY, {
+  const [registerUser, {error}] = useMutation(REGISTER_QUERY, {
     onError: errorData => {
+      console.log(errorData);
+      console.log(errorData.extraInfo);
+      console.log(errorData.graphQLErrors);
+      console.log(errorData.networkError?.message);
+
       const [extensions] = errorData.graphQLErrors;
       const errorCode = extensions.extensions?.exception.code;
       throw new Error(errorCode);
@@ -222,7 +205,7 @@ const AuthContextProvider: React.FC = ({children}) => {
       console.log(data);
     },
   });
-
+  console.log(error?.networkError);
   interface RegisterParametersTypes {
     email: String;
     password: String;
@@ -244,10 +227,11 @@ const AuthContextProvider: React.FC = ({children}) => {
     password: string,
     resetForm: () => void,
   ) => {
+    const lowerCaseEmail: string = email.toLowerCase();
     try {
       setAreRegisterButtonsDisabled(true);
       await setIsItServerError(false);
-      await registerGraphQLQuery({email, password});
+      await registerGraphQLQuery({email: lowerCaseEmail, password});
       await setIsRegisterSuccess(true);
       resetForm();
     } catch (error) {

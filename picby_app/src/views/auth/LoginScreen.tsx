@@ -1,12 +1,11 @@
 import * as React from 'react';
-import {useContext, useState} from 'react';
+import {useContext, useState, useEffect} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   Dimensions,
   TouchableWithoutFeedback,
-  Linking,
 } from 'react-native';
 import {
   TextInput,
@@ -33,11 +32,6 @@ import {
   loginMessages,
 } from '../../staticData/staticData';
 import {NavigationStackProp} from 'react-navigation-stack';
-import {
-  NavigationParams,
-  NavigationRoute,
-  NavigationScreenProp,
-} from 'react-navigation';
 
 const {width: vw} = Dimensions.get('window');
 
@@ -59,7 +53,7 @@ type userTokenType = string | undefined;
 const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
   const {navigate} = navigation;
 
-  React.useEffect(() => {
+  useEffect(() => {
     navigation.addListener('didBlur', () => setLoginScreenStateToDefault());
   }, []);
 
@@ -112,25 +106,17 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     password: yup.string().required(),
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     const userToken: userTokenType = navigation.getParam('token');
-    console.log(navigation.getParam('token'));
-    userToken && handleConfirmUserAndHandleErrors(userToken);
+    userToken && setUserTokenValue(userToken);
+  });
 
-    // userToken && handleConfirmUserAndHandleErrors({userToken});
-  }, []);
-
-  // React.useEffect(() => {
-  //   console.log(userTokenValue);
-  //   console.log(typeof userTokenValue);
-  //   // const userTokenToString = String(userTokenValue);
-  //   userTokenValue &&
-  //     handleConfirmUserAndHandleErrors(userTokenValue) &&
-  //     console.log('odpalanie handle confirm');
-  // }, [userTokenValue]);
+  useEffect(() => {
+    userTokenValue && handleConfirmUserAndHandleErrors(userTokenValue);
+  }, [userTokenValue]);
 
   // handle errors //
-  React.useEffect(() => {
+  useEffect(() => {
     if (isServerNotResponding) {
       setMessagePopUpText(messageServerError);
       handlePopUpAnimation();
