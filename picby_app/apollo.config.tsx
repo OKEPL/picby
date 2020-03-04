@@ -10,6 +10,7 @@ const link = new HttpLink({
 const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   cache,
   link,
+  connectToDevTools: true,
 });
 
 export default client;
