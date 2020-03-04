@@ -7,6 +7,7 @@ import {IntroductionContext} from './introductionContext';
 import CustomBottomTab from './customBottomTab';
 import {NavigationStackProp} from 'react-navigation-stack';
 import {introductionTextContent} from '../../staticData/staticData';
+import {getUserToken} from './utils';
 
 type Props = {
   navigation: NavigationStackProp;
@@ -16,6 +17,7 @@ type Props = {
 
 const firstView: React.FC<Props> = ({navigation}) => {
   const {firstScreenContentText, firstScreenTitle} = introductionTextContent;
+  getUserToken();
   return (
     <View>
       <Introduction
