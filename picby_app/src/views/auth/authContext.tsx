@@ -147,6 +147,7 @@ const AuthContextProvider: React.FC = ({children}) => {
     } finally {
       setIsLoginSuccess(false);
       setIsServerNotResponding(false);
+      setIsUserNotConfirmed(false);
     }
   };
 

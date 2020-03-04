@@ -26,7 +26,7 @@
           <category android:name="android.intent.category.BROWSABLE" />
           <category android:name="android.intent.category.DEFAULT" />
           
-          <!-- Accepts URIs that begin with "example://gizmos” android:pathPattern="..*"-->
+          <!-- Accepts URIs that begin with "https://hungry-kilby-128f75.netlify.com” android:pathPattern="/login/..*"-->
           
           <data android:scheme="https"
                 android:host="hungry-kilby-128f75.netlify.com"
