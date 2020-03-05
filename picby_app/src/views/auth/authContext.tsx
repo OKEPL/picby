@@ -1,8 +1,9 @@
 import React, {useState, Dispatch, SetStateAction} from 'react';
 import {Keyboard} from 'react-native';
-import {useMutation} from '@apollo/react-hooks';
+import {useMutation, useQuery} from '@apollo/react-hooks';
 import {REGISTER_QUERY, CONFIRM_USER, LOGIN_USER} from './mutationsGQL';
 import {userLoginErrorCodes} from '../../staticData/staticData';
+import {ME_QUERY} from '../../apollo/queries/queries';
 
 export interface Values {
   password: string;
@@ -161,6 +162,10 @@ const AuthContextProvider: React.FC = ({children}) => {
       console.log(returnedData);
     },
   });
+
+  const {data, client} = useQuery(ME_QUERY);
+
+  console.log(data);
 
   const confirmUserRequest = async (userToken: string) => {
     try {

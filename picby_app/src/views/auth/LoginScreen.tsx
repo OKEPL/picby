@@ -32,6 +32,7 @@ import {
   loginMessages,
 } from '../../staticData/staticData';
 import {NavigationStackProp} from 'react-navigation-stack';
+import {useStoreState, useStoreActions} from '../../easyPeasy/hooks';
 
 const {width: vw} = Dimensions.get('window');
 
@@ -76,6 +77,10 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
   } = useContext(AuthContext);
 
   const {loginHeaderTextTwo, loginHeaderTextOne} = introHeaderText;
+
+  const todos = useStoreState(state => state.todos);
+  const addTodo = useStoreActions(actions => actions.addTodo);
+  console.log(todos);
 
   const {
     messageBadEmail,
@@ -160,6 +165,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
   ) => {
     const {email, password} = values;
     const {resetForm} = actions;
+    await addTodo({id: 1, name: email});
     await handleLoginRequestAndErrors(email, password, resetForm);
   };
 
