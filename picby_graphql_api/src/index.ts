@@ -3,7 +3,7 @@ import connectRedis from 'connect-redis';
 import cors from 'cors';
 import express from "express";
 import session from "express-session";
-import { createConnection, getConnectionOptions } from "typeorm";
+import { createTypeormConn } from "./createTypeOrmConnection";
 import { AUTH_COOKIE_NAME } from "./modules/constants/cookies";
 import { redis } from "./redis";
 import { createSchema } from "./utils/createSchema";
@@ -20,12 +20,7 @@ const DEFAULT_PORT = 8081;
 
   const app = express();
 
-  const options = await getConnectionOptions(
-    process.env.NODE_ENV === 'production' ? 'production' : 'development'
-  );
-
-  await createConnection({ ...options, name: "default" });
-
+  await createTypeormConn();
   const apolloServer = new ApolloServer({
     introspection: true,
     playground: true,
