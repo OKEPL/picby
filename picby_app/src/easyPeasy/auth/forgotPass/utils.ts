@@ -1,4 +1,4 @@
-import {useStoreActions} from '../hooks';
+import {useStoreActions} from '../../hooks';
 
 export const setForgotScreenStateToDefault: () => void = () => {
   const {
