@@ -257,6 +257,10 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
       setIsServerNotResponding(true);
     } finally {
       setIsServerNotResponding(false);
+      setTimeout(
+        () => setAreLoginButtonsDisabled(false),
+        ENABLE_BUTTONS_DELAY_TIME,
+      );
     }
   };
 
