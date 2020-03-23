@@ -16,10 +16,6 @@ import {Formik} from 'formik';
 import * as yup from 'yup';
 
 import {globalStyles} from '../../common/styles/globalStyles';
-// import {
-//   setLoginScreenStateToDefault,
-//   handleConfirmUserAndHandleErrors,
-// } from '../../easyPeasy/auth/login/utils';
 import {AuthContext, RegisterParametersTypes} from './authContext';
 import GotAccountQuestion from './components/GotAccountQuestion';
 import FlatButton from '../../common/components/Button';
@@ -27,7 +23,10 @@ import PicbyLogo from '../../common/images/PICBY.svg';
 import EmailLogo from './icons/envelope.svg';
 import KeyLogo from './icons/key.svg';
 import ErrorLogo from './icons/exclamationMark.svg';
-import {useHandlePopupAnimation} from './hooks/useHandlePopupAnimation';
+import {
+  useHandlePopupAnimation,
+  ENABLE_BUTTONS_DELAY_TIME,
+} from './hooks/useHandlePopupAnimation';
 import PopUp from '../auth/components/Popup';
 import {
   introHeaderText,
@@ -39,7 +38,7 @@ import {
 import {NavigationStackProp} from 'react-navigation-stack';
 import {useStoreState, useStoreActions} from '../../easyPeasy/hooks';
 import {useMutation} from '@apollo/react-hooks';
-import {LOGIN_USER} from '../../apollo/mutations/mutations';
+import {LOGIN_USER, CONFIRM_USER} from '../../apollo/mutations/mutations';
 
 const {width: vw} = Dimensions.get('window');
 
@@ -79,6 +78,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     setIsLoginSuccess,
     setIsPasswordBad,
     setAreLoginButtonsDisabled,
+    setIsUserConfirmedSuccess,
   } = useStoreActions(actions => actions.LoginModel);
 
   const {
@@ -120,6 +120,10 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
       setIsLoginSuccess(false);
       setIsServerNotResponding(false);
       setIsUserNotConfirmed(false);
+      setTimeout(
+        () => setAreLoginButtonsDisabled(false),
+        ENABLE_BUTTONS_DELAY_TIME,
+      );
     }
   };
 
@@ -196,9 +200,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     userToken && setUserTokenValue(userToken);
   });
 
-  // useEffect(() => {
-  //   userTokenValue && handleConfirmUserAndHandleErrors(userTokenValue);
-  // }, [userTokenValue]);
+  useEffect(() => {
+    userTokenValue && handleConfirmUserAndHandleErrors(userTokenValue);
+  }, [userTokenValue]);
 
   // handle errors // podzielic na kilka useeffect
   useEffect(() => {
@@ -244,6 +248,38 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     const {email, password} = values;
     const {resetForm} = actions;
     await handleLoginRequestAndErrors({email, password, resetForm});
+  };
+
+  const [confirmUser] = useMutation(CONFIRM_USER, {
+    onError: errorData => {
+      const [extensions] = errorData.graphQLErrors;
+      const errorCode = extensions?.extensions?.exception.code;
+      throw new Error(errorCode);
+    },
+    onCompleted: returnedData => {
+      console.log(returnedData);
+    },
+  });
+
+  const confirmUserRequest = async (userToken: string) => {
+    try {
+      await confirmUser({variables: {token: userToken}});
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  const handleConfirmUserAndHandleErrors = async (userToken: string) => {
+    try {
+      setAreLoginButtonsDisabled(true);
+      await setIsServerNotResponding(false);
+      await confirmUserRequest(userToken);
+      setIsUserConfirmedSuccess(true);
+    } catch (error) {
+      setIsServerNotResponding(true);
+    } finally {
+      setIsServerNotResponding(false);
+    }
   };
 
   return (

@@ -1,8 +1,9 @@
 import {Dimensions, Animated} from 'react-native';
 import {useState} from 'react';
-import {useStoreActions} from '../../../easyPeasy/hooks';
 
 const {width: vw} = Dimensions.get('window');
+
+export const ENABLE_BUTTONS_DELAY_TIME = 4600;
 
 export const useHandlePopupAnimation = () => {
   const [fadeAnim] = useState(new Animated.Value(-1 * vw));
@@ -12,16 +13,9 @@ export const useHandlePopupAnimation = () => {
   const ANIMATION_SHORT_DELAY = 300;
   const ANIMATION_LONG_DELAY = 4000;
 
-  const {setAreLoginButtonsDisabled} = useStoreActions(
-    actions => actions.LoginModel,
-  );
-
   const handlePopUpAnimation = (redirectFunction?: () => void | undefined) => {
     console.log('animacja odpalona');
     const functionFiredAfterAnimationEnds = () => {
-      setAreLoginButtonsDisabled(false);
-      // setAreRegisterButtonsDisabled(false);
-      // setAreForgotPassButtonsDisabled(false);
       redirectFunction && redirectFunction();
     };
 

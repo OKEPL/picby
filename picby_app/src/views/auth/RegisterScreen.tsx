@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {useContext, useState} from 'react';
 import {
   View,
   Text,
@@ -12,14 +11,17 @@ import * as yup from 'yup';
 import {TextInput, ScrollView} from 'react-native-gesture-handler';
 
 import {globalStyles} from '../../common/styles/globalStyles';
-import {AuthContext} from './authContext';
+import {dismissKeyboard} from '../../common/utils.global';
 import GotAccountQuestion from './components/GotAccountQuestion';
 import PicbyLogo from '../../common/images/PICBY.svg';
 import EmailLogo from './icons/envelope.svg';
 import ErrorLogo from './icons/exclamationMark.svg';
 import KeyLogo from './icons/key.svg';
 import FlatButton from '../../common/components/Button';
-import {useHandlePopupAnimation} from './hooks/useHandlePopupAnimation';
+import {
+  useHandlePopupAnimation,
+  ENABLE_BUTTONS_DELAY_TIME,
+} from './hooks/useHandlePopupAnimation';
 import PopUp from '../auth/components/Popup';
 import {
   registerMessages,
@@ -28,10 +30,13 @@ import {
   introHeaderText,
 } from '../../staticData/staticData';
 import {NavigationStackProp} from 'react-navigation-stack';
+import {useStoreState, useStoreActions} from '../../easyPeasy/hooks';
+import {useMutation} from '@apollo/react-hooks';
+import {REGISTER_QUERY} from './mutationsGQL';
 
 const {width: vw} = Dimensions.get('window');
 
-type Props = {
+type NavTypes = {
   navigation: NavigationStackProp;
 };
 
@@ -44,25 +49,27 @@ interface ActionTypes {
   resetForm: () => void;
 }
 
-const RegisterScreen: React.FC<Props> = ({navigation}) => {
+const RegisterScreen: React.FC<NavTypes> = ({navigation}) => {
   const {navigate} = navigation;
 
   const {
-    dismissKeyboard,
-    registerContextData: {
-      isEmailAlreadyTaken,
-      handleRegisterRequestAndErrors,
-      isRegisterSuccess,
-      areRegisterButtonsDisabled,
-      setAreRegisterButtonsDisabled,
-      isItServerError,
-      setIsEmailAlreadyTaken,
-      setRegisterScreenStateToDefault,
-    },
-  } = useContext(AuthContext);
+    areRegisterButtonsDisabled,
+    isEmailAlreadyTaken,
+    isItServerError,
+    isRegisterSuccess,
+    messagePopUpText,
+  } = useStoreState(state => state.RegisterModel);
+
+  const {
+    setAreRegisterButtonsDisabled,
+    setIsEmailAlreadyTaken,
+    setMessagePopUpText,
+    setRegisterScreenStateToDefault,
+    setIsItServerError,
+    setIsRegisterSuccess,
+  } = useStoreActions(actions => actions.RegisterModel);
 
   const {handlePopUpAnimation, fadeAnim} = useHandlePopupAnimation();
-  const [messagePopUpText, setMessagePopUpText] = useState('');
 
   const {
     messageBadEmail,
@@ -98,23 +105,49 @@ const RegisterScreen: React.FC<Props> = ({navigation}) => {
       .required(messageFieldRequired)
       .oneOf([yup.ref('password'), null], messagePasswordNotSimilar),
   });
-
-  React.useEffect(() => {
-    return () => {
-      !navigation.isFocused() && setRegisterScreenStateToDefault();
-    };
-  }, []);
-
-  React.useEffect(() => {
-    if (isItServerError) {
-      setMessagePopUpText(messageServerError);
-      handlePopUpAnimation();
-    } else if (isRegisterSuccess) {
-      setMessagePopUpText(messageRegisterSuccess);
-      handlePopUpAnimation();
+  const handleRegisterRequestAndErrors = async (
+    email: string,
+    password: string,
+    resetForm: () => void,
+  ) => {
+    const lowerCaseEmail: string = email.toLowerCase();
+    try {
+      setAreRegisterButtonsDisabled(true);
+      await setIsItServerError(false);
+      await registerGraphQLQuery({email: lowerCaseEmail, password});
+      await setIsRegisterSuccess(true);
+      resetForm();
+    } catch (error) {
+      let errorCode = error.message;
+      Number(errorCode) == 23505
+        ? setIsEmailAlreadyTaken(true)
+        : setIsItServerError(true);
+    } finally {
+      setIsRegisterSuccess(false);
+      setIsItServerError(false);
+      setTimeout(
+        () => setAreRegisterButtonsDisabled(false),
+        ENABLE_BUTTONS_DELAY_TIME,
+      );
     }
-  }, [isItServerError, isRegisterSuccess]);
-
+  };
+  const registerGraphQLQuery = async ({email, password}: CredentialTypes) => {
+    try {
+      await registerUser({variables: {email, password}});
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  };
+  const [registerUser, {error}] = useMutation(REGISTER_QUERY, {
+    onError: errorData => {
+      const [extensions] = errorData.graphQLErrors;
+      const errorCode = extensions.extensions?.exception.code;
+      throw new Error(errorCode);
+    },
+    onCompleted: data => {
+      console.log(data);
+    },
+  });
   const sendRegisterRequest = async (
     values: CredentialTypes,
     actions: ActionTypes,
@@ -123,6 +156,24 @@ const RegisterScreen: React.FC<Props> = ({navigation}) => {
     const {resetForm} = actions;
     handleRegisterRequestAndErrors(email, password, resetForm);
   };
+  React.useEffect(() => {
+    return () => {
+      !navigation.isFocused() && setRegisterScreenStateToDefault(true);
+    };
+  }, []);
+
+  React.useEffect(() => {
+    if (isItServerError) {
+      setMessagePopUpText(messageServerError);
+      handlePopUpAnimation();
+    }
+  }, [isItServerError]);
+  React.useEffect(() => {
+    if (isRegisterSuccess) {
+      setMessagePopUpText(messageRegisterSuccess);
+      handlePopUpAnimation();
+    }
+  }, [isRegisterSuccess]);
 
   return (
     <ScrollView>

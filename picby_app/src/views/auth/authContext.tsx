@@ -67,217 +67,216 @@ export interface AuthProps {
 export const AuthContext = React.createContext<AuthProps>({} as AuthProps);
 
 const AuthContextProvider: React.FC = ({children}) => {
-  const dismissKeyboard = () => {
-    Keyboard.dismiss();
-  };
-  //////// beginning of login logic /////////////////////////////////////////////////
-  const [isPasswordBad, setIsPasswordBad] = useState<boolean>(false);
-  const [isServerNotResponding, setIsServerNotResponding] = useState<boolean>(
-    false,
-  );
-  const [isLoginSuccess, setIsLoginSuccess] = useState<boolean>(false);
-  const [isUserLoggedInFirstTime, setIsUserLoggedInFirstTime] = useState<
-    boolean
-  >(true);
+  // const dismissKeyboard = () => {
+  //   Keyboard.dismiss();
+  // };
+  // //////// beginning of login logic /////////////////////////////////////////////////
+  // const [isPasswordBad, setIsPasswordBad] = useState<boolean>(false);
+  // const [isServerNotResponding, setIsServerNotResponding] = useState<boolean>(
+  //   false,
+  // );
+  // const [isLoginSuccess, setIsLoginSuccess] = useState<boolean>(false);
+  // const [isUserLoggedInFirstTime, setIsUserLoggedInFirstTime] = useState<
+  //   boolean
+  // >(true);
 
-  const [areLoginButtonsDisabled, setAreLoginButtonsDisabled] = useState<
-    boolean
-  >(false);
+  // const [areLoginButtonsDisabled, setAreLoginButtonsDisabled] = useState<
+  //   boolean
+  // >(false);
 
-  const [isUserConfirmedSuccess, setIsUserConfirmedSuccess] = useState<boolean>(
-    false,
-  );
+  // const [isUserConfirmedSuccess, setIsUserConfirmedSuccess] = useState<boolean>(
+  //   false,
+  // );
 
-  const [isUserNotConfirmed, setIsUserNotConfirmed] = useState<boolean>(false);
+  // const [isUserNotConfirmed, setIsUserNotConfirmed] = useState<boolean>(false);
 
-  const {badEmailOrPasswordCode, userNotConfirmedCode} = userLoginErrorCodes;
+  // const {badEmailOrPasswordCode, userNotConfirmedCode} = userLoginErrorCodes;
 
-  const setLoginScreenStateToDefault = () => {
-    setIsPasswordBad(false);
-    setIsServerNotResponding(false);
-    setIsLoginSuccess(false);
-    setAreLoginButtonsDisabled(false);
-    setIsUserNotConfirmed(false);
-  };
+  // const setLoginScreenStateToDefault = () => {
+  //   setIsPasswordBad(false);
+  //   setIsServerNotResponding(false);
+  //   setIsLoginSuccess(false);
+  //   setAreLoginButtonsDisabled(false);
+  //   setIsUserNotConfirmed(false);
+  // };
 
-  const [loginUser] = useMutation(LOGIN_USER, {
-    onError: errorData => {
-      const [extensions] = errorData.graphQLErrors;
-      console.log(extensions);
-      const errorString = extensions.message;
-      console.log(errorString);
-      throw new Error(errorString);
-    },
-    onCompleted: data => {
-      console.log(data.login.id);
-    },
-  });
+  // const [loginUser] = useMutation(LOGIN_USER, {
+  //   onError: errorData => {
+  //     const [extensions] = errorData.graphQLErrors;
+  //     console.log(extensions);
+  //     const errorString = extensions.message;
+  //     console.log(errorString);
+  //     throw new Error(errorString);
+  //   },
+  //   onCompleted: data => {
+  //     console.log(data.login.id);
+  //   },
+  // });
 
-  const loginGraphQLQuery = async ({
-    email,
-    password,
-  }: RegisterParametersTypes) => {
-    const emailLowerCase = email.toLowerCase();
-    try {
-      await loginUser({variables: {email: emailLowerCase, password}});
-    } catch (error) {
-      throw new Error(error.message);
-    }
-  };
+  // const loginGraphQLQuery = async ({
+  //   email,
+  //   password,
+  // }: RegisterParametersTypes) => {
+  //   const emailLowerCase = email.toLowerCase();
+  //   try {
+  //     await loginUser({variables: {email: emailLowerCase, password}});
+  //   } catch (error) {
+  //     throw new Error(error.message);
+  //   }
+  // };
 
-  const handleLoginRequestAndErrors = async (
-    email: string,
-    password: string,
-    resetForm: () => void,
-  ) => {
-    try {
-      setAreLoginButtonsDisabled(true);
-      await setIsServerNotResponding(false);
-      await loginGraphQLQuery({email, password});
-      setIsLoginSuccess(true);
-      resetForm();
-    } catch (error) {
-      let errorCode = error.message;
-      console.log(errorCode);
-      if (errorCode == badEmailOrPasswordCode) {
-        setIsPasswordBad(true);
-      } else if (errorCode == userNotConfirmedCode) {
-        console.log('asd');
-        setIsUserNotConfirmed(true);
-      } else setIsServerNotResponding(true);
-    } finally {
-      setIsLoginSuccess(false);
-      setIsServerNotResponding(false);
-      setIsUserNotConfirmed(false);
-    }
-  };
+  // const handleLoginRequestAndErrors = async (
+  //   email: string,
+  //   password: string,
+  //   resetForm: () => void,
+  // ) => {
+  //   try {
+  //     setAreLoginButtonsDisabled(true);
+  //     await setIsServerNotResponding(false);
+  //     await loginGraphQLQuery({email, password});
+  //     setIsLoginSuccess(true);
+  //     resetForm();
+  //   } catch (error) {
+  //     let errorCode = error.message;
+  //     console.log(errorCode);
+  //     if (errorCode == badEmailOrPasswordCode) {
+  //       setIsPasswordBad(true);
+  //     } else if (errorCode == userNotConfirmedCode) {
+  //       console.log('asd');
+  //       setIsUserNotConfirmed(true);
+  //     } else setIsServerNotResponding(true);
+  //   } finally {
+  //     setIsLoginSuccess(false);
+  //     setIsServerNotResponding(false);
+  //     setIsUserNotConfirmed(false);
+  //   }
+  // };
 
-  const [confirmUser] = useMutation(CONFIRM_USER, {
-    onError: errorData => {
-      const [extensions] = errorData.graphQLErrors;
-      const errorCode = extensions?.extensions?.exception.code;
-      throw new Error(errorCode);
-    },
-    onCompleted: returnedData => {
-      console.log(returnedData);
-    },
-  });
+  // const [confirmUser] = useMutation(CONFIRM_USER, {
+  //   onError: errorData => {
+  //     const [extensions] = errorData.graphQLErrors;
+  //     const errorCode = extensions?.extensions?.exception.code;
+  //     throw new Error(errorCode);
+  //   },
+  //   onCompleted: returnedData => {
+  //     console.log(returnedData);
+  //   },
+  // });
 
-  const {data, client} = useQuery(ME_QUERY);
+  // const {data, client} = useQuery(ME_QUERY);
 
-  console.log(data);
+  // console.log(data);
 
-  const confirmUserRequest = async (userToken: string) => {
-    try {
-      await confirmUser({variables: {token: userToken}});
-    } catch (error) {
-      throw new Error(error);
-    }
-  };
+  // const confirmUserRequest = async (userToken: string) => {
+  //   try {
+  //     await confirmUser({variables: {token: userToken}});
+  //   } catch (error) {
+  //     throw new Error(error);
+  //   }
+  // };
 
-  const handleConfirmUserAndHandleErrors = async (userToken: string) => {
-    try {
-      setAreLoginButtonsDisabled(true);
-      await setIsServerNotResponding(false);
-      await confirmUserRequest(userToken);
-      setIsUserConfirmedSuccess(true);
-    } catch (error) {
-      setIsServerNotResponding(true);
-    } finally {
-      setIsServerNotResponding(false);
-    }
-  };
+  // const handleConfirmUserAndHandleErrors = async (userToken: string) => {
+  //   try {
+  //     setAreLoginButtonsDisabled(true);
+  //     await setIsServerNotResponding(false);
+  //     await confirmUserRequest(userToken);
+  //     setIsUserConfirmedSuccess(true);
+  //   } catch (error) {
+  //     setIsServerNotResponding(true);
+  //   } finally {
+  //     setIsServerNotResponding(false);
+  //   }
+  // };
 
-  const loginContextData = {
-    isPasswordBad,
-    isServerNotResponding,
-    isLoginSuccess,
-    isUserLoggedInFirstTime,
-    setIsPasswordBad,
-    areLoginButtonsDisabled,
-    setAreLoginButtonsDisabled,
-    handleLoginRequestAndErrors,
-    setLoginScreenStateToDefault,
-    isUserConfirmedSuccess,
-    handleConfirmUserAndHandleErrors,
-    isUserNotConfirmed,
-  };
+  // const loginContextData = {
+  //   isPasswordBad,
+  //   isServerNotResponding,
+  //   isLoginSuccess,
+  //   isUserLoggedInFirstTime,
+  //   setIsPasswordBad,
+  //   areLoginButtonsDisabled,
+  //   setAreLoginButtonsDisabled,
+  //   handleLoginRequestAndErrors,
+  //   setLoginScreenStateToDefault,
+  //   isUserConfirmedSuccess,
+  //   handleConfirmUserAndHandleErrors,
+  //   isUserNotConfirmed,
+  // };
 
-  /////////////////////  end of login logic /////////////////////////////////////////
+  // /////////////////////  end of login logic /////////////////////////////////////////
 
-  ////////////////////////// start of register logic //////////////////////////////////////
+  // ////////////////////////// start of register logic //////////////////////////////////////
 
-  const [isEmailAlreadyTaken, setIsEmailAlreadyTaken] = useState<boolean>(
-    false,
-  );
-  const [isItServerError, setIsItServerError] = useState<boolean>(false);
-  const [areRegisterButtonsDisabled, setAreRegisterButtonsDisabled] = useState<
-    boolean
-  >(false);
-  const [isRegisterSuccess, setIsRegisterSuccess] = useState<boolean>(false);
+  // const [isEmailAlreadyTaken, setIsEmailAlreadyTaken] = useState<boolean>(
+  //   false,
+  // );
+  // const [isItServerError, setIsItServerError] = useState<boolean>(false);
+  // const [areRegisterButtonsDisabled, setAreRegisterButtonsDisabled] = useState<
+  //   boolean
+  // >(false);
+  // const [isRegisterSuccess, setIsRegisterSuccess] = useState<boolean>(false);
 
-  const setRegisterScreenStateToDefault = () => {
-    setIsEmailAlreadyTaken(false);
-    setIsItServerError(false);
-    setAreRegisterButtonsDisabled(false);
-    setIsRegisterSuccess(false);
-  };
+  // // const setRegisterScreenStateToDefault = () => {
+  // //   setIsEmailAlreadyTaken(false);
+  // //   setIsItServerError(false);
+  // //   setAreRegisterButtonsDisabled(false);
+  // //   setIsRegisterSuccess(false);
+  // // };
 
-  const [registerUser, {error}] = useMutation(REGISTER_QUERY, {
-    onError: errorData => {
-      const [extensions] = errorData.graphQLErrors;
-      const errorCode = extensions.extensions?.exception.code;
-      throw new Error(errorCode);
-    },
-    onCompleted: data => {
-      console.log(data);
-    },
-  });
+  // const [registerUser, {error}] = useMutation(REGISTER_QUERY, {
+  //   onError: errorData => {
+  //     const [extensions] = errorData.graphQLErrors;
+  //     const errorCode = extensions.extensions?.exception.code;
+  //     throw new Error(errorCode);
+  //   },
+  //   onCompleted: data => {
+  //     console.log(data);
+  //   },
+  // });
 
-  const registerGraphQLQuery = async ({
-    email,
-    password,
-  }: RegisterParametersTypes) => {
-    try {
-      await registerUser({variables: {email, password}});
-    } catch (error) {
-      throw new Error(error.message);
-    }
-  };
+  // const registerGraphQLQuery = async ({
+  //   email,
+  //   password,
+  // }: RegisterParametersTypes) => {
+  //   try {
+  //     await registerUser({variables: {email, password}});
+  //   } catch (error) {
+  //     throw new Error(error.message);
+  //   }
+  // };
 
-  const handleRegisterRequestAndErrors = async (
-    email: string,
-    password: string,
-    resetForm: () => void,
-  ) => {
-    const lowerCaseEmail: string = email.toLowerCase();
-    try {
-      setAreRegisterButtonsDisabled(true);
-      await setIsItServerError(false);
-      await registerGraphQLQuery({email: lowerCaseEmail, password});
-      await setIsRegisterSuccess(true);
-      resetForm();
-    } catch (error) {
-      let errorCode = error.message;
-      Number(errorCode) == 23505
-        ? setIsEmailAlreadyTaken(true)
-        : setIsItServerError(true);
-    } finally {
-      setIsRegisterSuccess(false);
-      setIsItServerError(false);
-    }
-  };
+  // const handleRegisterRequestAndErrors = async (
+  //   email: string,
+  //   password: string,
+  //   resetForm: () => void,
+  // ) => {
+  //   const lowerCaseEmail: string = email.toLowerCase();
+  //   try {
+  //     setAreRegisterButtonsDisabled(true);
+  //     await setIsItServerError(false);
+  //     await registerGraphQLQuery({email: lowerCaseEmail, password});
+  //     await setIsRegisterSuccess(true);
+  //     resetForm();
+  //   } catch (error) {
+  //     let errorCode = error.message;
+  //     Number(errorCode) == 23505
+  //       ? setIsEmailAlreadyTaken(true)
+  //       : setIsItServerError(true);
+  //   } finally {
+  //     setIsRegisterSuccess(false);
+  //     setIsItServerError(false);
+  //   }
+  // };
 
-  const registerContextData = {
-    isEmailAlreadyTaken,
-    isRegisterSuccess,
-    isItServerError,
-    handleRegisterRequestAndErrors,
-    setAreRegisterButtonsDisabled,
-    areRegisterButtonsDisabled,
-    setIsEmailAlreadyTaken,
-    setRegisterScreenStateToDefault,
-  };
+  // const registerContextData = {
+  //   isEmailAlreadyTaken,
+  //   isRegisterSuccess,
+  //   isItServerError,
+  //   handleRegisterRequestAndErrors,
+  //   setAreRegisterButtonsDisabled,
+  //   areRegisterButtonsDisabled,
+  //   setIsEmailAlreadyTaken,
+  // };
 
   //////////////////////// end of reigster logic ////////////////////////////////////////////
 
@@ -349,9 +348,9 @@ const AuthContextProvider: React.FC = ({children}) => {
   return (
     <AuthContext.Provider
       value={{
-        registerContextData,
-        dismissKeyboard,
-        loginContextData,
+        // registerContextData,
+        // dismissKeyboard,
+        // loginContextData,
         forgotPassContextData,
       }}>
       {children}
