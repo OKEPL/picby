@@ -1,4 +1,4 @@
-import {Action, action} from 'easy-peasy';
+import {Action, action, Thunk, thunk} from 'easy-peasy';
 
 export interface LoginStoreModel {
   isUserConfirmedSuccess: boolean;
@@ -6,16 +6,8 @@ export interface LoginStoreModel {
   isServerNotResponding: boolean;
   isLoginSuccess: boolean;
   isUserLoggedInFirstTime: boolean;
-  // setIsPasswordBad: Dispatch<SetStateAction<boolean>>;
   areLoginButtonsDisabled: boolean;
-  // setAreLoginButtonsDisabled: Dispatch<SetStateAction<boolean>>;
-  // handleLoginRequestAndErrors: (
-  //   email: string,
-  //   password: string,
-  //   resetForm: () => void,
-  // ) => Promise<void>;
-  // setLoginScreenStateToDefault: () => void;
-  // handleConfirmUserAndHandleErrors: (userToken: string) => Promise<void>;
+  messagePopUpText: string;
   isUserNotConfirmed: boolean;
   setIsUserConfirmedSuccess: Action<LoginStoreModel, boolean>;
   setIsPasswordBad: Action<LoginStoreModel, boolean>;
@@ -24,6 +16,8 @@ export interface LoginStoreModel {
   setIsUserLoggedInFirstTime: Action<LoginStoreModel, boolean>;
   setAreLoginButtonsDisabled: Action<LoginStoreModel, boolean>;
   setIsUserNotConfirmed: Action<LoginStoreModel, boolean>;
+  setLoginScreenStateToDefault: Thunk<LoginStoreModel, boolean>;
+  setMessagePopUpText: Action<LoginStoreModel, string>;
 }
 const LoginModel: LoginStoreModel = {
   //   state   //
@@ -31,9 +25,10 @@ const LoginModel: LoginStoreModel = {
   isPasswordBad: false,
   isServerNotResponding: false,
   isLoginSuccess: false,
-  isUserLoggedInFirstTime: false,
+  isUserLoggedInFirstTime: true,
   areLoginButtonsDisabled: false,
   isUserNotConfirmed: false,
+  messagePopUpText: '',
   //   actions //
   setIsUserConfirmedSuccess: action((state, payload) => {
     state.isUserConfirmedSuccess = payload;
@@ -55,6 +50,19 @@ const LoginModel: LoginStoreModel = {
   }),
   setIsUserNotConfirmed: action((state, payload) => {
     state.isUserNotConfirmed = payload;
+  }),
+  setMessagePopUpText: action((state, payload) => {
+    state.messagePopUpText = payload;
+  }),
+  setLoginScreenStateToDefault: thunk((actions, payload) => {
+    actions.setAreLoginButtonsDisabled(false);
+    actions.setIsUserConfirmedSuccess(false);
+    actions.setIsLoginSuccess(false);
+    actions.setIsUserConfirmedSuccess(false);
+    actions.setIsServerNotResponding(false);
+    actions.setIsPasswordBad(false);
+    actions.setIsUserNotConfirmed(false);
+    actions.setMessagePopUpText('');
   }),
 };
 

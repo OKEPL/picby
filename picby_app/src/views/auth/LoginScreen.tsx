@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useContext, useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -14,9 +14,9 @@ import {
 } from 'react-native-gesture-handler';
 import {Formik} from 'formik';
 import * as yup from 'yup';
-
+import {dismissKeyboard} from '../../common/utils.global';
 import {globalStyles} from '../../common/styles/globalStyles';
-import {AuthContext, RegisterParametersTypes} from './authContext';
+import {RegisterParametersTypes} from './authContext';
 import GotAccountQuestion from './components/GotAccountQuestion';
 import FlatButton from '../../common/components/Button';
 import PicbyLogo from '../../common/images/PICBY.svg';
@@ -68,10 +68,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
   const {badEmailOrPasswordCode, userNotConfirmedCode} = userLoginErrorCodes;
 
   useEffect(() => {
-    navigation.addListener('didBlur', () => setLoginScreenStateToDefault());
+    navigation.addListener('didBlur', () => setLoginScreenStateToDefault(true));
   }, []);
-
-  const {dismissKeyboard} = useContext(AuthContext);
   const {
     setIsUserNotConfirmed,
     setIsServerNotResponding,
@@ -79,6 +77,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     setIsPasswordBad,
     setAreLoginButtonsDisabled,
     setIsUserConfirmedSuccess,
+    setLoginScreenStateToDefault,
+    setMessagePopUpText,
   } = useStoreActions(actions => actions.LoginModel);
 
   const {
@@ -89,12 +89,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     isUserConfirmedSuccess,
     isUserNotConfirmed,
     areLoginButtonsDisabled,
+    messagePopUpText,
   } = useStoreState(state => state.LoginModel);
-
-  //todo//
-
-  // przeniesc  zerowanie stanu jako thunk
-  // wyczyscic login graphql z handle login, wuczulic handlelogin na logingraph
 
   const handleLoginRequestAndErrors = async ({
     email,
@@ -113,7 +109,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
       if (errorCode == badEmailOrPasswordCode) {
         setIsPasswordBad(true);
       } else if (errorCode == userNotConfirmedCode) {
-        console.log('asd');
         setIsUserNotConfirmed(true);
       } else setIsServerNotResponding(true);
     } finally {
@@ -130,14 +125,11 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
   const [loginUser] = useMutation(LOGIN_USER, {
     onError: errorData => {
       const [extensions] = errorData.graphQLErrors;
-      console.log(extensions);
       const errorString = extensions.message;
-      console.log(errorString);
       throw new Error(errorString);
     },
     onCompleted: data => {
       console.log(data.login.id);
-      console.log('asd');
     },
   });
 
@@ -154,14 +146,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     }
   };
 
-  const setLoginScreenStateToDefault = () => {
-    setIsLoginSuccess(false);
-    setIsServerNotResponding(false);
-    setIsPasswordBad(false);
-    setAreLoginButtonsDisabled(false);
-    setIsUserNotConfirmed(false);
-  };
-
   const {loginHeaderTextTwo, loginHeaderTextOne} = introHeaderText;
 
   const {
@@ -175,7 +159,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
   } = loginMessages;
 
   const {placeholderTextBlueColor} = inputData;
-  const [messagePopUpText, setMessagePopUpText] = useState('');
   const [userTokenValue, setUserTokenValue] = useState<userTokenType>(
     undefined,
   );
