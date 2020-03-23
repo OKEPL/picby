@@ -1,25 +1,24 @@
-import {Action, action} from 'easy-peasy';
+import {Action, action, thunk, Thunk} from 'easy-peasy';
 
 export interface ForgotPassStoreModel {
   isEmailNotFound: boolean;
   isEmailSendSuccess: boolean;
   areForgotPassButtonsDisabled: boolean;
   isItForgotPassServerError: boolean;
-  //   handleForgotPasswordRequestAndErrors: (
-  //     email: string,
-  //     resetForm: () => void,
-  //   ) => Promise<void>;
-  //   setForgotScreenStateToDefault: () => void;
+  messagePopUpText: string;
   setIsEmailNotFound: Action<ForgotPassStoreModel, boolean>;
   setIsEmailSendSuccess: Action<ForgotPassStoreModel, boolean>;
   setAreForgotPassButtonsDisabled: Action<ForgotPassStoreModel, boolean>;
   setIsItForgotPassServerError: Action<ForgotPassStoreModel, boolean>;
+  setMessagePopUpText: Action<ForgotPassStoreModel, string>;
+  setForgotScreenStateToDefault: Thunk<ForgotPassStoreModel, boolean>;
 }
 const ForgotPassModel: ForgotPassStoreModel = {
   isEmailNotFound: false,
   isEmailSendSuccess: false,
   areForgotPassButtonsDisabled: false,
   isItForgotPassServerError: false,
+  messagePopUpText: '',
   setIsEmailNotFound: action((state, payload) => {
     state.isEmailNotFound = payload;
   }),
@@ -31,6 +30,16 @@ const ForgotPassModel: ForgotPassStoreModel = {
   }),
   setIsItForgotPassServerError: action((state, payload) => {
     state.isItForgotPassServerError = payload;
+  }),
+  setMessagePopUpText: action((state, payload) => {
+    state.messagePopUpText = payload;
+  }),
+  setForgotScreenStateToDefault: thunk((actions, payload) => {
+    actions.setAreForgotPassButtonsDisabled(false);
+    actions.setIsEmailSendSuccess(false);
+    actions.setIsItForgotPassServerError(false);
+    actions.setIsEmailNotFound(false);
+    actions.setMessagePopUpText('');
   }),
 };
 

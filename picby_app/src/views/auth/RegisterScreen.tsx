@@ -32,7 +32,7 @@ import {
 import {NavigationStackProp} from 'react-navigation-stack';
 import {useStoreState, useStoreActions} from '../../easyPeasy/hooks';
 import {useMutation} from '@apollo/react-hooks';
-import {REGISTER_QUERY} from './mutationsGQL';
+import {REGISTER_USER} from '../../apollo/mutations/mutations';
 
 const {width: vw} = Dimensions.get('window');
 
@@ -138,7 +138,7 @@ const RegisterScreen: React.FC<NavTypes> = ({navigation}) => {
       throw new Error(error.message);
     }
   };
-  const [registerUser, {error}] = useMutation(REGISTER_QUERY, {
+  const [registerUser, {error}] = useMutation(REGISTER_USER, {
     onError: errorData => {
       const [extensions] = errorData.graphQLErrors;
       const errorCode = extensions.extensions?.exception.code;

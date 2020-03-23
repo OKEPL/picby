@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React from 'react';
 import {
   StyleSheet,
   Text,
@@ -8,8 +8,8 @@ import {
   TextInput,
   KeyboardAvoidingView,
 } from 'react-native';
-import {AuthContext} from './authContext';
 
+import {dismissKeyboard} from '../../common/utils.global';
 import eyePic from '../../common/images/bigEye.png';
 import FlatButton from '../../common/components/Button';
 import {Formik} from 'formik';
@@ -21,7 +21,10 @@ import {
   ScrollView,
 } from 'react-native-gesture-handler';
 import {globalStyles} from '../../common/styles/globalStyles';
-import {useHandlePopupAnimation} from './hooks/useHandlePopupAnimation';
+import {
+  useHandlePopupAnimation,
+  ENABLE_BUTTONS_DELAY_TIME,
+} from './hooks/useHandlePopupAnimation';
 import PopUp from './components/Popup';
 import {
   forgotPasswordMessages,
@@ -29,6 +32,7 @@ import {
   buttonsData,
 } from '../../staticData/staticData';
 import {NavigationStackProp} from 'react-navigation-stack';
+import {useStoreActions, useStoreState} from '../../easyPeasy/hooks';
 
 const {width: vw, height: vh} = Dimensions.get('window');
 
@@ -54,19 +58,24 @@ interface ActionTypes {
 const ForgotPasswordScreen: React.FC<Props> = ({navigation}) => {
   const {navigate} = navigation;
   const {handlePopUpAnimation, fadeAnim} = useHandlePopupAnimation();
+
   const {
-    dismissKeyboard,
-    forgotPassContextData: {
-      isEmailNotFound,
-      isItForgotPassServerError,
-      areForgotPassButtonsDisabled,
-      setAreForgotPassButtonsDisabled,
-      setIsEmailNotFound,
-      isEmailSendSuccess,
-      handleForgotPasswordRequestAndErrors,
-      setForgotScreenStateToDefault,
-    },
-  } = useContext(AuthContext);
+    setAreForgotPassButtonsDisabled,
+    setIsEmailNotFound,
+    setIsEmailSendSuccess,
+    setIsItForgotPassServerError,
+    setForgotScreenStateToDefault,
+    setMessagePopUpText,
+  } = useStoreActions(actions => actions.ForgotPassModel);
+
+  const {
+    areForgotPassButtonsDisabled,
+    isEmailNotFound,
+    isEmailSendSuccess,
+    isItForgotPassServerError,
+    messagePopUpText,
+  } = useStoreState(state => state.ForgotPassModel);
+
   const {
     messageBadMail,
     messageEmailNotFound,
@@ -75,14 +84,52 @@ const ForgotPasswordScreen: React.FC<Props> = ({navigation}) => {
     contentHeader,
     messageServerError,
   } = forgotPasswordMessages;
+
   const {placeholderTextBlueColor} = inputData;
   const {textColorWhite, textColorBlue, sendText, goBackText} = buttonsData;
 
-  const [messagePopUpText, setMessagePopUpText] = useState('');
+  const forgotPassGraphQLQuery = async () => {
+    //that query gonna change once forgotpass form is ready
+    try {
+      //to have good response delete /"random string" after /pokemon/
+      await fetch('https://pokeapi.co/api/v2/pokemon/asdasd').then(response => {
+        if (response.status > 400) {
+          throw new Error();
+          //add else if with different status to pass error to catch
+        }
+        return response;
+      });
+    } catch (error) {
+      throw new Error('2');
+    }
+  };
 
+  const handleForgotPasswordRequestAndErrors = async (
+    email: string,
+    resetForm: () => void,
+  ) => {
+    try {
+      setAreForgotPassButtonsDisabled(true);
+      await setIsItForgotPassServerError(false);
+      await forgotPassGraphQLQuery();
+      await setIsEmailSendSuccess(true);
+      resetForm();
+    } catch (error) {
+      // setIsEmailNotFound(true);
+      setIsItForgotPassServerError(true);
+    } finally {
+      // setIsEmailNotFound(false);
+      setIsItForgotPassServerError(false);
+      setIsEmailSendSuccess(false);
+      setTimeout(
+        () => setAreForgotPassButtonsDisabled(false),
+        ENABLE_BUTTONS_DELAY_TIME,
+      );
+    }
+  };
   React.useEffect(() => {
     return () => {
-      !navigation.isFocused() && setForgotScreenStateToDefault();
+      !navigation.isFocused() && setForgotScreenStateToDefault(true);
     };
   }, []);
 

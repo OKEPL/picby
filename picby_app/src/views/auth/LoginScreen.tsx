@@ -16,7 +16,6 @@ import {Formik} from 'formik';
 import * as yup from 'yup';
 import {dismissKeyboard} from '../../common/utils.global';
 import {globalStyles} from '../../common/styles/globalStyles';
-import {RegisterParametersTypes} from './authContext';
 import GotAccountQuestion from './components/GotAccountQuestion';
 import FlatButton from '../../common/components/Button';
 import PicbyLogo from '../../common/images/PICBY.svg';
@@ -105,7 +104,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
       resetForm();
     } catch (error) {
       let errorCode = error.message;
-      console.log(errorCode);
       if (errorCode == badEmailOrPasswordCode) {
         setIsPasswordBad(true);
       } else if (errorCode == userNotConfirmedCode) {
@@ -133,10 +131,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
     },
   });
 
-  const loginGraphQLQuery = async ({
-    email,
-    password,
-  }: RegisterParametersTypes) => {
+  const loginGraphQLQuery = async ({email, password}: CredentialTypes) => {
     const emailLowerCase = email.toLowerCase();
 
     try {
